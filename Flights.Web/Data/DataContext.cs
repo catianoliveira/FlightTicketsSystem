@@ -17,5 +17,7 @@ namespace Flights.Web.Data
 
 
         }
+
+        public DbSet<Flights.Web.Data.Entities.Airport> Airport { get; set; }
     }
 }
