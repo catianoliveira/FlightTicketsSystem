@@ -12,29 +12,28 @@ namespace Flights.Web.Controllers
 {
     public class AirplanesController : Controller
     {
-        private readonly DataContext _context;
+        private readonly IRepository _repository;
 
-        public AirplanesController(DataContext context)
+        public AirplanesController(IRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: Airplanes
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Airplanes.ToListAsync());
+            return View(_repository.GetAirplanes());
         }
 
         // GET: Airplanes/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var airplane = await _context.Airplanes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var airplane = _repository.GetAirplane(id.Value);
             if (airplane == null)
             {
                 return NotFound();
@@ -54,26 +53,26 @@ namespace Flights.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Model,ImageUrl,Quantity,EconomicSeats,ExecutiveSeats,Seats")] Airplane airplane)
+        public async Task<IActionResult> Create(Airplane airplane)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(airplane);
-                await _context.SaveChangesAsync();
+                _repository.AddAirplane(airplane);
+                await _repository.SaveAllAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(airplane);
         }
 
         // GET: Airplanes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var airplane = await _context.Airplanes.FindAsync(id);
+            var airplane = _repository.GetAirplane(id.Value);
             if (airplane == null)
             {
                 return NotFound();
@@ -86,23 +85,18 @@ namespace Flights.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Model,ImageUrl,Quantity,EconomicSeats,ExecutiveSeats,Seats")] Airplane airplane)
+        public async Task<IActionResult> Edit(Airplane airplane)
         {
-            if (id != airplane.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(airplane);
-                    await _context.SaveChangesAsync();
+                    _repository.UpdateAirplane(airplane);
+                    await _repository.SaveAllAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AirplaneExists(airplane.Id))
+                    if (!_repository.AirplaneExists(airplane.Id))
                     {
                         return NotFound();
                     }
@@ -117,15 +111,14 @@ namespace Flights.Web.Controllers
         }
 
         // GET: Airplanes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var airplane = await _context.Airplanes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var airplane = _repository.GetAirplane(id.Value);
             if (airplane == null)
             {
                 return NotFound();
@@ -139,15 +132,10 @@ namespace Flights.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var airplane = await _context.Airplanes.FindAsync(id);
-            _context.Airplanes.Remove(airplane);
-            await _context.SaveChangesAsync();
+            var airplane = _repository.GetAirplane(id);
+            _repository.RemoveAirplanes(airplane);
+            await _repository.SaveAllAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool AirplaneExists(int id)
-        {
-            return _context.Airplanes.Any(e => e.Id == id);
         }
     }
 }

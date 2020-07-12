@@ -33,6 +33,10 @@ namespace Flights.Web
 
             services.AddTransient<SeedDb>();
 
+            //cria instancia nova do objeto sempre que for preciso
+            services.AddScoped<IRepository, Repository>();
+
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
