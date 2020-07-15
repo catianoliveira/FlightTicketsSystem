@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Flights.Web.Data;
+using Flights.Web.Data.Entities;
+using Flights.Web.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +29,21 @@ namespace Flights.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddIdentity<User, IdentityRole>(cfg =>
+            {
+                cfg.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+                cfg.SignIn.RequireConfirmedEmail = true;
+                cfg.User.RequireUniqueEmail = true;
+                cfg.Password.RequireDigit = false; // TODO passar a True
+                cfg.Password.RequiredUniqueChars = 0;
+                cfg.Password.RequireLowercase = false;  
+                cfg.Password.RequireNonAlphanumeric = false;  
+                cfg.Password.RequireUppercase = false;  
+                cfg.Password.RequiredLength = 6;
+            })
+                .AddEntityFrameworkStores<DataContext>();
+
             services.AddDbContext<DataContext>(cfg =>
             {
                 cfg.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
@@ -34,7 +52,13 @@ namespace Flights.Web
             services.AddTransient<SeedDb>();
 
             //cria instancia nova do objeto sempre que for preciso
-            services.AddScoped<IRepository, Repository>();
+            services.AddScoped<IAirplaneRepository, AirplaneRepository>();
+            services.AddScoped<IAirportRepository, AirportRepository>();
+            //services.AddScoped<IImageHelper, ImageHelper>();
+            services.AddScoped<IUserHelper, UserHelper>();
+            //services.AddScoped<IConverterHelper, ConverterHelper>();
+            //services.AddScoped<IMailHelper, MailHelper>();
+            //services.AddScoped<IOrderRepository, OrderRepository>();
 
 
             services.Configure<CookiePolicyOptions>(options =>

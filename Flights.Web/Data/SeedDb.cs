@@ -1,4 +1,6 @@
 ﻿using Flights.Web.Data.Entities;
+using Flights.Web.Helpers;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,34 +11,57 @@ namespace Flights.Web.Data
     public class SeedDb
     {
         private readonly DataContext _context;
-        private Random _random;
+        private readonly IUserHelper _userHelper;
+        private readonly Random _random;
 
-        public SeedDb(DataContext context)
+        //User manager faz a gestão dos users
+        public SeedDb(DataContext context, IUserHelper userHelper)
         {
             _context = context;
+            _userHelper = userHelper;
             _random = new Random();
         }
+
+        //TODO ver user manager
 
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync(); //vê se a bd já foi criada
 
-            if (!_context.Airplanes.Any()) //tabela produtos está vazia
-            {
-                this.AddAirplane("airbus123");
-                await _context.SaveChangesAsync();
-            }
-        }
+            await _userHelper.CheckRoleAsync("Admin");
+            await _userHelper.CheckRoleAsync("Customer");
 
-        private void AddAirplane(string model)
-        {
-            _context.Airplanes.Add(new Airplane
+            //criar aqui user
+            var user = await _userHelper.GetUserByEmailAsync("catia.nunes.oliveira@formandos.cinel.pt");
+
+            if (user == null)
             {
-                Model = model,
-                EconomicSeats = _random.Next(20),
-                ExecutiveSeats = _random.Next(15, 50),
-                Quantity = _random.Next(10)
-            });
+                user = new User
+                {
+                    FirstName = "Cátia",
+                    LastName = "Oliveira",
+                    Email = "catia.nunes.oliveira@formandos.cinel.pt",
+                    UserName = "catia.nunes.oliveira@formandos.cinel.pt",
+                    PhoneNumber = "123456"
+                };
+
+                var result = await _userHelper.AddUserAsync(user, "123456");
+
+                if (result != IdentityResult.Success)
+                {
+                    throw new InvalidOperationException("Could not create the user in seeder.");
+                }
+
+                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                await _userHelper.ConfirmEmailAsync(user, token);
+
+                var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");
+
+                if (!isInRole)
+                {
+                    await _userHelper.AddUSerToRoleAsync(user, "Admin");
+                }
+            }
         }
     }
 }

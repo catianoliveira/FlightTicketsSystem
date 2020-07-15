@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace Flights.Web.Data.Entities
 {
-    public class Airport
+    public class Airport : IEntity
     {
         public int Id { get; set; }
+
+        //TODO
+        public bool WasDeleted { get; set; }
 
         [Required]
         [MaxLength(3)]

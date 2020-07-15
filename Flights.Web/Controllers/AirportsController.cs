@@ -7,22 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Flights.Web.Data;
 using Flights.Web.Data.Entities;
+using Flights.Web.Helpers;
 
 namespace Flights.Web.Controllers
 {
     public class AirportsController : Controller
     {
-        private readonly DataContext _context;
+        private readonly IAirportRepository _airportRepository;
+        private readonly IUserHelper _userHelper;
 
-        public AirportsController(DataContext context)
+        public AirportsController(IAirportRepository airportRepository, IUserHelper userHelper)
         {
-            _context = context;
+            _airportRepository = airportRepository;
+            _userHelper = userHelper;
         }
 
         // GET: Airports
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Airport.ToListAsync());
+            return View(_airportRepository.GetAll());
         }
 
         // GET: Airports/Details/5
@@ -33,8 +36,7 @@ namespace Flights.Web.Controllers
                 return NotFound();
             }
 
-            var airport = await _context.Airport
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var airport = await _airportRepository.GetByIdAsync(id.Value);
             if (airport == null)
             {
                 return NotFound();
@@ -54,12 +56,12 @@ namespace Flights.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,City,Country")] Airport airport)
+        public async Task<IActionResult> Create(Airport airport)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(airport);
-                await _context.SaveChangesAsync();
+                //TODO airplane.User = await _userHelper.GetUserByEmailAsync();
+                await _airportRepository.CreateAsync(airport);
                 return RedirectToAction(nameof(Index));
             }
             return View(airport);
@@ -73,11 +75,13 @@ namespace Flights.Web.Controllers
                 return NotFound();
             }
 
-            var airport = await _context.Airport.FindAsync(id);
+            var airport = await _airportRepository.GetByIdAsync(id.Value);
+
             if (airport == null)
             {
                 return NotFound();
             }
+
             return View(airport);
         }
 
@@ -86,23 +90,18 @@ namespace Flights.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,City,Country")] Airport airport)
+        public async Task<IActionResult> Edit(Airport airport)
         {
-            if (id != airport.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(airport);
-                    await _context.SaveChangesAsync();
+                    //TODO airplane.User = await _userHelper.GetUserByEmailAsync();
+                    await _airportRepository.UpdateAsync(airport);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AirportExists(airport.Id))
+                    if (!await _airportRepository.ExistAsync(airport.Id))
                     {
                         return NotFound();
                     }
@@ -124,8 +123,7 @@ namespace Flights.Web.Controllers
                 return NotFound();
             }
 
-            var airport = await _context.Airport
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var airport = await _airportRepository.GetByIdAsync(id.Value);
             if (airport == null)
             {
                 return NotFound();
@@ -139,15 +137,14 @@ namespace Flights.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var airport = await _context.Airport.FindAsync(id);
-            _context.Airport.Remove(airport);
-            await _context.SaveChangesAsync();
+            var airport = await _airportRepository.GetByIdAsync(id);
+            await _airportRepository.DeleteAsync(airport);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AirportExists(int id)
+        private async Task<bool> AirportExists(Airport airport)
         {
-            return _context.Airport.Any(e => e.Id == id);
+            return await _airportRepository.ExistAsync(airport.Id);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Flights.Web.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,9 +8,14 @@ using System.Threading.Tasks;
 
 namespace Flights.Web.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<User>
     {
         public DbSet<Airplane> Airplanes { get; set; }
+
+        public DbSet<Airport> Airports { get; set; }
+
+
+        //TODO public DbSet<Flight> Flights { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -17,7 +23,5 @@ namespace Flights.Web.Data
 
 
         }
-
-        public DbSet<Flights.Web.Data.Entities.Airport> Airport { get; set; }
     }
 }

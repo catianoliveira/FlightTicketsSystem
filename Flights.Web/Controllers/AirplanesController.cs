@@ -7,33 +7,36 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Flights.Web.Data;
 using Flights.Web.Data.Entities;
+using Flights.Web.Helpers;
 
 namespace Flights.Web.Controllers
 {
     public class AirplanesController : Controller
     {
-        private readonly IRepository _repository;
+        private readonly IAirplaneRepository _airplaneRepository;
+        private readonly IUserHelper _userHelper;
 
-        public AirplanesController(IRepository repository)
+        public AirplanesController(IAirplaneRepository airplaneRepository, IUserHelper userHelper)
         {
-            _repository = repository;
+            _airplaneRepository = airplaneRepository;
+            _userHelper = userHelper;
         }
 
         // GET: Airplanes
         public IActionResult Index()
         {
-            return View(_repository.GetAirplanes());
+            return View(_airplaneRepository.GetAll());
         }
 
         // GET: Airplanes/Details/5
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var airplane = _repository.GetAirplane(id.Value);
+            var airplane = await _airplaneRepository.GetByIdAsync(id.Value);
             if (airplane == null)
             {
                 return NotFound();
@@ -57,26 +60,29 @@ namespace Flights.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repository.AddAirplane(airplane);
-                await _repository.SaveAllAsync();
+                //TODO airplane.User = await _userHelper.GetUserByEmailAsync();
+
+                await _airplaneRepository.CreateAsync(airplane);
                 return RedirectToAction(nameof(Index));
             }
             return View(airplane);
         }
 
         // GET: Airplanes/Edit/5
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var airplane = _repository.GetAirplane(id.Value);
+            var airplane = await _airplaneRepository.GetByIdAsync(id.Value);
+            
             if (airplane == null)
             {
                 return NotFound();
             }
+
             return View(airplane);
         }
 
@@ -91,12 +97,12 @@ namespace Flights.Web.Controllers
             {
                 try
                 {
-                    _repository.UpdateAirplane(airplane);
-                    await _repository.SaveAllAsync();
+                    //TODO airplane.User = await _userHelper.GetUserByEmailAsync();
+                    await _airplaneRepository.UpdateAsync(airplane);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_repository.AirplaneExists(airplane.Id))
+                    if (!await _airplaneRepository.ExistAsync(airplane.Id))
                     {
                         return NotFound();
                     }
@@ -111,14 +117,14 @@ namespace Flights.Web.Controllers
         }
 
         // GET: Airplanes/Delete/5
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var airplane = _repository.GetAirplane(id.Value);
+            var airplane = await _airplaneRepository.GetByIdAsync(id.Value);
             if (airplane == null)
             {
                 return NotFound();
@@ -132,9 +138,8 @@ namespace Flights.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var airplane = _repository.GetAirplane(id);
-            _repository.RemoveAirplanes(airplane);
-            await _repository.SaveAllAsync();
+            var airplane = await _airplaneRepository.GetByIdAsync(id);
+            await _airplaneRepository.DeleteAsync(airplane);
             return RedirectToAction(nameof(Index));
         }
     }

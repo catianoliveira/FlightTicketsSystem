@@ -2,9 +2,12 @@
 
 namespace Flights.Web.Data.Entities
 {
-    public class Airplane
+    public class Airplane : IEntity
     {
         public int Id { get; set; }
+
+        //TODO
+        public bool WasDeleted { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -40,5 +43,7 @@ namespace Flights.Web.Data.Entities
                 _seats = value;
             }
         }
+
+        public User User { get; set; }
     }
 }
