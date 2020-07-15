@@ -14,7 +14,7 @@ namespace Flights.Web.Helpers
 
         Task<IdentityResult> AddUserAsync(User user, string password);
 
-        //<SignInResult> LoginAsync(LoginViewModel model);
+        //<SignInResult> LoginAsync(LoginViewModel model);  
 
         Task LogoutAsync();
 
