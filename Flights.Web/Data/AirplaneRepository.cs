@@ -1,4 +1,5 @@
 ﻿using Flights.Web.Data.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,16 @@ namespace Flights.Web.Data
         {
             //é necessario o interface porque no startup temos que 
             //implementar o interface e o T
+        }
+
+        public IQueryable GetAllWithUsers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<SelectListItem> GetComboAirplanes()
+        {
+            throw new NotImplementedException();
         }
     }
 }
