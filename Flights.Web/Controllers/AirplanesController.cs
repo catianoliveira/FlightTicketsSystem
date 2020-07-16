@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Flights.Web.Data;
 using Flights.Web.Data.Entities;
 using Flights.Web.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Flights.Web.Controllers
 {
+    [Authorize] //Todo meter authorize em tudo
     public class AirplanesController : Controller
     {
         private readonly IAirplaneRepository _airplaneRepository;
