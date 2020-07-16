@@ -7,6 +7,8 @@ namespace Flights.Web.Data.Entities
 {
     public class Flight : IEntity
     {
+        //TODO WasDeleted
+
         public int Id { get; set; }
 
         public Airport From { get; set; }
@@ -20,6 +22,8 @@ namespace Flights.Web.Data.Entities
         public DateTime Time { get; set; }
 
         public bool WasDeleted { get; set; }
+
+        public User User { get; set; }
 
     }
 }

@@ -31,8 +31,6 @@ namespace Flights.Web.Migrations
 
                     b.Property<int>("ExecutiveSeats");
 
-                    b.Property<string>("ImageUrl");
-
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasMaxLength(50);

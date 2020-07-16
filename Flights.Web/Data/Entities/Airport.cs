@@ -26,5 +26,7 @@ namespace Flights.Web.Data.Entities
         [Display(Name = "Country")]
         public string Country { get; set; }
 
+        public User User { get; set; }
+
     }
 }

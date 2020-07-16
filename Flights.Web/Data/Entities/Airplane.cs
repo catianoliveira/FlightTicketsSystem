@@ -6,15 +6,12 @@ namespace Flights.Web.Data.Entities
     {
         public int Id { get; set; }
 
-        //TODO
+        //TODO WasDeleted
         public bool WasDeleted { get; set; }
 
         [Required]
         [MaxLength(50)]
         public string Model { get; set; }
-
-        [Display(Name = "Image")]
-        public string ImageUrl { get; set; }
 
         [Required]
         public int Quantity { get; set; }

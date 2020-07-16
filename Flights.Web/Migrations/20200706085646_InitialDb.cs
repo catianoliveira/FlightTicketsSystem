@@ -14,7 +14,6 @@ namespace Flights.Web.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Model = table.Column<string>(maxLength: 50, nullable: false),
-                    ImageUrl = table.Column<string>(nullable: true),
                     Quantity = table.Column<int>(nullable: false),
                     EconomicSeats = table.Column<int>(nullable: false),
                     ExecutiveSeats = table.Column<int>(nullable: false),
