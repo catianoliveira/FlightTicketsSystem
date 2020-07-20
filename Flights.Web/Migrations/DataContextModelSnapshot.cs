@@ -29,8 +29,6 @@ namespace Flights.Web.Migrations
 
                     b.Property<int>("ExecutiveSeats");
 
-                    b.Property<string>("ImageUrl");
-
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasMaxLength(50);
@@ -66,9 +64,13 @@ namespace Flights.Web.Migrations
                         .IsRequired()
                         .HasMaxLength(3);
 
+                    b.Property<string>("UserId");
+
                     b.Property<bool>("WasDeleted");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Airports");
                 });
@@ -239,6 +241,13 @@ namespace Flights.Web.Migrations
                 });
 
             modelBuilder.Entity("Flights.Web.Data.Entities.Airplane", b =>
+                {
+                    b.HasOne("Flights.Web.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Flights.Web.Data.Entities.Airport", b =>
                 {
                     b.HasOne("Flights.Web.Data.Entities.User", "User")
                         .WithMany()

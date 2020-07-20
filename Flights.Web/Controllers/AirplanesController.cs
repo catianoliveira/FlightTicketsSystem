@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Flights.Web.Controllers
 {
-    [Authorize] //Todo meter authorize em tudo
+    //[Authorize] //Todo meter authorize em tudo
     public class AirplanesController : Controller
     {
         private readonly IAirplaneRepository _airplaneRepository;

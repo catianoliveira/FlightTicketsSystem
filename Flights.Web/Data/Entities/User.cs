@@ -24,5 +24,13 @@ namespace Flights.Web.Data.Entities
         }
 
         //TODO ver o IdentityUser 
+
+        [MaxLength(50, ErrorMessage = "The field {0} can only contain {1} characters")]
+        public string Address { get; set; }
+
+
+        //public int CityId { get; set; }
+
+        //public City City { get; set; }
     }
 }

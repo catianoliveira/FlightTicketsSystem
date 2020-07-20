@@ -17,7 +17,7 @@ namespace Flights.Web.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUserHelper userHelper;
+        private readonly IUserHelper _userHelper;
         private readonly IConfiguration _configuration;
         //private readonly IMailHelper _mailHelper;
 
@@ -26,7 +26,7 @@ namespace Flights.Web.Controllers
             IConfiguration configuration)
             //IMailHelper mailHelper)
         {
-            this.userHelper = userHelper;
+            _userHelper = userHelper;
             _configuration = configuration;
            // _mailHelper = mailHelper;
         }
@@ -46,7 +46,7 @@ namespace Flights.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await this.userHelper.LoginAsync(model);
+                var result = await _userHelper.LoginAsync(model);
 
                 if (result.Succeeded)
                 {
@@ -65,7 +65,7 @@ namespace Flights.Web.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            await this.userHelper.LogoutAsync();
+            await _userHelper.LogoutAsync();
             return this.RedirectToAction("Index", "Login");
         }
 
@@ -74,13 +74,12 @@ namespace Flights.Web.Controllers
             return this.View();
         }
 
-        //Post
         [HttpPost]
         public async Task<IActionResult> Register(RegisterNewUserViewModel model)
         {
             if (this.ModelState.IsValid)
             {
-                var user = await this.userHelper.GetUserByEmailAsync(model.Username);
+                var user = await _userHelper.GetUserByEmailAsync(model.Username);
 
                 if (user == null)
                 {
@@ -89,10 +88,14 @@ namespace Flights.Web.Controllers
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         Email = model.Username,
-                        UserName = model.Username
+                        UserName = model.Username,
+                        Address = model.Address,
+                        PhoneNumber = model.PhoneNumber,
+                        //TODO CityId = model.CityId,
+                        //City = city
                     };
 
-                    var result = await this.userHelper.AddUserAsync(user, model.Password);
+                    var result = await _userHelper.AddUserAsync(user, model.Password);
 
                     if (result != IdentityResult.Success)
                     {
@@ -102,7 +105,7 @@ namespace Flights.Web.Controllers
 
                     //enviar email de confirmaçãp
 
-                    var myToken = await userHelper.GenerateEmailConfirmationTokenAsync(user);
+                    var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
                     var tokenLink = this.Url.Action("ConfirmEmail", "Account", new
                     {
                         userid = user.Id,
@@ -128,10 +131,10 @@ namespace Flights.Web.Controllers
         {
             if (this.ModelState.IsValid)
             {
-                var user = await this.userHelper.GetUserByEmailAsync(model.Username);
+                var user = await _userHelper.GetUserByEmailAsync(model.Username);
                 if (user != null)
                 {
-                    var result = await this.userHelper.ValidatePasswordAsync(
+                    var result = await _userHelper.ValidatePasswordAsync(
                         user,
                         model.Password);
 
@@ -177,14 +180,14 @@ namespace Flights.Web.Controllers
         {
             if (this.ModelState.IsValid)
             {
-                var user = await userHelper.GetUserByEmailAsync(model.Email);
+                var user = await _userHelper.GetUserByEmailAsync(model.Email);
                 if (user == null)
                 {
                     ModelState.AddModelError(string.Empty, "The email doesn't correspont to a registered user.");
                     return this.View(model);
                 }
 
-                var myToken = await userHelper.GeneratePasswordResetTokenAsync(user);
+                var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
 
                 var link = this.Url.Action(
                     "ResetPassword",
@@ -211,10 +214,10 @@ namespace Flights.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            var user = await userHelper.GetUserByEmailAsync(model.UserName);
+            var user = await _userHelper.GetUserByEmailAsync(model.UserName);
             if (user != null)
             {
-                var result = await userHelper.ResetPasswordAsync(user, model.Token, model.Password);
+                var result = await _userHelper.ResetPasswordAsync(user, model.Token, model.Password);
                 if (result.Succeeded)
                 {
                     this.ViewBag.Message = "Password reset successful.";
@@ -231,7 +234,7 @@ namespace Flights.Web.Controllers
 
         public async Task<IActionResult> ChangeUser()
         {
-            var user = await this.userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+            var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
 
             var model = new ChangeUserViewModel();
 
@@ -252,13 +255,13 @@ namespace Flights.Web.Controllers
                 return this.NotFound();
             }
 
-            var user = await userHelper.GetUserByIdAsync(userId);
+            var user = await _userHelper.GetUserByIdAsync(userId);
             if (user == null)
             {
                 return this.NotFound();
             }
 
-            var result = await userHelper.ConfirmEmailAsync(user, token);
+            var result = await _userHelper.ConfirmEmailAsync(user, token);
             if (!result.Succeeded)
             {
                 return this.NotFound();
@@ -272,14 +275,14 @@ namespace Flights.Web.Controllers
         {
             if (this.ModelState.IsValid)
             {
-                var user = await this.userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
 
                 if (user != null)
                 {
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
 
-                    var response = await this.userHelper.UpdateUserAsynnc(user);
+                    var response = await _userHelper.UpdateUserAsync(user);
 
                     if (response.Succeeded)
                     {
@@ -310,10 +313,10 @@ namespace Flights.Web.Controllers
         {
             if (this.ModelState.IsValid)
             {
-                var user = await userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 if (user != null)
                 {
-                    var result = await userHelper.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                    var result = await _userHelper.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
                         return this.RedirectToAction("ChangeUser");

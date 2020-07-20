@@ -4,28 +4,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Flights.Web.Migrations
 {
-    public partial class AddUsers : Migration
+    public partial class InitialDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Airport",
-                table: "Airport");
-
-            migrationBuilder.RenameTable(
-                name: "Airport",
-                newName: "Airports");
-
-            migrationBuilder.AddColumn<string>(
-                name: "UserId",
-                table: "Airplanes",
-                nullable: true);
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Airports",
-                table: "Airports",
-                column: "Id");
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -86,6 +68,54 @@ namespace Flights.Web.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Airplanes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    WasDeleted = table.Column<bool>(nullable: false),
+                    Model = table.Column<string>(maxLength: 50, nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
+                    EconomicSeats = table.Column<int>(nullable: false),
+                    ExecutiveSeats = table.Column<int>(nullable: false),
+                    Seats = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Airplanes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Airplanes_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Airports",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    WasDeleted = table.Column<bool>(nullable: false),
+                    Name = table.Column<string>(maxLength: 3, nullable: false),
+                    City = table.Column<string>(nullable: false),
+                    Country = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Airports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Airports_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,6 +209,11 @@ namespace Flights.Web.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Airports_UserId",
+                table: "Airports",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -216,21 +251,15 @@ namespace Flights.Web.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Airplanes_AspNetUsers_UserId",
-                table: "Airplanes",
-                column: "UserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Airplanes_AspNetUsers_UserId",
-                table: "Airplanes");
+            migrationBuilder.DropTable(
+                name: "Airplanes");
+
+            migrationBuilder.DropTable(
+                name: "Airports");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -252,27 +281,6 @@ namespace Flights.Web.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Airplanes_UserId",
-                table: "Airplanes");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Airports",
-                table: "Airports");
-
-            migrationBuilder.DropColumn(
-                name: "UserId",
-                table: "Airplanes");
-
-            migrationBuilder.RenameTable(
-                name: "Airports",
-                newName: "Airport");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Airport",
-                table: "Airport",
-                column: "Id");
         }
     }
 }

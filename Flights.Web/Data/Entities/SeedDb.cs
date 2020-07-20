@@ -1,4 +1,5 @@
 ﻿using Flights.Web.Data.Entities;
+using Flights.Web.Data.Entities;
 using Flights.Web.Helpers;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -26,12 +27,13 @@ namespace Flights.Web.Data
 
         public async Task SeedAsync()
         {
-            await _context.Database.EnsureCreatedAsync(); //vê se a bd já foi criada
+            await _context.Database.EnsureCreatedAsync();
+
 
             await _userHelper.CheckRoleAsync("Admin");
             await _userHelper.CheckRoleAsync("Customer");
 
-            //criar aqui user
+            
             var user = await _userHelper.GetUserByEmailAsync("catia.nunes.oliveira@formandos.cinel.pt");
 
             if (user == null)
@@ -42,26 +44,36 @@ namespace Flights.Web.Data
                     LastName = "Oliveira",
                     Email = "catia.nunes.oliveira@formandos.cinel.pt",
                     UserName = "catia.nunes.oliveira@formandos.cinel.pt",
-                    PhoneNumber = "123456"
+                    PhoneNumber = "123456",
+                    //Address = "Rua da Luz",
+                    //CityId = _context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
+                    //City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault()
                 };
 
                 var result = await _userHelper.AddUserAsync(user, "123456");
+
+
 
                 if (result != IdentityResult.Success)
                 {
                     throw new InvalidOperationException("Could not create the user in seeder.");
                 }
 
+
                 var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
                 await _userHelper.ConfirmEmailAsync(user, token);
 
-                var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");
 
+                var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");
                 if (!isInRole)
                 {
-                    await _userHelper.AddUSerToRoleAsync(user, "Admin");
+                    await _userHelper.AddUserToRoleAsync(user, "Admin");
                 }
+
+
             }
+
         }
+
     }
 }

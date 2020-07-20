@@ -35,12 +35,17 @@ namespace Flights.Web.Helpers
             await _userManager.AddToRoleAsync(user, roleName);
         }
 
+        public Task AddUserToRoleAsync(User user, string roleName)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)
         {
             return await this._userManager.ChangePasswordAsync(user, oldPassword, newPassword);
         }
 
-        //verifica se esxiste o role s não cria
+        //verifica se existe o role se não cria
         public async Task CheckRoleAsync(string roleName)
         {
             var roleExists = await _roleManager.RoleExistsAsync(roleName);
@@ -87,7 +92,7 @@ namespace Flights.Web.Helpers
 
         public async Task<SignInResult> LoginAsync(LoginViewModel model)
         {
-            return await this._signInManager.PasswordSignInAsync(
+            return await _signInManager.PasswordSignInAsync(
                 model.Username,
                 model.Password,
                 model.RememberMe,
@@ -96,7 +101,7 @@ namespace Flights.Web.Helpers
 
         public async Task LogoutAsync()
         {
-            await this._signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
         }
 
         public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password)
@@ -104,7 +109,7 @@ namespace Flights.Web.Helpers
             return await _userManager.ResetPasswordAsync(user, token, password);
         }
 
-        public async Task<IdentityResult> UpdateUserAsynnc(User user)
+        public async Task<IdentityResult> UpdateUserAsync(User user)
         {
             return await this._userManager.UpdateAsync(user);
         }

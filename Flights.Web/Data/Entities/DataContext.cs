@@ -25,24 +25,24 @@ namespace Flights.Web.Data
         }
 
         //TODO quando tiver o ticket
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Ticket>()
-        //        .Property(p => p.Price)
-        //        .HasColumnType("decimal(18,2");
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //modelBuilder.Entity<Ticket>()
+            //    .Property(p => p.Price)
+            //    .HasColumnType("decimal(18,2");
 
-        //    // habilitar a cascade delete rule
-        //    var cascadeFKs = modelBuilder.Model
-        //        .GetEntityTypes()
-        //        .SelectMany(t => t.GetForeignKeys())
-        //        .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
+            // habilitar a cascade delete rule
+            var cascadeFKs = modelBuilder.Model
+                .GetEntityTypes()
+                .SelectMany(t => t.GetForeignKeys())
+                .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
 
-        //    foreach (var fk in cascadeFKs)
-        //    {
-        //        fk.DeleteBehavior = DeleteBehavior.Restrict;
-        //    }
+            foreach (var fk in cascadeFKs)
+            {
+                fk.DeleteBehavior = DeleteBehavior.Restrict;
+            }
 
-        //    base.OnModelCreating(modelBuilder);
-        //}
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

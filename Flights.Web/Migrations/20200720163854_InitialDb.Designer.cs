@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flights.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200715142841_AddUsers")]
-    partial class AddUsers
+    [Migration("20200720163854_InitialDb")]
+    partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,9 +66,13 @@ namespace Flights.Web.Migrations
                         .IsRequired()
                         .HasMaxLength(3);
 
+                    b.Property<string>("UserId");
+
                     b.Property<bool>("WasDeleted");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Airports");
                 });
@@ -239,6 +243,13 @@ namespace Flights.Web.Migrations
                 });
 
             modelBuilder.Entity("Flights.Web.Data.Entities.Airplane", b =>
+                {
+                    b.HasOne("Flights.Web.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Flights.Web.Data.Entities.Airport", b =>
                 {
                     b.HasOne("Flights.Web.Data.Entities.User", "User")
                         .WithMany()

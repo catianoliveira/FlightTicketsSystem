@@ -18,7 +18,7 @@ namespace Flights.Web.Helpers
 
         Task LogoutAsync();
 
-        Task<IdentityResult> UpdateUserAsynnc(User user);
+        Task<IdentityResult> UpdateUserAsync(User user);
 
         Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword);
 
@@ -29,7 +29,7 @@ namespace Flights.Web.Helpers
 
         Task<bool> IsUserInRoleAsync(User user, string roleName);
 
-        Task AddUSerToRoleAsync(User user, string roleName);
+        Task AddUserToRoleAsync(User user, string roleName);
 
         Task<string> GenerateEmailConfirmationTokenAsync(User user);
 
