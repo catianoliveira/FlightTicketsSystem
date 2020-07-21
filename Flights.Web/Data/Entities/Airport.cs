@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,9 +11,6 @@ namespace Flights.Web.Data.Entities
     public class Airport : IEntity
     {
         public int Id { get; set; }
-
-        //TODO
-        public bool WasDeleted { get; set; }
 
         [Required]
         [MaxLength(3)]
@@ -28,5 +27,7 @@ namespace Flights.Web.Data.Entities
 
         public User User { get; set; }
 
+        [NotMapped]
+        public IEnumerable<SelectListItem> Countries { get; set; }
     }
 }

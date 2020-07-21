@@ -2,6 +2,9 @@
 using Flights.Web.Helpers;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Flights.Web.Data
@@ -10,14 +13,12 @@ namespace Flights.Web.Data
     {
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
-        private readonly Random _random;
 
         //User manager faz a gestão dos users
         public SeedDb(DataContext context, IUserHelper userHelper)
         {
             _context = context;
             _userHelper = userHelper;
-            _random = new Random();
         }
 
         //TODO ver user manager
@@ -43,6 +44,7 @@ namespace Flights.Web.Data
                     UserName = "AdminCatia",
                     PhoneNumber = "123456",
                     Address = "Rua da Luz",
+                    
                     //CityId = _context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
                     //City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault()
                 };
@@ -70,7 +72,37 @@ namespace Flights.Web.Data
 
             }
 
+            if (!_context.Countries.Any())
+            {
+
+                CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+                List<RegionInfo> countriesList = new List<RegionInfo>();
+                var countries = new List<Airport>();
+                foreach (CultureInfo ci in cultures)
+                {
+                    RegionInfo regionInfo = new RegionInfo(ci.Name);
+                    if (countriesList.Count(x => x.EnglishName == regionInfo.EnglishName) <= 0)
+                    {
+                        countriesList.Add(regionInfo);
+                    }
+                }
+
+                foreach (RegionInfo regionInfo in countriesList.OrderBy(x => x.EnglishName))
+                {
+                    var country = regionInfo.EnglishName;
+                    AddCountry(country);
+
+                    await _context.SaveChangesAsync();
+                }
+            }
         }
 
+        private void AddCountry(string name)
+        {
+            _context.Countries.Add(new Country
+            {
+                Name = name
+            });
+        }
     }
 }

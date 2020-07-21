@@ -1,5 +1,6 @@
 ﻿using Flights.Web.Data.Entities;
 using Flights.Web.Models;
+using GADB.Net;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,39 +19,48 @@ namespace Flights.Web.Data.Repositories
             _context = context;
         }
 
-        public async Task AddCityAsync(CityViewModel model)
+        //public async Task AddCityAsync(CityViewModel model)
+        //{
+        //    var country = await this.GetCountryWithCitiesAsync(model.CountryId);
+        //    if (country == null)
+        //    {
+        //        return;
+        //    }
+
+        //    country.Cities.Add(new City { Name = model.Name });
+        //    _context.Countries.Update(country);
+        //    await _context.SaveChangesAsync();
+
+        //}
+
+        public async Task CheckCity(City city)
         {
-            var country = await this.GetCountryWithCitiesAsync(model.CountryId);
-            if (country == null)
+            var globalAirports = new GlobalAirports();
+            
+            if (!_context.Cities)
             {
-                return;
+
             }
-
-            country.Cities.Add(new City { Name = model.Name });
-            _context.Countries.Update(country);
-            await _context.SaveChangesAsync();
-
         }
 
+        //public async Task<int> DeleteCityAsync(City city)
+        //{
+        //    var country = await _context.Countries.Where(c => c.Cities.Any(ci => ci.Id == city.Id)).FirstOrDefaultAsync();
+        //    if (country == null)
+        //    {
+        //        return 0;
+        //    }
 
-        public async Task<int> DeleteCityAsync(City city)
-        {
-            var country = await _context.Countries.Where(c => c.Cities.Any(ci => ci.Id == city.Id)).FirstOrDefaultAsync();
-            if (country == null)
-            {
-                return 0;
-            }
-
-            _context.Cities.Remove(city);
-            await _context.SaveChangesAsync();
-            return country.Id;
-        }
+        //    _context.Cities.Remove(city);
+        //    await _context.SaveChangesAsync();
+        //    return country.Id;
+        //}
 
 
-        public async Task<City> GetCityAsync(int id)
-        {
-            return await _context.Cities.FindAsync(id);
-        }
+        //public async Task<City> GetCityAsync(int id)
+        //{
+        //    return await _context.Cities.FindAsync(id);
+        //}
 
 
 

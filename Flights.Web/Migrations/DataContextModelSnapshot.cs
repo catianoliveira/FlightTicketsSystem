@@ -106,8 +106,6 @@ namespace Flights.Web.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<bool>("WasDeleted");
-
                     b.HasKey("Id");
 
                     b.ToTable("Countries");

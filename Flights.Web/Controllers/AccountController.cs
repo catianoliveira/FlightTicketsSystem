@@ -99,7 +99,7 @@ namespace Flights.Web.Controllers
                     {
                         FirstName = model.FirstName,
                         LastName = model.LastName,
-                        Email = model.EmailAdress,
+                        Email = model.EmailAddress,
                         UserName = model.Username,
                         Address = model.Address,
                         PhoneNumber = model.PhoneNumber,

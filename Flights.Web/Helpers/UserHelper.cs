@@ -35,9 +35,9 @@ namespace Flights.Web.Helpers
             await _userManager.AddToRoleAsync(user, roleName);
         }
 
-        public Task AddUserToRoleAsync(User user, string roleName)
+        public async Task AddUserToRoleAsync(User user, string roleName)
         {
-            throw new NotImplementedException();
+            await _userManager.AddToRoleAsync(user, roleName);
         }
 
         public async Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)

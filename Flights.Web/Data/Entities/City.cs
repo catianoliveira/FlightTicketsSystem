@@ -14,6 +14,5 @@ namespace Flights.Web.Data.Entities
         [Required]
         [Display(Name = "City")]
         public string Name { get; set; }
-        public bool WasDeleted { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

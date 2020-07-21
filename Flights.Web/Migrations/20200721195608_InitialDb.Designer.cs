@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flights.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200721174637_InitialDb")]
+    [Migration("20200721195608_InitialDb")]
     partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,8 +107,6 @@ namespace Flights.Web.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50);
-
-                    b.Property<bool>("WasDeleted");
 
                     b.HasKey("Id");
 

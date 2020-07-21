@@ -9,7 +9,5 @@ namespace Flights.Web.Data.Entities
     {
         int Id { get; set; }
 
-        //TODO
-        bool WasDeleted { get; set; }
     }
 }

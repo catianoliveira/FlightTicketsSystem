@@ -20,6 +20,5 @@ namespace Flights.Web.Data.Entities
         [Display(Name = "# Cities")]
         public int NumberCities { get { return Cities == null ? 0 : Cities.Count; } }
 
-        public bool WasDeleted { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
     }
 }

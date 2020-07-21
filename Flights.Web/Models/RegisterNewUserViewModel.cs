@@ -42,11 +42,10 @@ namespace Flights.Web.Models
 
         [Required]
         [Display(Name = "E-mail")]
-        public string EmailAdress { get; set; }
+        public string EmailAddress { get; set; }
 
         [Required]
         [MaxLength(50, ErrorMessage = "The field {0} can only contain {1} characters.")]
-        [Display(Name = "E-mail")]
         public string Username { get; set; }
 
         [Required]
