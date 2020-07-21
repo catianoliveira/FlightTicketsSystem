@@ -1,4 +1,5 @@
-﻿using MailKit.Net.Smtp;
+﻿using Flights.Web.Helpers;
+using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 using System;

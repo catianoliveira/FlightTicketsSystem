@@ -9,7 +9,7 @@ namespace Flights.Web.Models
     public class LoginViewModel
     {
         [Required]
-        [EmailAddress]
+        [MinLength(1)]
         public string Username { get; set; }
 
         [Required]

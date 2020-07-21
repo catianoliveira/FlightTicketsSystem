@@ -1,4 +1,4 @@
-﻿namespace Flights.Web.Controllers
+﻿namespace Flights.Web.Helpers
 {
     public interface IMailHelper
     {
