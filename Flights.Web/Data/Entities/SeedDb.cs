@@ -1,10 +1,7 @@
 ﻿using Flights.Web.Data.Entities;
-using Flights.Web.Data.Entities;
 using Flights.Web.Helpers;
 using Microsoft.AspNetCore.Identity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Flights.Web.Data
@@ -33,7 +30,7 @@ namespace Flights.Web.Data
             await _userHelper.CheckRoleAsync("Admin");
             await _userHelper.CheckRoleAsync("Customer");
 
-            
+
             var user = await _userHelper.GetUserByEmailAsync("catia.nunes.oliveira@formandos.cinel.pt");
 
             if (user == null)
@@ -43,9 +40,9 @@ namespace Flights.Web.Data
                     FirstName = "Cátia",
                     LastName = "Oliveira",
                     Email = "catia.nunes.oliveira@formandos.cinel.pt",
-                    UserName = "catia.nunes.oliveira@formandos.cinel.pt",
+                    UserName = "AdminCatia",
                     PhoneNumber = "123456",
-                    //Address = "Rua da Luz",
+                    Address = "Rua da Luz",
                     //CityId = _context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
                     //City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault()
                 };

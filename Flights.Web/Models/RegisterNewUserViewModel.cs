@@ -41,7 +41,12 @@ namespace Flights.Web.Models
         public IEnumerable<SelectListItem> Countries { get; set; }
 
         [Required]
-        [DataType(DataType.EmailAddress)]
+        [Display(Name = "E-mail")]
+        public string EmailAdress { get; set; }
+
+        [Required]
+        [MaxLength(50, ErrorMessage = "The field {0} can only contain {1} characters.")]
+        [Display(Name = "E-mail")]
         public string Username { get; set; }
 
         [Required]

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Flights.Web.Data.Entities;
+using Flights.Web.Data.Repositories;
+using Flights.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Flights.Web.Controllers

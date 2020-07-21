@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Flights.Web.Data.Entities;
+﻿using Flights.Web.Data.Entities;
+using Flights.Web.Data.Repositories;
 using Flights.Web.Helpers;
 using Flights.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Flights.Web.Controllers
 {
@@ -19,16 +19,19 @@ namespace Flights.Web.Controllers
     {
         private readonly IUserHelper _userHelper;
         private readonly IConfiguration _configuration;
-        //private readonly IMailHelper _mailHelper;
+        private readonly ICountryRepository _countryRepository;
+        private readonly IMailHelper _mailHelper;
 
         public AccountController(
             IUserHelper userHelper,
-            IConfiguration configuration)
-            //IMailHelper mailHelper)
+            IConfiguration configuration,
+            ICountryRepository countryRepository,
+            IMailHelper mailHelper)
         {
             _userHelper = userHelper;
             _configuration = configuration;
-           // _mailHelper = mailHelper;
+            _countryRepository = countryRepository;
+            _mailHelper = mailHelper;
         }
 
         public IActionResult Login()
@@ -59,51 +62,57 @@ namespace Flights.Web.Controllers
                 }
             }
 
-            this.ModelState.AddModelError(string.Empty, "Failed to login");
+            this.ModelState.AddModelError(string.Empty, "Incorrect username or password");
             return this.View(model);
         }
 
         public async Task<IActionResult> Logout()
         {
             await _userHelper.LogoutAsync();
-            return this.RedirectToAction("Index", "Login");
+            return this.RedirectToAction("Index", "Home");
         }
 
         public IActionResult Register()
         {
-            return this.View();
+            var model = new RegisterNewUserViewModel
+            {
+                Countries = _countryRepository.GetComboCountries(),
+                Cities = _countryRepository.GetComboCities(0)
+            };
+
+            return this.View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterNewUserViewModel model)
         {
-            if (this.ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);
-
                 if (user == null)
                 {
+
+                    var city = await _countryRepository.GetCityAsync(model.CityId);
+
+
                     user = new User
                     {
                         FirstName = model.FirstName,
                         LastName = model.LastName,
-                        Email = model.Username,
+                        Email = model.EmailAdress,
                         UserName = model.Username,
                         Address = model.Address,
                         PhoneNumber = model.PhoneNumber,
-                        //TODO CityId = model.CityId,
+                        //CityId = model.CityId,
                         //City = city
                     };
 
                     var result = await _userHelper.AddUserAsync(user, model.Password);
-
                     if (result != IdentityResult.Success)
                     {
-                        this.ModelState.AddModelError(string.Empty, "the user couldn't be created");
+                        this.ModelState.AddModelError(string.Empty, "The user couldn't be created.");
                         return this.View(model);
                     }
-
-                    //enviar email de confirmaçãp
 
                     var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
                     var tokenLink = this.Url.Action("ConfirmEmail", "Account", new
@@ -112,18 +121,22 @@ namespace Flights.Web.Controllers
                         token = myToken
                     }, protocol: HttpContext.Request.Scheme);
 
-                    /*_mailHelper.SendMail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
-                        $"To allow the user, " +
-                        $"please click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
-                    this.ViewBag.Message = "The instructions to allow your user has been sent to email.";*/
+                    _mailHelper.SendMail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
+                         $"To allow the user, " +
+                         $"please click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+                    this.ViewBag.Message = "The instructions to allow your user has been sent to email.";
+
 
                     return this.View(model);
                 }
 
-                this.ModelState.AddModelError(string.Empty, "Username already exists");
+                this.ModelState.AddModelError(string.Empty, "This user already exists.");
+
             }
+
             return View(model);
         }
+
 
 
         [HttpPost]
@@ -194,11 +207,11 @@ namespace Flights.Web.Controllers
                     "Account",
                     new { token = myToken }, protocol: HttpContext.Request.Scheme);
 
-                /*_mailHelper.SendMail(model.Email, "Shop Password Reset", $"<h1>Shop Password Reset</h1>" +
+                _mailHelper.SendMail(model.Email, "Shop Password Reset", $"<h1>Shop Password Reset</h1>" +
                 $"To reset the password click in this link:</br></br>" +
                 $"<a href = \"{link}\">Reset Password</a>");
                 this.ViewBag.Message = "The instructions to recover your password has been sent to email.";
-                return this.View();*/
+                return this.View();
 
             }
 

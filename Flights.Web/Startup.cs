@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Flights.Web.Data;
 using Flights.Web.Data.Entities;
+using Flights.Web.Data.Repositories;
 using Flights.Web.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -74,8 +75,9 @@ namespace Flights.Web
             services.AddScoped<IImageHelper, ImageHelper>();
             services.AddScoped<IUserHelper, UserHelper>();
             //services.AddScoped<IConverterHelper, ConverterHelper>();
-            //services.AddScoped<IMailHelper, MailHelper>();
+            services.AddScoped<IMailHelper, MailHelper>();
             //services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<ICountryRepository, CountryRepository>();
 
 
             services.Configure<CookiePolicyOptions>(options =>
