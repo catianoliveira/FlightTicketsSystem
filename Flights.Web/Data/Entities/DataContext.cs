@@ -1,5 +1,6 @@
 ﻿using Flights.Web.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,7 @@ namespace Flights.Web.Data
 
         public DbSet<Country> Countries { get; set; }
 
-        public DbSet<City> Cities { get; set; }
-
-        //TODO public DbSet<Flight> Flights { get; set; }
+        public DbSet<Flight> Flights { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -33,6 +32,9 @@ namespace Flights.Web.Data
             //modelBuilder.Entity<Ticket>()
             //    .Property(p => p.Price)
             //    .HasColumnType("decimal(18,2");
+
+            modelBuilder.Ignore<SelectListItem>();
+            modelBuilder.Ignore<SelectListGroup>();
 
             // habilitar a cascade delete rule
             var cascadeFKs = modelBuilder.Model

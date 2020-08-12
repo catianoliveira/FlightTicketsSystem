@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flights.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200721195608_InitialDb")]
+    [Migration("20200812095938_InitialDb")]
     partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,6 +31,8 @@ namespace Flights.Web.Migrations
 
                     b.Property<int>("ExecutiveSeats");
 
+                    b.Property<int?>("FlightId");
+
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasMaxLength(50);
@@ -41,9 +43,9 @@ namespace Flights.Web.Migrations
 
                     b.Property<string>("UserId");
 
-                    b.Property<bool>("WasDeleted");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("FlightId");
 
                     b.HasIndex("UserId");
 
@@ -59,43 +61,20 @@ namespace Flights.Web.Migrations
                     b.Property<string>("City")
                         .IsRequired();
 
-                    b.Property<string>("Country")
+                    b.Property<int>("CountryId");
+
+                    b.Property<int?>("FlightId");
+
+                    b.Property<string>("IATA");
+
+                    b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(3);
-
-                    b.Property<string>("UserId");
-
-                    b.Property<bool>("WasDeleted");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("FlightId");
 
                     b.ToTable("Airports");
-                });
-
-            modelBuilder.Entity("Flights.Web.Data.Entities.City", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CountryId");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<bool>("WasDeleted");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
-
-                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("Flights.Web.Data.Entities.Country", b =>
@@ -113,6 +92,27 @@ namespace Flights.Web.Migrations
                     b.ToTable("Countries");
                 });
 
+            modelBuilder.Entity("Flights.Web.Data.Entities.Flight", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AirplaneId");
+
+                    b.Property<int?>("ArrivalAirportId");
+
+                    b.Property<int?>("DepartureAirportId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArrivalAirportId");
+
+                    b.HasIndex("DepartureAirportId");
+
+                    b.ToTable("Flights");
+                });
+
             modelBuilder.Entity("Flights.Web.Data.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -122,6 +122,8 @@ namespace Flights.Web.Migrations
 
                     b.Property<string>("Address")
                         .HasMaxLength(50);
+
+                    b.Property<string>("City");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -283,6 +285,10 @@ namespace Flights.Web.Migrations
 
             modelBuilder.Entity("Flights.Web.Data.Entities.Airplane", b =>
                 {
+                    b.HasOne("Flights.Web.Data.Entities.Flight")
+                        .WithMany("Airplanes")
+                        .HasForeignKey("FlightId");
+
                     b.HasOne("Flights.Web.Data.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
@@ -290,16 +296,20 @@ namespace Flights.Web.Migrations
 
             modelBuilder.Entity("Flights.Web.Data.Entities.Airport", b =>
                 {
-                    b.HasOne("Flights.Web.Data.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                    b.HasOne("Flights.Web.Data.Entities.Flight")
+                        .WithMany("Airports")
+                        .HasForeignKey("FlightId");
                 });
 
-            modelBuilder.Entity("Flights.Web.Data.Entities.City", b =>
+            modelBuilder.Entity("Flights.Web.Data.Entities.Flight", b =>
                 {
-                    b.HasOne("Flights.Web.Data.Entities.Country")
-                        .WithMany("Cities")
-                        .HasForeignKey("CountryId");
+                    b.HasOne("Flights.Web.Data.Entities.Airport", "ArrivalAirport")
+                        .WithMany()
+                        .HasForeignKey("ArrivalAirportId");
+
+                    b.HasOne("Flights.Web.Data.Entities.Airport", "DepartureAirport")
+                        .WithMany()
+                        .HasForeignKey("DepartureAirportId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

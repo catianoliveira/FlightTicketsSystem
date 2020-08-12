@@ -1,4 +1,6 @@
 ﻿using Flights.Web.Data.Entities;
+using Flights.Web.Data.Repositories;
+using GADB.Net;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,26 +10,53 @@ using System.Threading.Tasks;
 
 namespace Flights.Web.Data
 {
-    public class AirportRepository : GenericRepository<Airport>, IAirportRepository
+    public class AirportRepository : GenericRepository<Entities.Airport>, IAirportRepository
     {
         private readonly DataContext _context;
+        private readonly ICountryRepository _countryRepository;
 
-        public AirportRepository(DataContext context) : base(context)
+        public AirportRepository(
+            DataContext context, 
+            ICountryRepository countryRepository) : base(context)
         {
             _context = context;
+            _countryRepository = countryRepository;
         }
+
+        
+
+        //public async Task CheckCity(City city)
+        //{
+        //    var globalAirports = new GlobalAirports();
+
+        //    //if (_context.Cities.Any())
+        //    //{
+        //    //    globalAirports.GetByCity(city);
+
+        //    //    if (true)
+        //    //    {
+
+        //    //    }
+        //    //}
+
+        //    //else
+        //    //{
+
+        //    //}
+        //}
 
         public IQueryable GetAllWithUsers()
         {
-            return _context.Airports.Include(p => p.User);
+            return _context.Airports;
         }
 
         public IEnumerable<SelectListItem> GetComboAirports()
         {
             var list = _context.Airports.Select(p => new SelectListItem
             {
-                Text = p.Name,
+                Text = p.CompleteAirport,
                 Value = p.Id.ToString()
+
             }).ToList();
 
 
@@ -38,6 +67,14 @@ namespace Flights.Web.Data
             });
 
             return list;
+        }
+
+        public async Task<Entities.Airport> GetCountries(int id)
+        {
+            return await _context.Airports
+             .Include(c => c.Countries)
+             .Where(c => c.Id == id)
+             .FirstOrDefaultAsync();
         }
     }
 }

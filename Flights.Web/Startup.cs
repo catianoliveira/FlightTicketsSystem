@@ -76,7 +76,7 @@ namespace Flights.Web
             services.AddScoped<IUserHelper, UserHelper>();
             //services.AddScoped<IConverterHelper, ConverterHelper>();
             services.AddScoped<IMailHelper, MailHelper>();
-            //services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IFlightRepository, FlightRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
 
 

@@ -14,6 +14,8 @@ namespace Flights.Web.Data
 
         IEnumerable<Airplane> GetAirplanes();
 
+        IEnumerable<Airport> GetAirports();
+
         void RemoveAirplanes(Airplane airplane);
 
         Task<bool> SaveAllAsync();

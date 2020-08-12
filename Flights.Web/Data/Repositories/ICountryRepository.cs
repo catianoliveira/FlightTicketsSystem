@@ -10,10 +10,9 @@ namespace Flights.Web.Data.Repositories
 {
 	public interface ICountryRepository : IGenericRepository<Country>
 	{
-		IQueryable GetCountriesWithCities();
+		//IQueryable GetCountriesWithCities();
+		IQueryable GetCountries();
 
-		//Todo Whyyy???
-		Task<Country> GetCountryWithCitiesAsync(int id);
 
 
 		//Task<City> GetCityAsync(int id);
@@ -34,8 +33,6 @@ namespace Flights.Web.Data.Repositories
 		//IEnumerable<SelectListItem> GetComboCities(int countryId);
 
 
-		Task<Country> GetCountryAsync(City city);
-
-		Task CheckCity(City city);
+		//Task<Country> GetCountryAsync(City city);
 	}
 }

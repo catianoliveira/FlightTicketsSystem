@@ -20,6 +20,11 @@ namespace Flights.Web.Data
             return _context.Airplanes.OrderBy(a => a.Model);
         }
 
+        public IEnumerable<Airport> GetAirports()
+        {
+            return _context.Airports.OrderBy(a => a.Countries);
+        }
+
         public Airplane GetAirplane(int id)
         {
             return _context.Airplanes.Find(id);

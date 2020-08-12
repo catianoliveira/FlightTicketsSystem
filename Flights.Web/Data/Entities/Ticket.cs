@@ -9,7 +9,7 @@ namespace Flights.Web.Data.Entities
     {
         public string Id { get; set; }
 
-        public Flight FlightId { get; set; }
+        //public Flight FlightId { get; set; }
 
         public string Name { get; set; }
 

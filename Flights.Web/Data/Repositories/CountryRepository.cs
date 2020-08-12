@@ -33,15 +33,7 @@ namespace Flights.Web.Data.Repositories
 
         //}
 
-        public async Task CheckCity(City city)
-        {
-            var globalAirports = new GlobalAirports();
-            
-            if (!_context.Cities)
-            {
-
-            }
-        }
+        
 
         //public async Task<int> DeleteCityAsync(City city)
         //{
@@ -64,28 +56,28 @@ namespace Flights.Web.Data.Repositories
 
 
 
-        public IEnumerable<SelectListItem> GetComboCities(int countryId)
-        {
-            var country = _context.Countries.Find(countryId);
-            var list = new List<SelectListItem>();
-            if (country != null)
-            {
-                list = country.Cities.Select(c => new SelectListItem
-                {
-                    Text = c.Name,
-                    Value = c.Id.ToString()
-                }).OrderBy(l => l.Text).ToList();
-            }
+        //public IEnumerable<SelectListItem> GetComboCities(int countryId)
+        //{
+        //    var country = _context.Countries.Find(countryId);
+        //    var list = new List<SelectListItem>();
+        //    if (country != null)
+        //    {
+        //        list = country.Cities.Select(c => new SelectListItem
+        //        {
+        //            Text = c.Name,
+        //            Value = c.Id.ToString()
+        //        }).OrderBy(l => l.Text).ToList();
+        //    }
 
-            list.Insert(0, new SelectListItem
-            {
-                Text = "(Select a city...)",
-                Value = "0"
-            });
+        //    list.Insert(0, new SelectListItem
+        //    {
+        //        Text = "(Select a city...)",
+        //        Value = "0"
+        //    });
 
-            return list;
+        //    return list;
 
-        }
+        //}
 
 
         public IEnumerable<SelectListItem> GetComboCountries()
@@ -108,44 +100,38 @@ namespace Flights.Web.Data.Repositories
         }
 
 
-        public IQueryable GetCountriesWithCities()
+
+        public IQueryable GetCountries()
         {
             return _context.Countries
-            .Include(c => c.Cities)
             .OrderBy(c => c.Name);
 
         }
 
+        
 
-        public async Task<Country> GetCountryAsync(City city)
-        {
-            return await _context.Countries.Where(c => c.Cities.Any(ci => ci.Id == city.Id)).FirstOrDefaultAsync();
-        }
+        
 
 
-
-        public async Task<Country> GetCountryWithCitiesAsync(int id)
-        {
-            return await _context.Countries
-             .Include(c => c.Cities)
-             .Where(c => c.Id == id)
-             .FirstOrDefaultAsync();
-
-        }
+        //public async Task<Country> GetCountryAsync(City city)
+        //{
+        //    return await _context.Countries.FirstOrDefaultAsync();
+        //}
 
 
-        public async Task<int> UpdateCityAsync(City city)
-        {
-            var country = await _context.Countries.Where(c => c.Cities.Any(ci => ci.Id == city.Id)).FirstOrDefaultAsync();
-            if (country == null)
-            {
-                return 0;
-            }
 
-            _context.Cities.Update(city);
-            await _context.SaveChangesAsync();
-            return country.Id;
-        }
+        //public async Task<int> UpdateCityAsync(City city)
+        //{
+        //    var country = await _context.Countries.FirstOrDefaultAsync();
+        //    if (country == null)
+        //    {
+        //        return 0;
+        //    }
+
+        //    //_context.Cities.Update(city);
+        //    await _context.SaveChangesAsync();
+        //    return country.Id;
+        //}
 
     }
 }

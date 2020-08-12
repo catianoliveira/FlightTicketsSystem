@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Flights.Web.Data.Entities
 {
@@ -13,21 +10,35 @@ namespace Flights.Web.Data.Entities
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(3)]
-        [Display(Name = "Airport")]
+        [Display(Name = "Airport Name")]
         public string Name { get; set; }
 
         [Required]
         [Display(Name = "City")]
         public string City { get; set; }
 
+        
+
         [Required]
         [Display(Name = "Country")]
-        public string Country { get; set; }
+        public int CountryId { get; set; }
 
-        public User User { get; set; }
 
-        [NotMapped]
         public IEnumerable<SelectListItem> Countries { get; set; }
+
+
+        public string IATA { get; set; }
+
+        
+        //public User User { get; set; }
+
+
+        public string CompleteAirport
+        {
+            get
+            {
+                return $"{this.IATA} {this.City} {this.CountryId}";
+            }
+        }
     }
 }

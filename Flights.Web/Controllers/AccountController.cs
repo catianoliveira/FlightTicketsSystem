@@ -77,7 +77,6 @@ namespace Flights.Web.Controllers
             var model = new RegisterNewUserViewModel
             {
                 Countries = _countryRepository.GetComboCountries(),
-                Cities = _countryRepository.GetComboCities(0)
             };
 
             return this.View(model);
@@ -91,10 +90,6 @@ namespace Flights.Web.Controllers
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);
                 if (user == null)
                 {
-
-                    var city = await _countryRepository.GetCityAsync(model.CityId);
-
-
                     user = new User
                     {
                         FirstName = model.FirstName,
@@ -103,8 +98,7 @@ namespace Flights.Web.Controllers
                         UserName = model.Username,
                         Address = model.Address,
                         PhoneNumber = model.PhoneNumber,
-                        //CityId = model.CityId,
-                        //City = city
+                        City = model.City
                     };
 
                     var result = await _userHelper.AddUserAsync(user, model.Password);
@@ -121,7 +115,7 @@ namespace Flights.Web.Controllers
                         token = myToken
                     }, protocol: HttpContext.Request.Scheme);
 
-                    _mailHelper.SendMail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
+                    _mailHelper.SendMail(model.FirstName + " " + model.LastName, "Email confirmation", $"<h1>Email Confirmation</h1>" +
                          $"To allow the user, " +
                          $"please click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
                     this.ViewBag.Message = "The instructions to allow your user has been sent to email.";
@@ -249,7 +243,12 @@ namespace Flights.Web.Controllers
         {
             var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
 
-            var model = new ChangeUserViewModel();
+            var model = new ChangeUserViewModel
+            {
+                Countries = _countryRepository.GetComboCountries(),
+                //Cities = _countryRepository.GetComboCities(0)
+            };
+
 
             if (user != null)
             {

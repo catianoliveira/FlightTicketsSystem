@@ -10,10 +10,13 @@ namespace Flights.Web.Data
 {
     public class AirplaneRepository : GenericRepository<Airplane>, IAirplaneRepository
     {
+        private readonly DataContext _context;
+
         public AirplaneRepository(DataContext context) : base(context)
         {
             //é necessario o interface porque no startup temos que 
             //implementar o interface e o T
+            _context = context;
         }
 
         public IQueryable GetAllWithUsers()
@@ -23,7 +26,20 @@ namespace Flights.Web.Data
 
         public IEnumerable<SelectListItem> GetComboAirplanes()
         {
-            throw new NotImplementedException();
+            var list = _context.Airplanes.Select(p => new SelectListItem
+            {
+                Text = p.Model,
+                Value = p.Id.ToString()
+            }).ToList();
+
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "Select a airplane",
+                Value = "0"
+            });
+
+            return list;
         }
     }
 }

@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,23 +10,24 @@ namespace Flights.Web.Data.Entities
 {
     public class Flight : IEntity
     {
-        //TODO WasDeleted
-
         public int Id { get; set; }
 
-        public Airport From { get; set; }
 
-        public Airport To { get; set; }
+        [Display(Name = "Airplane")]
+        [Range(1, int.MaxValue, ErrorMessage = "You must select an airport.")]
+        public int AirplaneId { get; set; }
 
-        public Airplane Airplane { get; set; }
 
-        public DateTime Date { get; set; }
+        [ForeignKey("DepartureAirportId")]
+        public Airport DepartureAirport { get; set; }
 
-        public DateTime Time { get; set; }
+        [ForeignKey("ArrivalAirportId")]
+        public Airport ArrivalAirport { get; set; }
 
-        public bool WasDeleted { get; set; }
 
-        public User User { get; set; }
+        public IEnumerable<Airport> Airports { get; set; }
+
+        public IEnumerable<Airplane> Airplanes { get; set; }
 
     }
 }
