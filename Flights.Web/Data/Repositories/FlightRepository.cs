@@ -10,11 +10,17 @@ namespace Flights.Web.Data.Repositories
     public class FlightRepository : GenericRepository<Flight>, IFlightRepository
     {
         private readonly DataContext _context;
+        private readonly IAirportRepository _airportRepository;
+        private readonly IAirplaneRepository _airplaneRepository;
 
-
-        public FlightRepository(DataContext context) : base(context)
+        public FlightRepository(
+            DataContext context,
+            IAirportRepository airportRepository,
+            IAirplaneRepository airplaneRepository) : base(context)
         {
             _context = context;
+            _airportRepository = airportRepository;
+            _airplaneRepository = airplaneRepository;
         }
 
         public IEnumerable<SelectListItem> GetComboFlights()
@@ -23,3 +29,4 @@ namespace Flights.Web.Data.Repositories
         }
     }
 }
+

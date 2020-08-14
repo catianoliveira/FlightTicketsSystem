@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Flights.Web.Data.Repositories
 {
-    interface IFlightRepository : IGenericRepository<Flight>
+    public interface IFlightRepository : IGenericRepository<Flight>
     {
         IEnumerable<SelectListItem> GetComboFlights();
 
