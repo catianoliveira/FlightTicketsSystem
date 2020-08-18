@@ -12,6 +12,11 @@ namespace Flights.Web.Models
     {
         [Required]
         [Display(Name = "First Name")]
+        public string User { get; set; }
+
+
+        [Required]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
         [Required]
@@ -32,7 +37,6 @@ namespace Flights.Web.Models
         [Display(Name = "City")]
         [Required]
         public string City { get; set; }
-
 
 
         [Display(Name = "Country")]

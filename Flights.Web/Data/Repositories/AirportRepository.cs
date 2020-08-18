@@ -1,9 +1,6 @@
-﻿using Flights.Web.Data.Entities;
-using Flights.Web.Data.Repositories;
-using GADB.Net;
+﻿using Flights.Web.Data.Repositories;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,14 +13,14 @@ namespace Flights.Web.Data
         private readonly ICountryRepository _countryRepository;
 
         public AirportRepository(
-            DataContext context, 
+            DataContext context,
             ICountryRepository countryRepository) : base(context)
         {
             _context = context;
             _countryRepository = countryRepository;
         }
 
-        
+
 
         //public async Task CheckCity(City city)
         //{
@@ -62,7 +59,7 @@ namespace Flights.Web.Data
 
             list.Insert(0, new SelectListItem
             {
-                Text = "Select a airport",
+                Text = "Select an airport",
                 Value = "0"
             });
 

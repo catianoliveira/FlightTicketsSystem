@@ -86,6 +86,30 @@ namespace Flights.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Airplanes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Model = table.Column<string>(maxLength: 50, nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
+                    EconomicSeats = table.Column<int>(nullable: false),
+                    ExecutiveSeats = table.Column<int>(nullable: false),
+                    Seats = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Airplanes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Airplanes_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
@@ -171,52 +195,6 @@ namespace Flights.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Flights",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AirplaneId = table.Column<int>(nullable: false),
-                    DepartureAirportId = table.Column<int>(nullable: true),
-                    ArrivalAirportId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Flights", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Airplanes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Model = table.Column<string>(maxLength: 50, nullable: false),
-                    Quantity = table.Column<int>(nullable: false),
-                    EconomicSeats = table.Column<int>(nullable: false),
-                    ExecutiveSeats = table.Column<int>(nullable: false),
-                    Seats = table.Column<int>(nullable: false),
-                    UserId = table.Column<string>(nullable: true),
-                    FlightId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Airplanes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Airplanes_Flights_FlightId",
-                        column: x => x.FlightId,
-                        principalTable: "Flights",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Airplanes_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Airports",
                 columns: table => new
                 {
@@ -225,24 +203,51 @@ namespace Flights.Web.Migrations
                     Name = table.Column<string>(nullable: false),
                     City = table.Column<string>(nullable: false),
                     CountryId = table.Column<int>(nullable: false),
-                    IATA = table.Column<string>(nullable: true),
-                    FlightId = table.Column<int>(nullable: true)
+                    IATA = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Airports", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Airports_Flights_FlightId",
-                        column: x => x.FlightId,
-                        principalTable: "Flights",
+                        name: "FK_Airports_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Airplanes_FlightId",
-                table: "Airplanes",
-                column: "FlightId");
+            migrationBuilder.CreateTable(
+                name: "Flights",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AirplaneId = table.Column<int>(nullable: false),
+                    DepartureAirportId = table.Column<int>(nullable: false),
+                    ArrivalAirportId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Flights", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Flights_Airplanes_AirplaneId",
+                        column: x => x.AirplaneId,
+                        principalTable: "Airplanes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Flights_Airports_ArrivalAirportId",
+                        column: x => x.ArrivalAirportId,
+                        principalTable: "Airports",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Flights_Airports_DepartureAirportId",
+                        column: x => x.DepartureAirportId,
+                        principalTable: "Airports",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Airplanes_UserId",
@@ -250,9 +255,9 @@ namespace Flights.Web.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Airports_FlightId",
+                name: "IX_Airports_CountryId",
                 table: "Airports",
-                column: "FlightId");
+                column: "CountryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -294,6 +299,11 @@ namespace Flights.Web.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Flights_AirplaneId",
+                table: "Flights",
+                column: "AirplaneId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Flights_ArrivalAirportId",
                 table: "Flights",
                 column: "ArrivalAirportId");
@@ -302,33 +312,10 @@ namespace Flights.Web.Migrations
                 name: "IX_Flights_DepartureAirportId",
                 table: "Flights",
                 column: "DepartureAirportId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Flights_Airports_ArrivalAirportId",
-                table: "Flights",
-                column: "ArrivalAirportId",
-                principalTable: "Airports",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Flights_Airports_DepartureAirportId",
-                table: "Flights",
-                column: "DepartureAirportId",
-                principalTable: "Airports",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Airports_Flights_FlightId",
-                table: "Airports");
-
-            migrationBuilder.DropTable(
-                name: "Airplanes");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -345,19 +332,22 @@ namespace Flights.Web.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Countries");
+                name: "Flights");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Flights");
+                name: "Airplanes");
 
             migrationBuilder.DropTable(
                 name: "Airports");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
         }
     }
 }

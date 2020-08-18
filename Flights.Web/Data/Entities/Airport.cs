@@ -23,6 +23,9 @@ namespace Flights.Web.Data.Entities
         [Display(Name = "Country")]
         public int CountryId { get; set; }
 
+        public Country Country { get; set; }
+
+
 
         public IEnumerable<SelectListItem> Countries { get; set; }
 

@@ -18,16 +18,41 @@ namespace Flights.Web.Data.Entities
         public int AirplaneId { get; set; }
 
 
-        [ForeignKey("DepartureAirportId")]
+        public IEnumerable<SelectListItem> Airplanes { get; set; }
+
+
+        public Airplane Airplane { get; set; }
+
+
+        [ForeignKey("DepartureAirport")]
+        public int DepartureAirportId { get; set; }
+
+
+        [ForeignKey("ArrivalAirport")]
+        public int ArrivalAirportId { get; set; }
+
+
         public Airport DepartureAirport { get; set; }
 
-        [ForeignKey("ArrivalAirportId")]
         public Airport ArrivalAirport { get; set; }
 
 
-        public IEnumerable<Airport> Airports { get; set; }
+        public IEnumerable<SelectListItem> Airports { get; set; }
 
-        public IEnumerable<Airplane> Airplanes { get; set; }
+        //public IEnumerable<Airport> DepartureAirports { get; set; }
+
+
+
+
+
+
+        public string CompleteFlight
+        {
+            get
+            {
+                return $"{this.AirplaneId}";
+            }
+        }
 
     }
 }

@@ -4,6 +4,7 @@ using Flights.Web.Data.Repositories;
 using Flights.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Flights.Web.Controllers
@@ -13,21 +14,27 @@ namespace Flights.Web.Controllers
         private readonly IAirportRepository _airportRepository;
         private readonly ICountryRepository _countryRepository;
         private readonly IUserHelper _userHelper;
+        private readonly DataContext _dataContext;
 
         public AirportsController(
             IAirportRepository airportRepository, 
             ICountryRepository countryRepository, 
-            IUserHelper userHelper)
+            IUserHelper userHelper,
+            DataContext dataContext)
         {
             _airportRepository = airportRepository;
             _countryRepository = countryRepository;
             _userHelper = userHelper;
+            _dataContext = dataContext;
         }
 
         // GET: Airports
         public IActionResult Index()
         {
-            return View(_airportRepository.GetAll());
+            var model = _dataContext.Airports
+                .Include(c => c.Country);
+
+            return View(model.ToList());
         }
 
         // GET: Airports/Details/5

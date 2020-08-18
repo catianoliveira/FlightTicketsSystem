@@ -2,10 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Flights.Web.Data
 {
@@ -18,6 +15,8 @@ namespace Flights.Web.Data
         public DbSet<Country> Countries { get; set; }
 
         public DbSet<Flight> Flights { get; set; }
+
+        public DbSet<DocumentType> DocumentTypes { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -49,5 +48,7 @@ namespace Flights.Web.Data
 
             base.OnModelCreating(modelBuilder);
         }
+
+        //TODO quando tiver o ticket
     }
 }

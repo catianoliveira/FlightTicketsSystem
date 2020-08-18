@@ -2,6 +2,7 @@
 using Flights.Web.Data.Repositories;
 using Flights.Web.Helpers;
 using Flights.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,9 @@ using System.Threading.Tasks;
 
 namespace Flights.Web.Controllers
 {
+    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Manager")]
+
     public class AccountController : Controller
     {
         private readonly IUserHelper _userHelper;
@@ -40,6 +44,7 @@ namespace Flights.Web.Controllers
             {
                 return this.RedirectToAction("Index", "Home");
             }
+            
 
             return this.View();
         }
@@ -293,6 +298,9 @@ namespace Flights.Web.Controllers
                 {
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
+                    user.City = model.City;
+                    user.Address = model.Address;
+                    
 
                     var response = await _userHelper.UpdateUserAsync(user);
 

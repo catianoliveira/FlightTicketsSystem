@@ -30,11 +30,6 @@ namespace Flights.Web.Helpers
             return await _userManager.CreateAsync(user, password);
         }
 
-        public async Task AddUSerToRoleAsync(User user, string roleName) 
-        {
-            await _userManager.AddToRoleAsync(user, roleName);
-        }
-
         public async Task AddUserToRoleAsync(User user, string roleName)
         {
             await _userManager.AddToRoleAsync(user, roleName);

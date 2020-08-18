@@ -29,8 +29,9 @@ namespace Flights.Web.Data
 
 
             await _userHelper.CheckRoleAsync("Admin");
-            await _userHelper.CheckRoleAsync("Customer");
-
+            await _userHelper.CheckRoleAsync("Manager");
+            await _userHelper.CheckRoleAsync("Employee");
+            await _userHelper.CheckRoleAsync("Intern");
 
             var user = await _userHelper.GetUserByEmailAsync("catia.nunes.oliveira@formandos.cinel.pt");
 
@@ -42,8 +43,8 @@ namespace Flights.Web.Data
                     LastName = "Oliveira",
                     Email = "catia.nunes.oliveira@formandos.cinel.pt",
                     UserName = "AdminCatia",
-                    PhoneNumber = "123456",
-                    Address = "Rua da Luz",
+                    PhoneNumber = "912345678",
+                    Address = "Rua da Luz 1 2ºEsq 1200-110 Lisboa",
 
                     //CityId = _context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
                     //City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault()
@@ -101,6 +102,25 @@ namespace Flights.Web.Data
                 this.AddAirplanes("Airbus 123", 2, 15, 5, 20);
                 this.AddAirplanes("Boeing 787", 3, 30, 15, 45);
                 this.AddAirplanes("Boeing 781", 1, 40, 18, 58);
+
+                await _context.SaveChangesAsync();
+            }
+
+
+            if (!_context.Flights.Any())
+            {
+                this.AddFlights(1, 2, 3);
+                this.AddFlights(2, 5, 6);
+                this.AddFlights(3, 7, 8);
+
+                await _context.SaveChangesAsync();
+            }
+
+
+            if (!_context.DocumentTypes.Any())
+            {
+                this.AddDocuments("Identity Card");
+                this.AddDocuments("Passport");
 
                 await _context.SaveChangesAsync();
             }
@@ -7828,12 +7848,32 @@ namespace Flights.Web.Data
             });
         }
 
+
+        private void AddFlights(
+            int airplane, int arrival, int departure)
+        {
+            _context.Flights.Add(new Flight
+            {
+                AirplaneId = airplane,
+                DepartureAirportId = departure,
+                ArrivalAirportId = arrival
+            });
+        }
+
         private void AddCountries(string name)
         {
             _context.Countries.Add(new Country
             {
                 Name = name
             });
+        }
+
+        private void AddDocuments(string document)
+        {
+            _context.DocumentTypes.Add(new DocumentType
+            {
+                Type = document
+            }) ;
         }
     }
 }

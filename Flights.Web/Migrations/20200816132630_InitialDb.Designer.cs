@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flights.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200812095938_InitialDb")]
+    [Migration("20200816132630_InitialDb")]
     partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,8 +31,6 @@ namespace Flights.Web.Migrations
 
                     b.Property<int>("ExecutiveSeats");
 
-                    b.Property<int?>("FlightId");
-
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasMaxLength(50);
@@ -44,8 +42,6 @@ namespace Flights.Web.Migrations
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FlightId");
 
                     b.HasIndex("UserId");
 
@@ -63,8 +59,6 @@ namespace Flights.Web.Migrations
 
                     b.Property<int>("CountryId");
 
-                    b.Property<int?>("FlightId");
-
                     b.Property<string>("IATA");
 
                     b.Property<string>("Name")
@@ -72,7 +66,7 @@ namespace Flights.Web.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FlightId");
+                    b.HasIndex("CountryId");
 
                     b.ToTable("Airports");
                 });
@@ -100,11 +94,13 @@ namespace Flights.Web.Migrations
 
                     b.Property<int>("AirplaneId");
 
-                    b.Property<int?>("ArrivalAirportId");
+                    b.Property<int>("ArrivalAirportId");
 
-                    b.Property<int?>("DepartureAirportId");
+                    b.Property<int>("DepartureAirportId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AirplaneId");
 
                     b.HasIndex("ArrivalAirportId");
 
@@ -285,10 +281,6 @@ namespace Flights.Web.Migrations
 
             modelBuilder.Entity("Flights.Web.Data.Entities.Airplane", b =>
                 {
-                    b.HasOne("Flights.Web.Data.Entities.Flight")
-                        .WithMany("Airplanes")
-                        .HasForeignKey("FlightId");
-
                     b.HasOne("Flights.Web.Data.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
@@ -296,20 +288,28 @@ namespace Flights.Web.Migrations
 
             modelBuilder.Entity("Flights.Web.Data.Entities.Airport", b =>
                 {
-                    b.HasOne("Flights.Web.Data.Entities.Flight")
-                        .WithMany("Airports")
-                        .HasForeignKey("FlightId");
+                    b.HasOne("Flights.Web.Data.Entities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Flights.Web.Data.Entities.Flight", b =>
                 {
+                    b.HasOne("Flights.Web.Data.Entities.Airplane", "Airplane")
+                        .WithMany()
+                        .HasForeignKey("AirplaneId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Flights.Web.Data.Entities.Airport", "ArrivalAirport")
                         .WithMany()
-                        .HasForeignKey("ArrivalAirportId");
+                        .HasForeignKey("ArrivalAirportId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Flights.Web.Data.Entities.Airport", "DepartureAirport")
                         .WithMany()
-                        .HasForeignKey("DepartureAirportId");
+                        .HasForeignKey("DepartureAirportId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Flights.Web.Models
+namespace FlightTicketsSystem.Web.Data.Entities
 {
-    public class AirportsViewModel : Airport
+    public class Manager
     {
-        public Country Country { get; set; }
+        public int Id { get; set; }
+
+        public User User { get; set; }
     }
 }

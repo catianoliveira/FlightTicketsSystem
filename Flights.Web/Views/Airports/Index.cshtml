@@ -72,7 +72,7 @@
                                         @Html.DisplayFor(modelItem => item.City)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Countries)
+                                        @Html.DisplayFor(modelItem => item.Country.Name)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.IATA)
@@ -130,22 +130,28 @@
     <!-- AdminLTE for demo purposes -->
     <script src="~/~/dist/js/demo.js"></script>
     <!-- page script -->
-    <script>
-$(function () {
-    $("#example1").DataTable({
-      "responsive": true,
-      "autoWidth": false,
-    });
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
-  });</script>
-</body>
-</html>
 
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+        <script>
+
+            $(function () {
+                $("#example1").DataTable({
+                    "responsive": true,
+                    "autoWidth": false,
+                });
+                $('#example2').DataTable({
+                    "paging": true,
+                    "lengthChange": false,
+                    "searching": false,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false,
+                    "responsive": true,
+                });
+            });</script>
+    </body>
+</html>
+        }
