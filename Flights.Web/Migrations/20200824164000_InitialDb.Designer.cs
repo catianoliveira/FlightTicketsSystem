@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Flights.Web.Migrations
+namespace FlightTicketsSystem.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200816132630_InitialDb")]
+    [Migration("20200824164000_InitialDb")]
     partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -86,6 +86,19 @@ namespace Flights.Web.Migrations
                     b.ToTable("Countries");
                 });
 
+            modelBuilder.Entity("Flights.Web.Data.Entities.DocumentType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DocumentTypes");
+                });
+
             modelBuilder.Entity("Flights.Web.Data.Entities.Flight", b =>
                 {
                     b.Property<int>("Id")
@@ -96,7 +109,13 @@ namespace Flights.Web.Migrations
 
                     b.Property<int>("ArrivalAirportId");
 
+                    b.Property<DateTime>("DateTime");
+
                     b.Property<int>("DepartureAirportId");
+
+                    b.Property<double>("EconomicPrice");
+
+                    b.Property<double>("ExecutivePrice");
 
                     b.HasKey("Id");
 
@@ -109,6 +128,33 @@ namespace Flights.Web.Migrations
                     b.ToTable("Flights");
                 });
 
+            modelBuilder.Entity("Flights.Web.Data.Entities.Ticket", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("DocumentNumber");
+
+                    b.Property<int>("DocumentTypeId");
+
+                    b.Property<int>("FlightID");
+
+                    b.Property<bool>("Lugagge");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<string>("Seat");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentTypeId");
+
+                    b.HasIndex("FlightID");
+
+                    b.ToTable("Ticket");
+                });
+
             modelBuilder.Entity("Flights.Web.Data.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -117,21 +163,33 @@ namespace Flights.Web.Migrations
                     b.Property<int>("AccessFailedCount");
 
                     b.Property<string>("Address")
-                        .HasMaxLength(50);
+                        .IsRequired()
+                        .HasMaxLength(70);
 
-                    b.Property<string>("City");
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<int>("CountryId");
+
+                    b.Property<DateTime>("DateOfBirth");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("FirstName")
+                        .IsRequired();
 
-                    b.Property<string>("LastName");
+                    b.Property<string>("Indicative")
+                        .IsRequired();
+
+                    b.Property<string>("LastName")
+                        .IsRequired();
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -157,6 +215,8 @@ namespace Flights.Web.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -289,7 +349,7 @@ namespace Flights.Web.Migrations
             modelBuilder.Entity("Flights.Web.Data.Entities.Airport", b =>
                 {
                     b.HasOne("Flights.Web.Data.Entities.Country", "Country")
-                        .WithMany()
+                        .WithMany("Airports")
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -309,6 +369,27 @@ namespace Flights.Web.Migrations
                     b.HasOne("Flights.Web.Data.Entities.Airport", "DepartureAirport")
                         .WithMany()
                         .HasForeignKey("DepartureAirportId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Flights.Web.Data.Entities.Ticket", b =>
+                {
+                    b.HasOne("Flights.Web.Data.Entities.DocumentType", "DocumentType")
+                        .WithMany()
+                        .HasForeignKey("DocumentTypeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Flights.Web.Data.Entities.Flight", "Flight")
+                        .WithMany("Tickets")
+                        .HasForeignKey("FlightID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Flights.Web.Data.Entities.User", b =>
+                {
+                    b.HasOne("Flights.Web.Data.Entities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

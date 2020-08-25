@@ -12,20 +12,23 @@ namespace Flights.Web.Data.Entities
     {
         //TODO cada user tem uma classe e um controlador
 
-
-        [Display(Name = "Document")]
-        [MaxLength(20, ErrorMessage = "The {0} field can not have more than {1} characters.")]
-        [Required(ErrorMessage = "The field {0} is mandatory.")]
-        public string Document { get; set; }
-
-
-
+        [Required]
         public string FirstName { get; set; }
 
 
 
+        [Required]
         public string LastName { get; set; }
 
+
+
+        [Required]
+        public DateTime DateOfBirth { get; set; }
+
+
+
+        [Required]
+        public string Indicative { get; set; }
 
 
 
@@ -41,36 +44,37 @@ namespace Flights.Web.Data.Entities
 
 
 
-
-        public string PhoneNumber { get; set; }
-
-
-
         //TODO ver o IdentityUser 
 
-        [MaxLength(50, ErrorMessage = "The field {0} can only contain {1} characters")]
+        [Required]
+        [MaxLength(70, ErrorMessage = "The field {0} can only contain {1} characters")]
         public string Address { get; set; }
+
+
+
+        [Required]
+        [MaxLength(50, ErrorMessage = "The field {0} can only contain {1} characters")]
+        public string City { get; set; }
+
 
 
         [Required]
         [Display(Name = "Country")]
         public int CountryId { get; set; }
 
+
+
+
         public Country Country { get; set; }
+
+
+
 
 
         public IEnumerable<SelectListItem> Countries { get; set; }
 
 
 
-        [Display(Name = "Full Name")]
-        public string FullNameWithDocument
-        {
-            get
-            {
-                return $"{FirstName} {LastName} - {Document}";
-            }
-
-        }
+        
     }
 }

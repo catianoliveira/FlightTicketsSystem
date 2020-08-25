@@ -14,7 +14,6 @@ namespace Flights.Web.Data.Repositories
 		IQueryable GetCountries();
 
 
-
 		//Task<City> GetCityAsync(int id);
 
 

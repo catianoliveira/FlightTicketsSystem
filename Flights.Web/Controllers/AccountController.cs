@@ -2,6 +2,7 @@
 using Flights.Web.Data.Repositories;
 using Flights.Web.Helpers;
 using Flights.Web.Models;
+using FlightTicketsSystem.Web.Data.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,8 +17,8 @@ using System.Threading.Tasks;
 
 namespace Flights.Web.Controllers
 {
-    [Authorize(Roles = "Administrator")]
-    [Authorize(Roles = "Manager")]
+    //[Authorize(Roles = "Administrator")]
+    //[Authorize(Roles = "Manager")]
 
     public class AccountController : Controller
     {
@@ -25,17 +26,21 @@ namespace Flights.Web.Controllers
         private readonly IConfiguration _configuration;
         private readonly ICountryRepository _countryRepository;
         private readonly IMailHelper _mailHelper;
+        private readonly IDocumentTypeRepository _documentTypeRepository;
 
+        private RoleManager<IdentityRole> RoleManager;
         public AccountController(
             IUserHelper userHelper,
             IConfiguration configuration,
             ICountryRepository countryRepository,
-            IMailHelper mailHelper)
+            IMailHelper mailHelper,
+            IDocumentTypeRepository documentTypeRepository)
         {
             _userHelper = userHelper;
             _configuration = configuration;
             _countryRepository = countryRepository;
             _mailHelper = mailHelper;
+            _documentTypeRepository = documentTypeRepository;
         }
 
         public IActionResult Login()
@@ -79,20 +84,31 @@ namespace Flights.Web.Controllers
 
         public IActionResult Register()
         {
+            
+
+
             var model = new RegisterNewUserViewModel
             {
                 Countries = _countryRepository.GetComboCountries(),
-            };
+                DocumentTypes = _documentTypeRepository.GetComboDocumentTypes(),
+               //TODO  RolesList = RoleManager.Roles
+        };
+
+
+
+
 
             return this.View(model);
         }
+
+
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterNewUserViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = await _userHelper.GetUserByEmailAsync(model.Username);
+                var user = await _userHelper.GetUserByEmailAsync(model.EmailAddress);
                 if (user == null)
                 {
                     user = new User
@@ -100,10 +116,13 @@ namespace Flights.Web.Controllers
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         Email = model.EmailAddress,
-                        UserName = model.Username,
+                        UserName = model.EmailAddress,
                         Address = model.Address,
+                        Indicative = model.Indicative,
                         PhoneNumber = model.PhoneNumber,
-                        City = model.City
+                        City = model.City,
+                        CountryId = model.CountryId,
+                        
                     };
 
                     var result = await _userHelper.AddUserAsync(user, model.Password);
@@ -120,9 +139,9 @@ namespace Flights.Web.Controllers
                         token = myToken
                     }, protocol: HttpContext.Request.Scheme);
 
-                    _mailHelper.SendMail(model.FirstName + " " + model.LastName, "Email confirmation", $"<h1>Email Confirmation</h1>" +
-                         $"To allow the user, " +
-                         $"please click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+                    _mailHelper.SendMail(model.EmailAddress, "Email confirmation", $"<h1>Email Confirmation</h1>" +
+                        $"To allow the user, " +
+                        $"please click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
                     this.ViewBag.Message = "The instructions to allow your user has been sent to email.";
 
 
@@ -199,6 +218,9 @@ namespace Flights.Web.Controllers
                     return this.View(model);
                 }
 
+                ModelState.AddModelError(string.Empty, "Click the link on your email to change your password");
+
+
                 var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
 
                 var link = this.Url.Action(
@@ -206,10 +228,10 @@ namespace Flights.Web.Controllers
                     "Account",
                     new { token = myToken }, protocol: HttpContext.Request.Scheme);
 
-                _mailHelper.SendMail(model.Email, "Shop Password Reset", $"<h1>Shop Password Reset</h1>" +
+                _mailHelper.SendMail(model.Email, "HighFly Password Reset", $"<h1>HighFly Password Reset</h1>" +
                 $"To reset the password click in this link:</br></br>" +
                 $"<a href = \"{link}\">Reset Password</a>");
-                this.ViewBag.Message = "The instructions to recover your password has been sent to email.";
+                
                 return this.View();
 
             }
@@ -251,7 +273,7 @@ namespace Flights.Web.Controllers
             var model = new ChangeUserViewModel
             {
                 Countries = _countryRepository.GetComboCountries(),
-                //Cities = _countryRepository.GetComboCities(0)
+                DocumentTypes = _documentTypeRepository.GetComboDocumentTypes()
             };
 
 
@@ -298,9 +320,11 @@ namespace Flights.Web.Controllers
                 {
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
-                    user.City = model.City;
                     user.Address = model.Address;
-                    
+                    user.CountryId = model.CountryId;
+                    user.City = model.City;
+                    user.PhoneNumber = model.PhoneNumber;
+
 
                     var response = await _userHelper.UpdateUserAsync(user);
 
@@ -348,7 +372,7 @@ namespace Flights.Web.Controllers
                 }
                 else
                 {
-                    this.ModelState.AddModelError(string.Empty, "User no found.");
+                    this.ModelState.AddModelError(string.Empty, "User not found.");
                 }
             }
 

@@ -12,6 +12,10 @@ namespace FlightTicketsSystem.Web.Data.Entities
 
         public User User { get; set; }
 
+
+
+
+
         public ICollection<Ticket> Tickets { get; set; }
 
         // TODO Agenda maybe? 

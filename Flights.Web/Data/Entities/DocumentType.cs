@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Flights.Web.Data.Entities
 {
-    public class DocumentType
+    public class DocumentType : IEntity
     {
         public int Id { get; set; }
 

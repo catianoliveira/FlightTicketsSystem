@@ -1,12 +1,7 @@
 ﻿using Flights.Web.Data.Entities;
-using Flights.Web.Models;
-using GADB.Net;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Flights.Web.Data.Repositories
 {
@@ -33,7 +28,7 @@ namespace Flights.Web.Data.Repositories
 
         //}
 
-        
+
 
         //public async Task<int> DeleteCityAsync(City city)
         //{
@@ -108,9 +103,9 @@ namespace Flights.Web.Data.Repositories
 
         }
 
-        
 
-        
+
+
 
 
         //public async Task<Country> GetCountryAsync(City city)

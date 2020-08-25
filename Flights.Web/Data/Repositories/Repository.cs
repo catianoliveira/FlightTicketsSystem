@@ -22,7 +22,7 @@ namespace Flights.Web.Data
 
         public IEnumerable<Airport> GetAirports()
         {
-            return _context.Airports.OrderBy(a => a.Countries);
+           return _context.Airports.OrderBy(a => a.Country);
         }
 
         public Airplane GetAirplane(int id)

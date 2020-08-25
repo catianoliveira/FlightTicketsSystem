@@ -49,7 +49,7 @@ namespace Flights.Web.Data
 
         public IEnumerable<SelectListItem> GetComboAirports()
         {
-            var list = _context.Airports.Select(p => new SelectListItem
+            var list = _context.Airports.OrderBy(p => p.Country).Select(p => new SelectListItem
             {
                 Text = p.CompleteAirport,
                 Value = p.Id.ToString()

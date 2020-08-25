@@ -7,6 +7,8 @@ namespace Flights.Web.Data.Entities
 {
     public class Airport : IEntity
     {
+        Country country = new Country();
+
         public int Id { get; set; }
 
         [Required]
@@ -17,11 +19,12 @@ namespace Flights.Web.Data.Entities
         [Display(Name = "City")]
         public string City { get; set; }
 
-        
 
         [Required]
         [Display(Name = "Country")]
         public int CountryId { get; set; }
+
+
 
         public Country Country { get; set; }
 
@@ -40,7 +43,7 @@ namespace Flights.Web.Data.Entities
         {
             get
             {
-                return $"{this.IATA} {this.City} {this.CountryId}";
+                return $"{this.IATA} {this.City}";
             }
         }
     }

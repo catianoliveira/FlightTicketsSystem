@@ -26,10 +26,11 @@ namespace Flights.Web.Data
 
         public IEnumerable<SelectListItem> GetComboAirplanes()
         {
-            var list = _context.Airplanes.Select(p => new SelectListItem
+            var list = _context.Airplanes.OrderBy(p => p.Model).Select(p => new SelectListItem
             {
                 Text = p.Model,
                 Value = p.Id.ToString()
+
             }).ToList();
 
 

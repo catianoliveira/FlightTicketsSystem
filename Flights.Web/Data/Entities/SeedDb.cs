@@ -1,5 +1,5 @@
-﻿using Flights.Web.Data.Entities;
-using Flights.Web.Helpers;
+﻿using Flights.Web.Helpers;
+using Flights.Web.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -33,45 +33,9 @@ namespace Flights.Web.Data
             await _userHelper.CheckRoleAsync("Employee");
             await _userHelper.CheckRoleAsync("Intern");
 
-            var user = await _userHelper.GetUserByEmailAsync("catia.nunes.oliveira@formandos.cinel.pt");
 
-            if (user == null)
-            {
-                user = new User
-                {
-                    FirstName = "Cátia",
-                    LastName = "Oliveira",
-                    Email = "catia.nunes.oliveira@formandos.cinel.pt",
-                    UserName = "AdminCatia",
-                    PhoneNumber = "912345678",
-                    Address = "Rua da Luz 1 2ºEsq 1200-110 Lisboa",
+            //TODO indicatives
 
-                    //CityId = _context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
-                    //City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault()
-                };
-
-                var result = await _userHelper.AddUserAsync(user, "123456");
-
-
-
-                if (result != IdentityResult.Success)
-                {
-                    throw new InvalidOperationException("Could not create the user in seeder.");
-                }
-
-
-                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
-                await _userHelper.ConfirmEmailAsync(user, token);
-
-
-                var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");
-                if (!isInRole)
-                {
-                    await _userHelper.AddUserToRoleAsync(user, "Admin");
-                }
-
-                await _context.SaveChangesAsync();
-            }
 
             if (!_context.Countries.Any())
             {
@@ -102,25 +66,6 @@ namespace Flights.Web.Data
                 this.AddAirplanes("Airbus 123", 2, 15, 5, 20);
                 this.AddAirplanes("Boeing 787", 3, 30, 15, 45);
                 this.AddAirplanes("Boeing 781", 1, 40, 18, 58);
-
-                await _context.SaveChangesAsync();
-            }
-
-
-            if (!_context.Flights.Any())
-            {
-                this.AddFlights(1, 2, 3);
-                this.AddFlights(2, 5, 6);
-                this.AddFlights(3, 7, 8);
-
-                await _context.SaveChangesAsync();
-            }
-
-
-            if (!_context.DocumentTypes.Any())
-            {
-                this.AddDocuments("Identity Card");
-                this.AddDocuments("Passport");
 
                 await _context.SaveChangesAsync();
             }
@@ -4412,7 +4357,7 @@ namespace Flights.Web.Data
                 this.AddAirports("Namsos Høknesøra Airport", "Namsos", 167, "OSY");
                 this.AddAirports("Mo i Rana Airport Røssvoll", "Mo i Rana", 167, "MQN");
                 this.AddAirports("Rørvik Airport Ryum", "Rørvik", 167, "RVK");
-                this.AddAirports("Røst Airport", "Røst2",167,"RET");
+                this.AddAirports("Røst Airport", "Røst2", 167, "RET");
                 this.AddAirports("Sandane Airport (Anda)", "Sandane", 167, "SDN");
                 this.AddAirports("Sogndal Airport", "Sogndal", 167, "SOG");
                 this.AddAirports("Svolvær Helle Airport", "Svolvær", 167, "SVJ");
@@ -5352,7 +5297,7 @@ namespace Flights.Web.Data
                 this.AddAirports("Zell Am See Airport", "Zell am See", 14, "None");
                 this.AddAirports("RAAF Base Amberley", "Amberley", 13, "None");
                 this.AddAirports("Tindal Airport", "Katherine", 13, "KTR");
-                this.AddAirports("RAAF Williams Laverton Base", "Laverton", 13,"None");
+                this.AddAirports("RAAF Williams Laverton Base", "Laverton", 13, "None");
                 this.AddAirports("Nowra Airport", "Nowra", 13, "NOA");
                 this.AddAirports("Lutsk Airport", "Lutsk", 234, "UCK");
                 this.AddAirports("Chernihiv Shestovitsa Airport", "Chernigov", 234, "CEJ");
@@ -7817,14 +7762,79 @@ namespace Flights.Web.Data
                 this.AddAirports("Melitopol Air Base", "Melitopol", 234, "None");
 
                 await _context.SaveChangesAsync();
+
+            }
+
+
+
+            if (!_context.Flights.Any())
+            {
+                this.AddFlights(1, 2, 3);
+                this.AddFlights(2, 5, 6);
+                this.AddFlights(3, 7, 8);
+
+                await _context.SaveChangesAsync();
+            }
+
+
+            if (!_context.DocumentTypes.Any())
+            {
+                this.AddDocuments("Identity Card");
+                this.AddDocuments("Passport");
+
+                await _context.SaveChangesAsync();
+            }
+
+
+            var user = await _userHelper.GetUserByEmailAsync("ctoliveira44@gmail.com");
+
+            if (user == null)
+            {
+                user = new User
+                {
+                    FirstName = "Cátia",
+                    LastName = "Oliveira",
+                    Email = "ctoliveira44@gmail.com",
+                    UserName = "ctoliveira44@gmail.com",
+                    Indicative = "+351",
+                    PhoneNumber = "912345678",
+                    Address = "Rua da Luz 1 2ºEsq 1200-110 Lisboa",
+                    City = "Lisboa",
+                    CountryId = 179
+                };
+
+                var result = await _userHelper.AddUserAsync(user, "123456");
+
+
+
+                if (result != IdentityResult.Success)
+                {
+                    throw new InvalidOperationException("Could not create the user in seeder.");
+                }
+
+
+                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                await _userHelper.ConfirmEmailAsync(user, token);
+
+
+                var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");
+                if (!isInRole)
+                {
+                    await _userHelper.AddUserToRoleAsync(user, "Admin");
+                }
+
+                await _context.SaveChangesAsync();
+
+
             }
         }
+
 
         private void AddAirports(
         string name, string city, int country,
         string iata)
         {
-            
+
             _context.Airports.Add(new Airport
             {
                 Name = name,
@@ -7835,13 +7845,13 @@ namespace Flights.Web.Data
         }
 
         private void AddAirplanes(
-            string model, int quantity, 
+            string model, int quantity,
             int economic, int executive, int total)
         {
             _context.Airplanes.Add(new Airplane
             {
                 Model = model,
-                Quantity = quantity ,
+                Quantity = quantity,
                 EconomicSeats = economic,
                 ExecutiveSeats = executive,
                 Seats = total
@@ -7873,7 +7883,7 @@ namespace Flights.Web.Data
             _context.DocumentTypes.Add(new DocumentType
             {
                 Type = document
-            }) ;
+            });
         }
     }
 }

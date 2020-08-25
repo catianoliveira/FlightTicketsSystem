@@ -32,7 +32,8 @@ namespace Flights.Web.Controllers
         public IActionResult Index()
         {
             var model = _dataContext.Airports
-                .Include(c => c.Country);
+                .Include(c => c.Country)
+                .OrderBy(p => p.Country);
 
             return View(model.ToList());
         }

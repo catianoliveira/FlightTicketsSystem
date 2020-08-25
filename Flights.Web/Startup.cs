@@ -7,6 +7,7 @@ using Flights.Web.Data;
 using Flights.Web.Data.Entities;
 using Flights.Web.Data.Repositories;
 using Flights.Web.Helpers;
+using FlightTicketsSystem.Web.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -78,6 +79,7 @@ namespace Flights.Web
             services.AddScoped<IMailHelper, MailHelper>();
             services.AddScoped<IFlightRepository, FlightRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
+            services.AddScoped<IDocumentTypeRepository, DocumentTypeRepository>();
 
 
             services.Configure<CookiePolicyOptions>(options =>

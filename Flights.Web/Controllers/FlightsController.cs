@@ -34,7 +34,8 @@ namespace Flights.Web.Controllers
             var model = _context.Flights
                 .Include(a => a.Airplane)
                 .Include(a => a.DepartureAirport)
-                .Include(a => a.ArrivalAirport);
+                .Include(a => a.ArrivalAirport)
+                .OrderBy(p => p.DateTime);
 
             return View(model.ToList());
         }

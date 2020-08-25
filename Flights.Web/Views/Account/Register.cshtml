@@ -11,6 +11,13 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly"></div>
 
+
+            <div class="form-group">
+                <label asp-for="RoleID" class="control-label"></label>
+                <select asp-for="RoleID" asp-items="Model.RolesList" class="form-control"></select>
+                <span asp-validation-for="RoleID" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="FirstName">First Name</label>
                 <input asp-for="FirstName" class="form-control" />
@@ -23,10 +30,25 @@
                 <span asp-validation-for="LastName" class="text-warning"></span>
             </div>
 
+
             <div class="form-group">
-                <label asp-for="Address">Address</label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-warning"></span>
+                <label asp-for="DateOfBirth">DateOfBirth</label>
+                <input asp-for="DateOfBirth" class="form-control" />
+                <span asp-validation-for="DateOfBirth" class="text-warning"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="EmailAddress">Email Address</label>
+                <input asp-for="EmailAddress" class="form-control" />
+                <span asp-validation-for="EmailAddress" class="text-warning"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="Indicative">Indicative</label>
+                <input asp-for="Indicative" class="form-control" />
+                <span asp-validation-for="Indicative" class="text-warning"></span>
             </div>
 
             <div class="form-group">
@@ -35,13 +57,17 @@
                 <span asp-validation-for="PhoneNumber" class="text-warning"></span>
             </div>
 
-
+            <div class="form-group">
+                <label asp-for="Address">Address</label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-warning"></span>
+            </div>
 
 
             <div class="form-group">
-                <label asp-for="Username">Username</label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-warning"></span>
+                <label asp-for="City">City</label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-warning"></span>
             </div>
 
 
@@ -50,13 +76,6 @@
                 <select asp-for="CountryId" asp-items="Model.Countries" class="form-control"></select>
                 <span asp-validation-for="CountryId" class="text-danger"></span>
             </div>
-
-            <div class="form-group">
-                <label asp-for="City">City</label>
-                <input asp-for="City" class="form-control" />
-                <span asp-validation-for="City" class="text-warning"></span>
-            </div>
-
 
 
 

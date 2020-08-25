@@ -1,14 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Flights.Web.Data.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Flights.Web.Models
 {
     public class RegisterNewUserViewModel
     {
+
+        public string UserRole { get; set; }
+        public string RoleID { get; set; }
+        //public IEnumerable<AppRole> AllRoles { get; set; }
+        public IEnumerable<SelectListItem> RolesList { get; set; }
+
+
         [Required]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
@@ -17,12 +24,48 @@ namespace Flights.Web.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+
+        [Required]
+        public DateTime DateOfBirth { get; set; }
+
+
+
+        [Required]
+        public string Indicative { get; set; }
+
+
         [MaxLength(100, ErrorMessage = "The field {0} only can contain {1} characters.")]
         public string Address { get; set; }
 
 
+
+        [Required]
         [MaxLength(20, ErrorMessage = "The field {0} only can contain {1} characters.")]
         public string PhoneNumber { get; set; }
+
+
+
+
+        [Display(Name = "Document Type")]
+        [Required(ErrorMessage = "You must select a {0}")]
+        public int DocumentTypeId { get; set; }
+
+
+
+
+        public IEnumerable<SelectListItem> DocumentTypes { get; set; }
+
+
+
+
+        public DocumentType DocumentType { get; set; }
+
+
+
+
+        public string DocumentNumber { get; set; }
+
+
 
 
         [Display(Name = "City")]
@@ -37,13 +80,15 @@ namespace Flights.Web.Models
 
         public IEnumerable<SelectListItem> Countries { get; set; }
 
+
+        public Country Country { get; set; }
+
+
         [Required]
         [Display(Name = "E-mail")]
         public string EmailAddress { get; set; }
 
-        [Required]
-        [MaxLength(50, ErrorMessage = "The field {0} can only contain {1} characters.")]
-        public string Username { get; set; }
+
 
         [Required]
         public string Password { get; set; }

@@ -34,23 +34,34 @@ namespace Flights.Web.Data.Entities
 
         public Airport DepartureAirport { get; set; }
 
+
         public Airport ArrivalAirport { get; set; }
 
 
         public IEnumerable<SelectListItem> Airports { get; set; }
 
-        //public IEnumerable<Airport> DepartureAirports { get; set; }
+
+
+        public DateTime DateTime { get; set; }
 
 
 
+        public double EconomicPrice { get; set; }
 
+
+
+        public double ExecutivePrice { get; set; }
+
+
+
+        public List<Ticket> Tickets { get; set; }
 
 
         public string CompleteFlight
         {
             get
             {
-                return $"{this.AirplaneId}";
+                return $"{this.AirplaneId} {this.ArrivalAirportId}";
             }
         }
 
