@@ -28,6 +28,36 @@
                 <span asp-validation-for="ArrivalAirportId" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Date">Date</label>
+                <input asp-for="Date" class="form-control" />
+                <span asp-validation-for="Date" class="text-warning"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Time">Time</label>
+                <input asp-for="Time" class="form-control" />
+                <span asp-validation-for="Time" class="text-warning"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EconomyClassPrice">Economy Class Price</label>
+                <input asp-for="EconomyClassPrice" class="form-control" />
+                <span asp-validation-for="EconomyClassPrice" class="text-warning"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BusinessClassPrice">Business Class Price</label>
+                <input asp-for="BusinessClassPrice" class="form-control" />
+                <span asp-validation-for="BusinessClassPrice" class="text-warning"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstClassPrice">First Class Price</label>
+                <input asp-for="FirstClassPrice" class="form-control" />
+                <span asp-validation-for="FirstClassPrice" class="text-warning"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastMinutePrice">Last Minute Price %</label>
+                <input asp-for="LastMinutePrice" class="form-control" />
+                <span asp-validation-for="LastMinutePrice" class="text-warning"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </form>
@@ -37,34 +67,4 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#CountryId").change(function () {
-                $("#CityId").empty();
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("GetAirportsAsync")',
-                    dataType: 'json',
-                    data: { countryId: $("#CountryId").val() },
-                    success: function (cities) {
-                        debugger;
-                        $("#CityId").append('<option value="0">(Select a city...)</option>');
-                        $.each(cities, function (i, city) {
-                            $("#CityId").append('<option value="'
-                                + city.id + '">'
-                                + city.name + '</option>');
-                        });
-                    },
-                    error: function (ex) {
-                        alert('Failed to retrieve cities.' + ex);
-                    }
-                });
-                return false;
-            })
-        });
-    </script>
-}
-
 

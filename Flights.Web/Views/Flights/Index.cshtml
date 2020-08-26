@@ -16,10 +16,28 @@
                 @Html.DisplayNameFor(model => model.Airplanes)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Airports)
+                @Html.DisplayNameFor(model => model.DepartureAirport)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Airports)
+                @Html.DisplayNameFor(model => model.ArrivalAirport)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Time)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EconomyClassPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BusinessClassPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstClassPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastMinutePrice)
             </th>
             <th></th>
         </tr>
@@ -31,10 +49,28 @@
                 @Html.DisplayFor(modelItem => item.Airplane.Model)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DepartureAirport.CompleteAirport)
+                @Html.DisplayFor(modelItem => item.DepartureAirport.IATA)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ArrivalAirport.CompleteAirport)
+                @Html.DisplayFor(modelItem => item.ArrivalAirport.IATA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Time)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EconomyClassPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BusinessClassPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstClassPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastMinutePrice)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

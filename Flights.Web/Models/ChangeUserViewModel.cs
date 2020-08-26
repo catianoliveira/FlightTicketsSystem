@@ -1,4 +1,5 @@
 ﻿using Flights.Web.Data.Entities;
+using FlightTicketsSystem.Web.Data.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,13 @@ namespace Flights.Web.Models
         [Required]
         [MaxLength(50, ErrorMessage = "The field {0} can only contain {1} characters")]
         public string City { get; set; }
+
+
+
+        public int IndicativeId { get; set; }
+
+
+        public IEnumerable<SelectListItem> Indicatives { get; set; }
 
 
 

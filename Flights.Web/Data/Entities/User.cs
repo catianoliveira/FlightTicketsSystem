@@ -23,12 +23,10 @@ namespace Flights.Web.Data.Entities
 
 
         [Required]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DateOfBirth { get; set; }
 
 
-
-        [Required]
-        public string Indicative { get; set; }
 
 
 
@@ -75,6 +73,15 @@ namespace Flights.Web.Data.Entities
 
 
 
-        
+
+        [Required]
+        [Display(Name = "Indicative")]
+        public int IndicativeId { get; set; }
+
+
+
+
+        public IEnumerable<SelectListItem> Indicatives { get; set; }
+
     }
 }

@@ -16,13 +16,22 @@ namespace Flights.Web.Data.Entities
         [Required]
         public int Quantity { get; set; }
 
-        [Display(Name = "Economic Seats")]
+        [Display(Name = "Economy Class Seats")]
         [Required]
-        public int EconomicSeats { get; set; }
+        public int EconomyClassSeats { get; set; }
 
-        [Display(Name = "Executive Seats")]
+
+
+        [Display(Name = "Business Class Seats")]
         [Required]
-        public int ExecutiveSeats { get; set; }
+        public int BusinessClassSeats { get; set; }
+        
+
+
+
+        [Display(Name = "First Class Seats")]
+        [Required]
+        public int FirstClassSeats { get; set; }
 
         public int _seats;
 
@@ -32,7 +41,7 @@ namespace Flights.Web.Data.Entities
         {
             get
             {
-                return EconomicSeats + ExecutiveSeats;
+                return EconomyClassSeats + FirstClassSeats + BusinessClassSeats;
             }
 
             set
@@ -41,6 +50,6 @@ namespace Flights.Web.Data.Entities
             }
         }
 
-        public User User { get; set; }
+       //TODO ? public User User { get; set; }
     }
 }

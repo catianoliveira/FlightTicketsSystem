@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using FlightTicketsSystem.Web.CustomValidation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +13,7 @@ namespace Flights.Web.Data.Entities
     {
         public int Id { get; set; }
 
-
+        [Required]
         [Display(Name = "Airplane")]
         [Range(1, int.MaxValue, ErrorMessage = "You must select an airport.")]
         public int AirplaneId { get; set; }
@@ -24,10 +25,14 @@ namespace Flights.Web.Data.Entities
         public Airplane Airplane { get; set; }
 
 
+        [Required]
+        [Display(Name = "Departure Airport")]
         [ForeignKey("DepartureAirport")]
         public int DepartureAirportId { get; set; }
 
 
+        [Required]
+        [Display(Name = "Arrival Airport")]
         [ForeignKey("ArrivalAirport")]
         public int ArrivalAirportId { get; set; }
 
@@ -42,26 +47,82 @@ namespace Flights.Web.Data.Entities
 
 
 
-        public DateTime DateTime { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
+        [Display(Name = "Date"), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [GreaterThanDate]
+        public DateTime Date { get; set; }
 
 
 
-        public double EconomicPrice { get; set; }
+        [Required]
+        [DataType(DataType.Time)]
+        [Display(Name = "Time")]
+        public DateTime Time { get; set; }
 
 
 
-        public double ExecutivePrice { get; set; }
+        [Required]
+        [Display(Name = "Economy C. Price")]
+        public double EconomyClassPrice { get; set; }
+
+
+
+
+        [Required]
+        [Display(Name = "Business C. Price")]
+        public double BusinessClassPrice { get; set; }
+
+
+
+
+        [Required]
+        [Display(Name = "First C. Price")]
+        public double FirstClassPrice { get; set; }
+
+
+
+
+        [Required]
+        [Display(Name = "Last Minute Buy")]
+        public int LastMinutePrice { get; set; }
+
 
 
 
         public List<Ticket> Tickets { get; set; }
 
 
+        public string EconomyLastMinutePrice
+        {
+            get
+            {
+                return $"{((LastMinutePrice * EconomyClassPrice)/100)+EconomyClassPrice}";
+            }
+        }
+
+        public string BusinessLastMinutePrice
+        {
+            get
+            {
+                return $"{((LastMinutePrice * EconomyClassPrice) / 100) + EconomyClassPrice}";
+            }
+        }
+
+        public string FirstLastMinutePrice
+        {
+            get
+            {
+                return $"{((LastMinutePrice * FirstClassPrice) / 100) + FirstClassPrice}";
+            }
+        }
+
+
         public string CompleteFlight
         {
             get
             {
-                return $"{this.AirplaneId} {this.ArrivalAirportId}";
+                return $"{this.AirplaneId} - from {this.ArrivalAirportId} to {this.DepartureAirport}";
             }
         }
 

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -27,20 +28,24 @@ namespace Flights.Web.Controllers
         private readonly ICountryRepository _countryRepository;
         private readonly IMailHelper _mailHelper;
         private readonly IDocumentTypeRepository _documentTypeRepository;
+        private readonly IIndicativeRepository _indicativeRepository;
 
-        private RoleManager<IdentityRole> RoleManager;
+        //TODO private RoleManager<IdentityRole> RoleManager;
+
         public AccountController(
             IUserHelper userHelper,
             IConfiguration configuration,
             ICountryRepository countryRepository,
             IMailHelper mailHelper,
-            IDocumentTypeRepository documentTypeRepository)
+            IDocumentTypeRepository documentTypeRepository,
+            IIndicativeRepository indicativeRepository)
         {
             _userHelper = userHelper;
             _configuration = configuration;
             _countryRepository = countryRepository;
             _mailHelper = mailHelper;
             _documentTypeRepository = documentTypeRepository;
+            _indicativeRepository = indicativeRepository;
         }
 
         public IActionResult Login()
@@ -79,25 +84,22 @@ namespace Flights.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await _userHelper.LogoutAsync();
-            return this.RedirectToAction("Index", "Home");
+            return this.RedirectToAction("Login", "Account");
         }
+
+        
 
         public IActionResult Register()
         {
-            
-
 
             var model = new RegisterNewUserViewModel
             {
                 Countries = _countryRepository.GetComboCountries(),
                 DocumentTypes = _documentTypeRepository.GetComboDocumentTypes(),
+                Indicatives = _indicativeRepository.GetComboIndicatives()
+
                //TODO  RolesList = RoleManager.Roles
         };
-
-
-
-
-
             return this.View(model);
         }
 
@@ -108,6 +110,13 @@ namespace Flights.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                //if (model.DateOfBirth > DateTime.Today)
+                //{
+                //    ModelState.AddModelError("DateOfBirth", "Invalid date of birth");
+                //    return View(model);
+                //}
+
+
                 var user = await _userHelper.GetUserByEmailAsync(model.EmailAddress);
                 if (user == null)
                 {
@@ -118,7 +127,7 @@ namespace Flights.Web.Controllers
                         Email = model.EmailAddress,
                         UserName = model.EmailAddress,
                         Address = model.Address,
-                        Indicative = model.Indicative,
+                        IndicativeId = model.IndicativeId,
                         PhoneNumber = model.PhoneNumber,
                         City = model.City,
                         CountryId = model.CountryId,
@@ -273,7 +282,8 @@ namespace Flights.Web.Controllers
             var model = new ChangeUserViewModel
             {
                 Countries = _countryRepository.GetComboCountries(),
-                DocumentTypes = _documentTypeRepository.GetComboDocumentTypes()
+                DocumentTypes = _documentTypeRepository.GetComboDocumentTypes(),
+                Indicatives = _indicativeRepository.GetComboIndicatives()
             };
 
 
@@ -324,6 +334,7 @@ namespace Flights.Web.Controllers
                     user.CountryId = model.CountryId;
                     user.City = model.City;
                     user.PhoneNumber = model.PhoneNumber;
+                    user.IndicativeId = model.IndicativeId;
 
 
                     var response = await _userHelper.UpdateUserAsync(user);

@@ -1,4 +1,5 @@
 ﻿using Flights.Web.Data.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -57,5 +58,9 @@ namespace Flights.Web.Data
             _context.Set<T>().Update(entity); // o set faz a conversão de c# para bd (generico)
             await SaveAllAsync();
         }
+
+
+
+
     }
 }

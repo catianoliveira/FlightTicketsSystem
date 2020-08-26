@@ -1,5 +1,5 @@
 ﻿using Flights.Web.Data.Entities;
-using Microsoft.AspNetCore.Identity;
+using FlightTicketsSystem.Web.CustomValidation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -25,13 +25,24 @@ namespace Flights.Web.Models
         public string LastName { get; set; }
 
 
+
+
         [Required]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = false)]
+        [LessThanDate]
         public DateTime DateOfBirth { get; set; }
 
 
 
+
+
+
+
         [Required]
-        public string Indicative { get; set; }
+        public int IndicativeId { get; set; }
+        public IEnumerable<SelectListItem> Indicatives { get; set; }
+
+
 
 
         [MaxLength(100, ErrorMessage = "The field {0} only can contain {1} characters.")]

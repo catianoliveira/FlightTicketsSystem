@@ -53,10 +53,13 @@
                                     @Html.DisplayNameFor(model => model.Quantity)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.EconomicSeats)
+                                    @Html.DisplayNameFor(model => model.EconomyClassSeats)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.ExecutiveSeats)
+                                    @Html.DisplayNameFor(model => model.BusinessClassSeats)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.FirstClassSeats)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.Seats)
@@ -67,28 +70,31 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Model)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Quantity)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EconomicSeats)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ExecutiveSeats)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Seats)
-                                    </td>
-                                    <td>
-                                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Model)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EconomyClassSeats)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.BusinessClassSeats)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FirstClassSeats)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Seats)
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                </td>
+                            </tr>
                             }
                         </tbody>
                         <tfoot>
@@ -100,10 +106,13 @@
                                     @Html.DisplayNameFor(model => model.Quantity)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.EconomicSeats)
+                                    @Html.DisplayNameFor(model => model.EconomyClassSeats)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.ExecutiveSeats)
+                                    @Html.DisplayNameFor(model => model.BusinessClassSeats)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.FirstClassSeats)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.Seats)

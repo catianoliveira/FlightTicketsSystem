@@ -1,7 +1,9 @@
 ﻿using Flights.Web.Data.Entities;
+using FlightTicketsSystem.Web.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Linq;
 
 namespace Flights.Web.Data
@@ -17,6 +19,11 @@ namespace Flights.Web.Data
         public DbSet<Flight> Flights { get; set; }
 
         public DbSet<DocumentType> DocumentTypes { get; set; }
+
+        public DbSet<Indicative> Indicatives { get; set; }
+
+        public DbSet<Ticket> Tickets { get; set; }
+
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -48,6 +55,9 @@ namespace Flights.Web.Data
 
             base.OnModelCreating(modelBuilder);
         }
+
+        //TODO quando tiver o ticket
+        public DbSet<Flights.Web.Data.Entities.Ticket> Ticket { get; set; }
 
         //TODO quando tiver o ticket
     }

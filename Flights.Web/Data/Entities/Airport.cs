@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Remotion.Linq.Clauses.ResultOperators;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Flights.Web.Data.Entities
 {
@@ -43,7 +45,10 @@ namespace Flights.Web.Data.Entities
         {
             get
             {
-                return $"{this.IATA} {this.City}";
+                return $"{this.IATA} {this.City} {this.CountryId}";
+
+                //Country.Where(c => c.Text == CountryId)
+                //return $"{this.IATA} {this.City} {this.Countries.Where(c => c.Text = country)}";
             }
         }
     }

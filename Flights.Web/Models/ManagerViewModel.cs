@@ -6,19 +6,10 @@ using System.Threading.Tasks;
 
 namespace FlightTicketsSystem.Web.Data.Entities
 {
-    public class Client
+    public class ManagerViewModel
     {
         public int Id { get; set; }
 
         public User User { get; set; }
-
-
-
-
-
-        public ICollection<Ticket> Tickets { get; set; }
-
-        // TODO Agenda maybe? 
-        //public ICollection<Agenda> Agendas { get; set; }
     }
 }
