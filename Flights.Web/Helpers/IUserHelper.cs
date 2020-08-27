@@ -1,6 +1,7 @@
 ﻿using Flights.Web.Data.Entities;
 using Flights.Web.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,7 @@ namespace Flights.Web.Helpers
 
         Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
 
+        IEnumerable<SelectListItem> GetComboRoles();
 
     }
 

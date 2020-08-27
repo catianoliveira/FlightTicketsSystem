@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlightTicketsSystem.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200826171404_InitialDb")]
+    [Migration("20200827173951_InitialDb")]
     partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,8 +36,6 @@ namespace FlightTicketsSystem.Web.Migrations
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasMaxLength(50);
-
-                    b.Property<int>("Quantity");
 
                     b.Property<int>("Seats");
 
@@ -163,7 +161,7 @@ namespace FlightTicketsSystem.Web.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Ticket");
+                    b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("Flights.Web.Data.Entities.User", b =>

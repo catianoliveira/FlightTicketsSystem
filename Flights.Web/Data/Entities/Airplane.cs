@@ -13,8 +13,7 @@ namespace Flights.Web.Data.Entities
         [MaxLength(50)]
         public string Model { get; set; }
 
-        [Required]
-        public int Quantity { get; set; }
+        
 
         [Display(Name = "Economy Class Seats")]
         [Required]

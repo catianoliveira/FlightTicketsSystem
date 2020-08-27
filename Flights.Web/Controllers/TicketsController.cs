@@ -22,7 +22,7 @@ namespace FlightTicketsSystem.Web.Controllers
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            var dataContext = _context.Ticket.Include(t => t.DocumentType).Include(t => t.Flight);
+            var dataContext = _context.Tickets.Include(t => t.DocumentType).Include(t => t.Flight);
             return View(await dataContext.ToListAsync());
         }
 
@@ -34,7 +34,7 @@ namespace FlightTicketsSystem.Web.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.Ticket
+            var ticket = await _context.Tickets
                 .Include(t => t.DocumentType)
                 .Include(t => t.Flight)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -80,7 +80,7 @@ namespace FlightTicketsSystem.Web.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.Ticket.FindAsync(id);
+            var ticket = await _context.Tickets.FindAsync(id);
             if (ticket == null)
             {
                 return NotFound();
@@ -135,7 +135,7 @@ namespace FlightTicketsSystem.Web.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.Ticket
+            var ticket = await _context.Tickets
                 .Include(t => t.DocumentType)
                 .Include(t => t.Flight)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -152,15 +152,15 @@ namespace FlightTicketsSystem.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var ticket = await _context.Ticket.FindAsync(id);
-            _context.Ticket.Remove(ticket);
+            var ticket = await _context.Tickets.FindAsync(id);
+            _context.Tickets.Remove(ticket);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool TicketExists(string id)
         {
-            return _context.Ticket.Any(e => e.Id == id);
+            return _context.Tickets.Any(e => e.Id == id);
         }
     }
 }

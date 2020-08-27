@@ -48,9 +48,8 @@ namespace Flights.Web.Data.Entities
 
 
         [Required]
-        [DataType(DataType.Date)]
-        [Display(Name = "Date"), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        [GreaterThanDate]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = false)]
+        [GreaterThanDateAttributte]
         public DateTime Date { get; set; }
 
 

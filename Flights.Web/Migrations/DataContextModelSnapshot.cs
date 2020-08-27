@@ -35,8 +35,6 @@ namespace FlightTicketsSystem.Web.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<int>("Quantity");
-
                     b.Property<int>("Seats");
 
                     b.HasKey("Id");
@@ -161,7 +159,7 @@ namespace FlightTicketsSystem.Web.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Ticket");
+                    b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("Flights.Web.Data.Entities.User", b =>

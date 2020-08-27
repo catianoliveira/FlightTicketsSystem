@@ -1,6 +1,8 @@
-﻿using Flights.Web.Data.Entities;
+﻿using Flights.Web.Data;
+using Flights.Web.Data.Entities;
 using Flights.Web.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +15,18 @@ namespace Flights.Web.Helpers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly DataContext _context;
 
         public UserHelper(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            DataContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _context = context;
         }
 
         public async Task<IdentityResult> AddUserAsync(User user, string password)
@@ -67,6 +72,24 @@ namespace Flights.Web.Helpers
         public async Task<string> GeneratePasswordResetTokenAsync(User user)
         {
             return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
+        public IEnumerable<SelectListItem> GetComboRoles()
+        {
+            var list = _context.Roles.Select(c => new SelectListItem
+            {
+                Text = c.Name,
+                Value = c.Id.ToString()
+
+            }).OrderBy(l => l.Text).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "(Select a role...)",
+                Value = "0"
+            });
+
+            return list;
         }
 
         public async Task<User> GetUserByEmailAsync(string email)

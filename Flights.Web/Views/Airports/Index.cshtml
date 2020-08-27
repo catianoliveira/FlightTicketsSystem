@@ -1,22 +1,12 @@
 ﻿@model IEnumerable<Flights.Web.Data.Entities.Airport>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FlyHigh</title>
-
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="~/~/plugins/fontawesome-free/css/all.min.css">
-    <!-- DataTables -->
-    <link rel="stylesheet" href="~/~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="~/~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="~/~/dist/css/adminlte.min.css">
+    <title>Airports - HighFly</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
 </head>
 <body class="hold-transition sidebar-mini">
     <!-- Content Wrapper. Contains page content -->
@@ -43,11 +33,11 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <table id="example1" class="table table-bordered table-striped">
+                    <table id="airports" class="display table table-bordered table-striped" style="width:100%">
                         <thead>
                             <tr>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.Name)
+                                    @Html.DisplayNameFor(model => model.IATA)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.City)
@@ -55,41 +45,40 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.Countries)
                                 </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.IATA)
-                                </th>
+
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.City)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Country.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.IATA)
-                                    </td>
+                                @using (Html.BeginForm("Delete", "Airports", new { id = item.Id }))
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IATA)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.City)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Country.Name)
+                                        </td>
 
-                                    <td>
-                                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                                    </td>
-                                </tr>
+                                        <td>
+                                            <a class="btn btn-info pull-right" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                                            <a class="btn btn-primary pull-right" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                            <input type="submit" value="Delete" class="btn btn-danger pull-right"
+                                                   onclick="return confirm('Are you sure you want to delete @item.Name?')" />
+                                        </td>
+                                    </tr>
+                                }
                             }
                         </tbody>
                         <tfoot>
                             <tr>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.Name)
+                                    @Html.DisplayNameFor(model => model.IATA)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.City)
@@ -97,9 +86,7 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.Countries)
                                 </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.IATA)
-                                </th>
+
                                 <th></th>
                             </tr>
                         </tfoot>
@@ -116,42 +103,20 @@
     <!-- /.content -->
     <!-- /.content-wrapper -->
     <!-- ./wrapper -->
-    <!-- jQuery -->
-    <script src="~/~/plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="~/~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- DataTables -->
-    <script src="~/~/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="~/~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="~/~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="~/~/dist/js/adminlte.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="~/~/dist/js/demo.js"></script>
-    <!-- page script -->
 
     @section Scripts {
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-
         <script>
 
-            $(function () {
-                $("#example1").DataTable({
-                    "responsive": true,
-                    "autoWidth": false,
-                });
-                $('#example2').DataTable({
-                    "paging": true,
-                    "lengthChange": false,
-                    "searching": false,
-                    "ordering": true,
-                    "info": true,
-                    "autoWidth": false,
-                    "responsive": true,
-                });
+            $(document).ready(function () {
+                $('#airports').DataTable();
             });</script>
-    </body>
+
+        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    }
+
+
+</body>
 </html>
-        }

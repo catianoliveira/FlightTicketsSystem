@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Linq;
+using FlightTicketsSystem.Web.Models;
 
 namespace Flights.Web.Data
 {
@@ -56,9 +57,5 @@ namespace Flights.Web.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        //TODO quando tiver o ticket
-        public DbSet<Flights.Web.Data.Entities.Ticket> Ticket { get; set; }
-
-        //TODO quando tiver o ticket
     }
 }

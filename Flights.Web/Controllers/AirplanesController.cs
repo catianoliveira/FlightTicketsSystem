@@ -118,30 +118,22 @@ namespace Flights.Web.Controllers
             return View(airplane);
         }
 
-        // GET: Airplanes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var airplane = await _airplaneRepository.GetByIdAsync(id.Value);
-            if (airplane == null)
-            {
-                return NotFound();
-            }
 
-            return View(airplane);
-        }
 
         // POST: Airplanes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            var airplane = await _airplaneRepository.GetByIdAsync(id);
+            if (id == null)
+            {
+                //TODO return new NotFoundViewResult("NotFound");
+            }
+            
+            var airplane = await _airplaneRepository.GetByIdAsync(id.Value);
             await _airplaneRepository.DeleteAsync(airplane);
+
             return RedirectToAction(nameof(Index));
         }
     }

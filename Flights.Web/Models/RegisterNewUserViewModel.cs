@@ -10,10 +10,12 @@ namespace Flights.Web.Models
     public class RegisterNewUserViewModel
     {
 
-        public string UserRole { get; set; }
         public string RoleID { get; set; }
-        //public IEnumerable<AppRole> AllRoles { get; set; }
-        public IEnumerable<SelectListItem> RolesList { get; set; }
+
+
+
+        public IEnumerable<SelectListItem> RoleChoices { get; set; }
+
 
 
         [Required]
@@ -31,9 +33,6 @@ namespace Flights.Web.Models
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = false)]
         [LessThanDate]
         public DateTime DateOfBirth { get; set; }
-
-
-
 
 
 

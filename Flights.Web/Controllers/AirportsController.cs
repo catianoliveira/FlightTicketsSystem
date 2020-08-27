@@ -17,8 +17,8 @@ namespace Flights.Web.Controllers
         private readonly DataContext _dataContext;
 
         public AirportsController(
-            IAirportRepository airportRepository, 
-            ICountryRepository countryRepository, 
+            IAirportRepository airportRepository,
+            ICountryRepository countryRepository,
             IUserHelper userHelper,
             DataContext dataContext)
         {
@@ -52,7 +52,17 @@ namespace Flights.Web.Controllers
                 return NotFound();
             }
 
-            return View(airport);
+
+            var model = new Airport
+            {
+                IATA = airport.IATA,
+                City = airport.City,
+                Name = airport.Name,
+                Country = airport.Country,
+                Countries = _countryRepository.GetComboCountries()
+            };
+
+            return View(model);
         }
 
         // GET: Airports/Create
@@ -84,38 +94,21 @@ namespace Flights.Web.Controllers
 
 
 
-        // GET: Airports/Delete/5
+        // POST: Airports/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                //TODO return new NotFoundViewResult("NotFound");
             }
 
             var airport = await _airportRepository.GetByIdAsync(id.Value);
-            if (airport == null)
-            {
-                return NotFound();
-            }
-
-            return View(airport);
-        }
-
-        // POST: Airports/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var airport = await _airportRepository.GetByIdAsync(id);
             await _airportRepository.DeleteAsync(airport);
+
             return RedirectToAction(nameof(Index));
         }
-
-        private async Task<bool> AirportExists(Airport airport)
-        {
-            return await _airportRepository.ExistAsync(airport.Id);
-        }
-
 
         // GET: Airplanes/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -125,14 +118,23 @@ namespace Flights.Web.Controllers
                 return NotFound();
             }
 
-            var airplane = await _airportRepository.GetByIdAsync(id.Value);
+            var airport = await _airportRepository.GetByIdAsync(id.Value);
 
-            if (airplane == null)
+            if (airport == null)
             {
                 return NotFound();
             }
 
-            return View(airplane);
+            var model = new Airport
+            {
+                IATA = airport.IATA,
+                City = airport.City,
+                Name = airport.Name,
+                Country = airport.Country,
+                Countries = _countryRepository.GetComboCountries()
+            };
+
+            return View(model);
         }
 
         // POST: Airplanes/Edit/5

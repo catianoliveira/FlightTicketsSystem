@@ -813,7 +813,7 @@ namespace Flights.Web.Data
                 this.AddAirports("Kalixfors Airport", "Kalixfors", 214, "None");
                 this.AddAirports("Spangdahlem Air Base", "Spangdahlem", 84, "SPM");
                 this.AddAirports("Ramstein Air Base", "Ramstein", 84, "RMS");
-                this.AddAirports("[Duplicate] Giebelstadt Army Air Field", "Giebelstadt", 84, "GHF");
+                this.AddAirports("Giebelstadt Army Air Field", "Giebelstadt", 84, "GHF");
                 this.AddAirports("Bückeburg Air Base", "Brueckeburg", 84, "None");
                 this.AddAirports("Celle Airport", "Celle", 84, "ZCN");
                 this.AddAirports("Rheine Bentlage Air Base", "Rheine-brentlange", 84, "None");
@@ -4587,7 +4587,7 @@ namespace Flights.Web.Data
                 this.AddAirports("Islita Airport", "Nandayure", 54, "PBP");
                 this.AddAirports("Puerto Jimenez Airport", "Puerto Jimenez", 54, "PJM");
                 this.AddAirports("Tobias Bolanos International Airport", "San Jose", 54, "SYQ");
-                this.AddAirports("(Duplicate) Playa Samara Airport", "Playa Samara", 54, "None");
+                this.AddAirports("Playa Samara Airport", "Playa Samara", 54, "None");
                 this.AddAirports("Jérémie Airport", "Jeremie", 97, "JEE");
                 this.AddAirports("Port-de-Paix Airport", "Port-de-Paix", 97, "PAX");
                 this.AddAirports("Cayo Coco Airport", "Cayo Coco", 57, "None");
@@ -7223,13 +7223,13 @@ namespace Flights.Web.Data
                 this.AddAirports("Nenana Municipal Airport", "Nenana", 237, "ENN");
                 this.AddAirports("Wasilla Airport", "Wasilla", 237, "WWA");
                 this.AddAirports("Gangshan Air Force Base", "Gangshan", 217, "None");
-                this.AddAirports("Asahikawa Airfield", "", 111, "None");
+                this.AddAirports("Asahikawa Airfield", "Asahikawa", 111, "None");
                 this.AddAirports("Iwakuni Marine Corps Air Station", "Iwakuni", 111, "IWK");
-                this.AddAirports("Utsunomiya Airport", "", 111, "None");
+                this.AddAirports("Utsunomiya Airport", "Utsunomiya", 111, "None");
                 this.AddAirports("Jungwon Air Base/Chungju Airport", "", 117, "None");
                 this.AddAirports("Ie Jima Airport", "Ie", 111, "IEJ");
                 this.AddAirports("Allah Valley Airport", "Surallah", 176, "AAV");
-                this.AddAirports("Bislig Airport", "", 176, "BPH");
+                this.AddAirports("Bislig Airport", "Bislig", 176, "BPH");
                 this.AddAirports("Mati National Airport", "", 176, "MXI");
                 this.AddAirports("Presidente Néstor Kirchner Regionsl Airport", "Villa Maria", 10, "None");
                 this.AddAirports("Chafei Amsei Airport", "Barretos", 30, "BAT");
@@ -7256,7 +7256,7 @@ namespace Flights.Web.Data
                 this.AddAirports("Chelkar Airport", "Chelkar", 114, "None");
                 this.AddAirports("Kyzyl-Syr Airport", "Kyzyl-Syr", 184, "None");
                 this.AddAirports("Vilyuisk Airport", "Vilyuisk", 184, "VYI");
-                this.AddAirports("Belaya Gora Airport", "", 184, "BGN");
+                this.AddAirports("Belaya Gora Airport", "Belaya", 184, "BGN");
                 this.AddAirports("Dzhermuk Airport", "Dzhermuk", 11, "None");
                 this.AddAirports("Kamenny Ruchey Naval Air Base", "Sovetskaya Gavan", 184, "None");
                 this.AddAirports("Maygatka Airport.", "Sovetskaya Gavan", 184, "GVN");
@@ -7298,7 +7298,7 @@ namespace Flights.Web.Data
                 this.AddAirports("Maksimovka Airport", "Ufa", 184, "None");
                 this.AddAirports("Buguruslan Severny Airport", "Buguruslan", 184, "None");
                 this.AddAirports("Bezymyanka Airfield", "Samara", 184, "None");
-                this.AddAirports("Ratnagiri Airport", "", 102, "RTC");
+                this.AddAirports("Ratnagiri Airport", "Ratnagiri", 102, "RTC");
                 this.AddAirports("Hingurakgoda Air Force Base", "Polonnaruwa Town", 209, "HIM");
                 this.AddAirports("Kazi Nazrul Islam Airport", "Durgapur", 102, "RDP");
                 this.AddAirports("Ambala Air Force Station", "", 102, "None");
@@ -7423,7 +7423,7 @@ namespace Flights.Web.Data
                 this.AddAirports("Nypari Airport", "Angatja Homeland", 13, "None");
                 this.AddAirports("Ihtiman Airfield", "Ihtiman", 34, "None");
                 this.AddAirports("Vogtareuth Airport", "Vogtareuth", 84, "None");
-                this.AddAirports("[Duplicate] Illertissen see EDMI - ED-0425 location moved out-of-the way", "Not Specified", 158, "None");
+                this.AddAirports("Illertissen see EDMI - ED-0425 location moved out-of-the way", "Not Specified", 158, "None");
                 this.AddAirports("New Smyrna Beach Municipal Airport", "New Smyrna Beach", 237, "None");
                 this.AddAirports("Las Vegas Helicopters Heliport", "Las vegas", 237, "None");
                 this.AddAirports("Delta Camp Airport", "Delta Camp", 29, "None");
@@ -8100,7 +8100,6 @@ namespace Flights.Web.Data
             _context.Airplanes.Add(new Airplane
             {
                 Model = model,
-                Quantity = quantity,
                 EconomyClassSeats = economy,
                 BusinessClassSeats = business,
                 FirstClassSeats = first,

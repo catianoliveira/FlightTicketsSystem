@@ -1,11 +1,14 @@
-﻿using Flights.Web.Data.Entities;
+﻿using Flights.Web.Data;
+using Flights.Web.Data.Entities;
 using Flights.Web.Data.Repositories;
 using Flights.Web.Helpers;
 using Flights.Web.Models;
 using FlightTicketsSystem.Web.Data.Repositories;
+using FlightTicketsSystem.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -30,7 +33,9 @@ namespace Flights.Web.Controllers
         private readonly IDocumentTypeRepository _documentTypeRepository;
         private readonly IIndicativeRepository _indicativeRepository;
 
-        //TODO private RoleManager<IdentityRole> RoleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<User> _userManager;
+        private readonly DataContext _context;
 
         public AccountController(
             IUserHelper userHelper,
@@ -38,7 +43,10 @@ namespace Flights.Web.Controllers
             ICountryRepository countryRepository,
             IMailHelper mailHelper,
             IDocumentTypeRepository documentTypeRepository,
-            IIndicativeRepository indicativeRepository)
+            IIndicativeRepository indicativeRepository,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<User> userManager,
+            DataContext context)
         {
             _userHelper = userHelper;
             _configuration = configuration;
@@ -46,6 +54,9 @@ namespace Flights.Web.Controllers
             _mailHelper = mailHelper;
             _documentTypeRepository = documentTypeRepository;
             _indicativeRepository = indicativeRepository;
+            _roleManager = roleManager;
+            _userManager = userManager;
+            _context = context;
         }
 
         public IActionResult Login()
@@ -54,7 +65,7 @@ namespace Flights.Web.Controllers
             {
                 return this.RedirectToAction("Index", "Home");
             }
-            
+
 
             return this.View();
         }
@@ -87,7 +98,7 @@ namespace Flights.Web.Controllers
             return this.RedirectToAction("Login", "Account");
         }
 
-        
+
 
         public IActionResult Register()
         {
@@ -96,12 +107,13 @@ namespace Flights.Web.Controllers
             {
                 Countries = _countryRepository.GetComboCountries(),
                 DocumentTypes = _documentTypeRepository.GetComboDocumentTypes(),
-                Indicatives = _indicativeRepository.GetComboIndicatives()
-
-               //TODO  RolesList = RoleManager.Roles
-        };
+                Indicatives = _indicativeRepository.GetComboIndicatives(),
+                RoleChoices = _userHelper.GetComboRoles()
+            };
             return this.View(model);
         }
+
+
 
 
 
@@ -115,6 +127,7 @@ namespace Flights.Web.Controllers
                 //    ModelState.AddModelError("DateOfBirth", "Invalid date of birth");
                 //    return View(model);
                 //}
+
 
 
                 var user = await _userHelper.GetUserByEmailAsync(model.EmailAddress);
@@ -131,7 +144,7 @@ namespace Flights.Web.Controllers
                         PhoneNumber = model.PhoneNumber,
                         City = model.City,
                         CountryId = model.CountryId,
-                        
+
                     };
 
                     var result = await _userHelper.AddUserAsync(user, model.Password);
@@ -240,7 +253,7 @@ namespace Flights.Web.Controllers
                 _mailHelper.SendMail(model.Email, "HighFly Password Reset", $"<h1>HighFly Password Reset</h1>" +
                 $"To reset the password click in this link:</br></br>" +
                 $"<a href = \"{link}\">Reset Password</a>");
-                
+
                 return this.View();
 
             }
@@ -394,5 +407,33 @@ namespace Flights.Web.Controllers
         {
             return View();
         }
+
+        //[Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                IdentityRole identityRole = new IdentityRole
+                {
+                    Name = model.Role
+                };
+
+                IdentityResult result = await _roleManager.CreateAsync(identityRole);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+                foreach (IdentityError error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+
+            return View();
+        }
+
     }
 }
