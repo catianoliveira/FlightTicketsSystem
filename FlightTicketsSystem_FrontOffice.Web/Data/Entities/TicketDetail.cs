@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Flights.Web.Data.Entities
+namespace FlightTicketsSystem_FrontOffice.Web.Data.Entities
 {
-    public class TicketDetail
+    public class TicketDetail : IEntity
     {
         public int Id { get; set; }
+
+
+        public User User { get; set; }
+
+
 
         [Required]
         public Flight Flight { get; set; }
@@ -25,7 +26,7 @@ namespace Flights.Web.Data.Entities
         public double Passangers { get; set; }
 
 
-        
+
 
 
         [DisplayFormat(DataFormatString = "{0:C2}")]

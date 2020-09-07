@@ -1,10 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Flights.Web.Data.Entities
 {
     public class Airplane : IEntity
     {
         public int Id { get; set; }
+
+
+        public User User { get; set; }
+
+
+
+
 
         //TODO WasDeleted
         //public bool WasDeleted { get; set; }
@@ -17,22 +25,16 @@ namespace Flights.Web.Data.Entities
 
         [Display(Name = "Economy Class Seats")]
         [Required]
-        public int EconomyClassSeats { get; set; }
+        public int EconomySeats { get; set; }
 
 
 
         [Display(Name = "Business Class Seats")]
         [Required]
-        public int BusinessClassSeats { get; set; }
+        public int BusinessSeats { get; set; }
         
 
 
-
-        [Display(Name = "First Class Seats")]
-        [Required]
-        public int FirstClassSeats { get; set; }
-
-        public int _seats;
 
         [Required]
         [Display(Name = "Total Seats")]
@@ -40,12 +42,7 @@ namespace Flights.Web.Data.Entities
         {
             get
             {
-                return EconomyClassSeats + FirstClassSeats + BusinessClassSeats;
-            }
-
-            set
-            {
-                _seats = value;
+                return EconomySeats + BusinessSeats;
             }
         }
 

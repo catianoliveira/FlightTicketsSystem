@@ -31,11 +31,9 @@ namespace Flights.Web.Controllers
         // GET: Airports
         public IActionResult Index()
         {
-            var model = _dataContext.Airports
-                .Include(c => c.Country)
-                .OrderBy(p => p.Country);
+            var model = _airportRepository.GetAll().OrderBy(p => p.Country).ToList();
 
-            return View(model.ToList());
+            return View(model);
         }
 
         // GET: Airports/Details/5
@@ -59,7 +57,6 @@ namespace Flights.Web.Controllers
                 City = airport.City,
                 Name = airport.Name,
                 Country = airport.Country,
-                Countries = _countryRepository.GetComboCountries()
             };
 
             return View(model);
@@ -68,12 +65,7 @@ namespace Flights.Web.Controllers
         // GET: Airports/Create
         public IActionResult Create()
         {
-            var model = new Airport
-            {
-                Countries = _countryRepository.GetComboCountries(),
-            };
-
-            return this.View(model);
+            return this.View();
         }
 
         // POST: Airports/Create
@@ -130,8 +122,7 @@ namespace Flights.Web.Controllers
                 IATA = airport.IATA,
                 City = airport.City,
                 Name = airport.Name,
-                Country = airport.Country,
-                Countries = _countryRepository.GetComboCountries()
+                Country = airport.Country
             };
 
             return View(model);
@@ -168,3 +159,4 @@ namespace Flights.Web.Controllers
         }
     }
 }
+

@@ -12,6 +12,17 @@ namespace Flights.Web.Data.Entities
     {
         //TODO cada user tem uma classe e um controlador
 
+        public string RoleID { get; set; }
+
+
+        public IEnumerable<SelectListItem> RoleChoices { get; set; }
+
+
+        public IdentityRole Role { get; set; }
+
+
+
+
         [Required]
         public string FirstName { get; set; }
 
@@ -83,5 +94,8 @@ namespace Flights.Web.Data.Entities
 
         public IEnumerable<SelectListItem> Indicatives { get; set; }
 
+
+
+        public User user { get; set; }
     }
 }

@@ -1,21 +1,10 @@
 ﻿@model Flights.Web.Data.Entities.Ticket
 
-@{
-    ViewData["Title"] = "Create";
-}
-
-<h2>Create</h2>
-
-<h4>Ticket</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="FlightID" class="control-label"></label>
-                <select asp-for="FlightID" class ="form-control" asp-items="ViewBag.FlightID"></select>
-            </div>
             <div class="form-group">
                 <label asp-for="PassangerName" class="control-label"></label>
                 <input asp-for="PassangerName" class="form-control" />
@@ -23,12 +12,28 @@
             </div>
             <div class="form-group">
                 <label asp-for="DocumentTypeId" class="control-label"></label>
-                <select asp-for="DocumentTypeId" class ="form-control" asp-items="ViewBag.DocumentTypeId"></select>
+                <select asp-for="DocumentTypeId" asp-items="Model.DocumentTypes" class="form-control"></select>
+                <span asp-validation-for="DocumentTypeId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DocumentNumber" class="control-label"></label>
                 <input asp-for="DocumentNumber" class="form-control" />
                 <span asp-validation-for="DocumentNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DepartureAirportId" class="control-label"></label>
+                <select asp-for="DepartureAirportId" asp-items="Model.DepartureAirports" class="form-control"></select>
+                <span asp-validation-for="DepartureAirportId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ArrivalAirportId" class="control-label"></label>
+                <select asp-for="ArrivalAirportId" asp-items="Model.ArrivalAirports" class="form-control"></select>
+                <span asp-validation-for="ArrivalAirportId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TravelClass" class="control-label"></label>
+                <input asp-for="TravelClass" class="form-control" />
+                <span asp-validation-for="TravelClass" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SeatNumber" class="control-label"></label>
@@ -48,8 +53,33 @@
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#DepartureAirportId").change(function () {
+                $("#ArrivalAirportId").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetArrivalsAsync")',
+                    dataType: 'json',
+                    data: { departuresId: $("#DepartureAirportId").val() },
+                    success: function (arrivals) {
+                        debugger;
+                        $("#ArrivalAirportId").append('<option value="0">(Select an airport...)</option>');
+                        $.each(arrivals, function (i, arrival) {
+                            $("#ArrivalAirportId").append('<option value="'
+                                + arrivals.id + '">'
+                                + arrivals.completeAirport + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve airports.' + ex);
+                    }
+                });
+                return false;
+            })
+        });
+    </script>
+}
 

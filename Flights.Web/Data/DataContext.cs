@@ -3,9 +3,7 @@ using FlightTicketsSystem.Web.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 using System.Linq;
-using FlightTicketsSystem.Web.Models;
 
 namespace Flights.Web.Data
 {
@@ -56,6 +54,9 @@ namespace Flights.Web.Data
 
             base.OnModelCreating(modelBuilder);
         }
+
+        //TODO quando tiver o ticket
+        public DbSet<FlightTicketsSystem.Web.Models.CreateRoleViewModel> CreateRoleViewModel { get; set; }
 
     }
 }

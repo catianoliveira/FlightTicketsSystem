@@ -1,4 +1,5 @@
 ﻿using Flights.Web.Data.Entities;
+using FlightTicketsSystem.Web.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,17 @@ namespace Flights.Web.Data.Repositories
 {
     public interface IFlightRepository : IGenericRepository<Flight>
     {
-        IEnumerable<SelectListItem> GetComboFlights();
+        IEnumerable<SelectListItem> GetComboDepartures();
 
-        //Task<Flight> GetAirports(int id);
+        IEnumerable<SelectListItem> GetComboArrivals(int departureId);
+
 
         Task<Flight> GetAirplanesAsync(int id);
+
+
+        Task<Flight> GetDeparturesWithArrivalsAsync(int id);
+
+
+
     }
 }

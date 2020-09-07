@@ -1,11 +1,14 @@
 ﻿@model IEnumerable<Flights.Web.Data.Entities.Ticket>
 
-@{
-    ViewData["Title"] = "Index";
-}
 
-<h2>Index</h2>
+<!DOCTYPE html>
 
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -13,7 +16,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Flight)
+                @Html.DisplayNameFor(model => model.DepartureAirport)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PassangerName)
@@ -28,6 +31,9 @@
                 @Html.DisplayNameFor(model => model.SeatNumber)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.TravelClass)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Lugagge)
             </th>
             <th></th>
@@ -37,7 +43,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Flight.Id)
+                @Html.DisplayFor(modelItem => item.DepartureAirport.Id)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PassangerName)
@@ -52,6 +58,9 @@
                 @Html.DisplayFor(modelItem => item.SeatNumber)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.TravelClass)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Lugagge)
             </td>
             <td>
@@ -63,3 +72,5 @@
 }
     </tbody>
 </table>
+</body>
+</html>

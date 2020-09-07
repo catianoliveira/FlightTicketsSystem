@@ -40,16 +40,16 @@
                                     @Html.DisplayNameFor(model => model.Model)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.EconomyClassSeats)
+                                    @Html.DisplayNameFor(model => model.EconomySeats)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.BusinessClassSeats)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.FirstClassSeats)
+                                    @Html.DisplayNameFor(model => model.BusinessSeats)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.Seats)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.User)
                                 </th>
                                 <th></th>
                             </tr>
@@ -64,22 +64,23 @@
                                             @Html.DisplayFor(modelItem => item.Model)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.EconomyClassSeats)
+                                            @Html.DisplayFor(modelItem => item.EconomySeats)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.BusinessClassSeats)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.FirstClassSeats)
+                                            @Html.DisplayFor(modelItem => item.BusinessSeats)
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Seats)
                                         </td>
+                                        <th>
+                                            @Html.DisplayFor(modelItem => item.User.UserName)
+                                        </th>
                                         <td>
                                             <a class="btn btn-primary pull-right" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-
-                                            <input type="submit" value="Delete" class="btn btn-danger pull-right"
-                                                   onclick="return confirm('Are you sure you want to delete @item.Model?')" />
+                                            <form>
+                                                <input type="submit" value="Delete" class="btn btn-danger pull-right"
+                                                       onclick="return confirm('Are you sure you want to delete @item.Model?')" />
+                                            </form>
                                         </td>
                                     </tr>
                                 }
@@ -91,16 +92,16 @@
                                     @Html.DisplayNameFor(model => model.Model)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.EconomyClassSeats)
+                                    @Html.DisplayNameFor(model => model.EconomySeats)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.BusinessClassSeats)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.FirstClassSeats)
+                                    @Html.DisplayNameFor(model => model.BusinessSeats)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.Seats)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.User)
                                 </th>
                                 <th></th>
                             </tr>
@@ -121,7 +122,7 @@
 
     @section Scripts {
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-        
+
         <script>
 
             $(document).ready(function () {

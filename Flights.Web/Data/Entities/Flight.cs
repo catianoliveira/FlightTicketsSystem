@@ -13,6 +13,10 @@ namespace Flights.Web.Data.Entities
     {
         public int Id { get; set; }
 
+        public User user { get; set; }
+
+
+
         [Required]
         [Display(Name = "Airplane")]
         [Range(1, int.MaxValue, ErrorMessage = "You must select an airport.")]
@@ -37,13 +41,19 @@ namespace Flights.Web.Data.Entities
         public int ArrivalAirportId { get; set; }
 
 
+        public ICollection<Airport> ArrivalsCollection { get; set; }
+
+
+        public ICollection<Airport> DeparturesCollection { get; set; }
+
+
+        public IEnumerable<SelectListItem> AirportsEnumerable { get; set; }
+
+
         public Airport DepartureAirport { get; set; }
 
 
         public Airport ArrivalAirport { get; set; }
-
-
-        public IEnumerable<SelectListItem> Airports { get; set; }
 
 
 
@@ -63,22 +73,14 @@ namespace Flights.Web.Data.Entities
 
         [Required]
         [Display(Name = "Economy C. Price")]
-        public double EconomyClassPrice { get; set; }
+        public double EconomyPrice { get; set; }
 
 
 
 
         [Required]
         [Display(Name = "Business C. Price")]
-        public double BusinessClassPrice { get; set; }
-
-
-
-
-        [Required]
-        [Display(Name = "First C. Price")]
-        public double FirstClassPrice { get; set; }
-
+        public double BusinessPrice { get; set; }
 
 
 
@@ -89,14 +91,14 @@ namespace Flights.Web.Data.Entities
 
 
 
-        public List<Ticket> Tickets { get; set; }
+        //public List<Ticket> Tickets { get; set; }
 
 
         public string EconomyLastMinutePrice
         {
             get
             {
-                return $"{((LastMinutePrice * EconomyClassPrice)/100)+EconomyClassPrice}";
+                return $"{((LastMinutePrice * EconomyPrice)/100)+EconomyPrice}";
             }
         }
 
@@ -104,15 +106,7 @@ namespace Flights.Web.Data.Entities
         {
             get
             {
-                return $"{((LastMinutePrice * EconomyClassPrice) / 100) + EconomyClassPrice}";
-            }
-        }
-
-        public string FirstLastMinutePrice
-        {
-            get
-            {
-                return $"{((LastMinutePrice * FirstClassPrice) / 100) + FirstClassPrice}";
+                return $"{((LastMinutePrice * BusinessPrice) / 100) + BusinessPrice}";
             }
         }
 
@@ -121,7 +115,7 @@ namespace Flights.Web.Data.Entities
         {
             get
             {
-                return $"{this.AirplaneId} - from {this.ArrivalAirportId} to {this.DepartureAirport}";
+                return $"From {this.DepartureAirport} to {this.ArrivalAirport}";
             }
         }
 

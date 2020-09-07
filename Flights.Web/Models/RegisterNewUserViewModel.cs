@@ -1,5 +1,6 @@
 ﻿using Flights.Web.Data.Entities;
 using FlightTicketsSystem.Web.CustomValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,14 @@ namespace Flights.Web.Models
         public string RoleID { get; set; }
 
 
-
         public IEnumerable<SelectListItem> RoleChoices { get; set; }
+
+
+        public IdentityRole Role { get; set; }
+
+
+        //public bool IsSelected { get; set; }
+
 
 
 

@@ -10,5 +10,9 @@ namespace Flights.Web.Data.Entities
         public int Id { get; set; }
 
         public string Type { get; set; }
+
+
+        public User user { get; set; }
+
     }
 }

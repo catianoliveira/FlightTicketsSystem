@@ -1,4 +1,5 @@
 ﻿using Flights.Web.Data.Entities;
+using FlightTicketsSystem.Web.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -32,19 +33,33 @@ namespace Flights.Web.Data.Repositories
                          .FirstOrDefaultAsync();
         }
 
-        //TODO public async Task<Flight> GetAirports(int id)
-        //{
-        //    return await _context.Flights
-        //     .Include(c => c.)
-        //     .Where(c => c.Id == id)
-        //     .FirstOrDefaultAsync();
-        //}
+        public IEnumerable<SelectListItem> GetComboArrivals(int departureId)
+        {
+            var departure = _context.Flights.Find(departureId);
+            var list = new List<SelectListItem>();
+            if (departure != null)
+            {
+                list = departure.ArrivalsCollection.Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+                }).OrderBy(l => l.Text).ToList();
+            }
 
-        public IEnumerable<SelectListItem> GetComboFlights()
+            list.Insert(0, new SelectListItem
+            {
+                Text = "(Select a airport...)",
+                Value = "0"
+            });
+
+            return list;
+        }
+
+        public IEnumerable<SelectListItem> GetComboDepartures()
         {
             var list = _context.Flights.Select(p => new SelectListItem
             {
-                Text = p.CompleteFlight,
+                Text = p.DepartureAirport.ToString(),
                 Value = p.Id.ToString()
 
             }).ToList();
@@ -52,11 +67,20 @@ namespace Flights.Web.Data.Repositories
 
             list.Insert(0, new SelectListItem
             {
-                Text = "Select a flight",
+                Text = "Select an airport",
                 Value = "0"
             });
 
             return list;
         }
+
+        public async Task<Flight> GetDeparturesWithArrivalsAsync(int id)
+        {
+            return await _context.Flights
+              .Include(c => c.ArrivalsCollection)
+              .FirstOrDefaultAsync(c => c.DepartureAirportId == id);
+        }
+
+
     }
 }

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Flights.Web.Data.Entities
 {
-    public class Ticket
+    public class Ticket : IEntity
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
 
 
         [Required]
@@ -18,12 +18,28 @@ namespace Flights.Web.Data.Entities
 
 
         [Required]
-        [ForeignKey("Flight")]
-        public int FlightID { get; set; }
+        [ForeignKey("Departure Airport")]
+        public int DepartureAirportId { get; set; }
+
+
+        [Required]
+        [ForeignKey("Arrival Airport")]
+        public int ArrivalAirportId { get; set; }
+
+
+        public Flight DepartureAirport { get; set; }
 
 
 
-        public Flight Flight { get; set; }
+        public Flight ArrivalAirport { get; set; }
+
+
+
+        public IEnumerable<SelectListItem> ArrivalAirports { get; set; }
+
+        public IEnumerable<SelectListItem> DepartureAirports { get; set; }
+
+
 
 
         [Required]
@@ -56,5 +72,14 @@ namespace Flights.Web.Data.Entities
 
 
         public bool Lugagge { get; set; }
+
+
+        public string CompleteTicket
+        {
+            get
+            {
+                return $"{this.ArrivalAirport} {this.DepartureAirport}";
+            }
+        }
     }
 }

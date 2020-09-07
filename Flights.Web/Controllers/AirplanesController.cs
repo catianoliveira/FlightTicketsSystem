@@ -62,7 +62,7 @@ namespace Flights.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                //TODO airplane.User = await _userHelper.GetUserByEmailAsync();
+                airplane.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
 
                 await _airplaneRepository.CreateAsync(airplane);
                 return RedirectToAction(nameof(Index));

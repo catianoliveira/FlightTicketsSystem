@@ -16,7 +16,7 @@ namespace Flights.Web.Data
 
         //Task<Airport> GetAirportWithCountriesAsync(int id);
 
-        Task<Airport> GetCountries(int id);
+        //Task<Airport> GetCountries(int id);
 
     }
 }

@@ -5,14 +5,11 @@ using Flights.Web.Helpers;
 using Flights.Web.Models;
 using FlightTicketsSystem.Web.Data.Repositories;
 using FlightTicketsSystem.Web.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -36,6 +33,7 @@ namespace Flights.Web.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly DataContext _context;
+
 
         public AccountController(
             IUserHelper userHelper,
@@ -115,24 +113,15 @@ namespace Flights.Web.Controllers
 
 
 
-
-
         [HttpPost]
         public async Task<IActionResult> Register(RegisterNewUserViewModel model)
         {
             if (ModelState.IsValid)
             {
-                //if (model.DateOfBirth > DateTime.Today)
-                //{
-                //    ModelState.AddModelError("DateOfBirth", "Invalid date of birth");
-                //    return View(model);
-                //}
-
-
-
                 var user = await _userHelper.GetUserByEmailAsync(model.EmailAddress);
                 if (user == null)
                 {
+
                     user = new User
                     {
                         FirstName = model.FirstName,
@@ -144,10 +133,13 @@ namespace Flights.Web.Controllers
                         PhoneNumber = model.PhoneNumber,
                         City = model.City,
                         CountryId = model.CountryId,
-
+                        RoleID = model.RoleID
                     };
 
+                   await _userHelper.AddUserToRoleAsync(user, user.RoleChoices.Select(r => r.Text).ToString());
+
                     var result = await _userHelper.AddUserAsync(user, model.Password);
+
                     if (result != IdentityResult.Success)
                     {
                         this.ModelState.AddModelError(string.Empty, "The user couldn't be created.");
@@ -162,9 +154,9 @@ namespace Flights.Web.Controllers
                     }, protocol: HttpContext.Request.Scheme);
 
                     _mailHelper.SendMail(model.EmailAddress, "Email confirmation", $"<h1>Email Confirmation</h1>" +
-                        $"To allow the user, " +
-                        $"please click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
-                    this.ViewBag.Message = "The instructions to allow your user has been sent to email.";
+                        $"Complete your registration by " +
+                        $"clicking link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+                    this.ViewBag.Message = "The instructions to confirm your account have been sent to your email.";
 
 
                     return this.View(model);
@@ -341,6 +333,14 @@ namespace Flights.Web.Controllers
 
                 if (user != null)
                 {
+
+
+
+
+
+
+
+
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
                     user.Address = model.Address;
@@ -408,32 +408,27 @@ namespace Flights.Web.Controllers
             return View();
         }
 
+
+        public IActionResult CreateRole()
+        {
+            return View();
+        }
+
+
         //[Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
         {
             if (ModelState.IsValid)
             {
-                IdentityRole identityRole = new IdentityRole
-                {
-                    Name = model.Role
-                };
+                await _userHelper.CheckRoleAsync(model.Role);
 
-                IdentityResult result = await _roleManager.CreateAsync(identityRole);
-
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-
-                foreach (IdentityError error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
-                }
+                return View(model);
             }
 
-            return View();
-        }
+            this.ModelState.AddModelError(string.Empty, "Role already exists");
 
+            return View(model);
+        }
     }
 }

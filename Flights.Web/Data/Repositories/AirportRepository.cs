@@ -66,12 +66,6 @@ namespace Flights.Web.Data
             return list;
         }
 
-        public async Task<Entities.Airport> GetCountries(int id)
-        {
-            return await _context.Airports
-             .Include(c => c.Countries)
-             .Where(c => c.Id == id)
-             .FirstOrDefaultAsync();
-        }
+        
     }
 }

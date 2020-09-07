@@ -14,6 +14,7 @@ namespace Flights.Web.Data.Entities
         public string Name { get; set; }
 
 
+        [Required]
         public ICollection<Airport> Airports { get; set; }
     }
 }

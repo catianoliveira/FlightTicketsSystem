@@ -1,8 +1,10 @@
 ﻿using Flights.Web.Data;
 using Flights.Web.Data.Entities;
 using Flights.Web.Data.Repositories;
+using FlightTicketsSystem.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -64,7 +66,7 @@ namespace Flights.Web.Controllers
             var model = new Flight
             {
                 Airplanes = _airplaneRepository.GetComboAirplanes(),
-                Airports = _airportRepository.GetComboAirports()
+                AirportsEnumerable = _airportRepository.GetComboAirports()
             };
 
             return this.View(model);
@@ -75,15 +77,31 @@ namespace Flights.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Flight flight)
+        public async Task<IActionResult> Create(Flight flights)
         {
             if (ModelState.IsValid)
             {
+                //await _flightRepository.CreateAsync(flight);
+
+
+                Flight flight = new Flight
+                {
+                    ArrivalAirportId = flights.ArrivalAirportId,
+                    DepartureAirportId = flights.DepartureAirportId,
+                    ArrivalsCollection = new List<Airport>(),
+                    DeparturesCollection = new List<Airport>(),
+                    AirplaneId = flights.AirplaneId
+                };
+
                 await _flightRepository.CreateAsync(flight);
+
+
                 return RedirectToAction(nameof(Index));
+                
             }
-            return View(flight);
+            return View(flights);
         }
+        
 
         // GET: Flights/Edit/5
         public async Task<IActionResult> Edit(int? id)
