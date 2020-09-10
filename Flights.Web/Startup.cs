@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Flights.Web.Data;
+﻿using Flights.Web.Data;
 using Flights.Web.Data.Entities;
 using Flights.Web.Data.Repositories;
 using Flights.Web.Helpers;
@@ -11,18 +6,18 @@ using FlightTicketsSystem.Web.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Flights.Web
 {
     public class Startup
-    { 
+    {
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -46,6 +41,7 @@ namespace Flights.Web
                 cfg.Password.RequireUppercase = false;
                 cfg.Password.RequiredLength = 6;
             })
+            .AddRoles<IdentityRole>()
             .AddDefaultTokenProviders()
             .AddEntityFrameworkStores<DataContext>();
 
@@ -62,10 +58,39 @@ namespace Flights.Web
                     };
                 });
 
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    IConfigurationSection googleAuthNSection =
+               Configuration.GetSection("Authentication:Google");
+
+                    options.ClientId = googleAuthNSection["ClientId"];
+                    options.ClientSecret = googleAuthNSection["ClientSecret"];
+                    options.SignInScheme = IdentityConstants.ExternalScheme;
+
+
+                });
+
+            //    services.AddAuthentication()
+            //.AddGoogle(options =>
+            //{
+            //    IConfigurationSection googleAuthNSection =
+            //        Configuration.GetSection("Authentication:Google");
+
+            //    options.ClientId = googleAuthNSection["935738845675-ca2v2vqnalcn4umnb1icm879r3jusjen.apps.googleusercontent.com"];
+            //    options.ClientSecret = googleAuthNSection["uo2oHak0ALUouirwTA3UCeeE"];
+            //});
+
+            //.AddFacebook(options =>
+            //{
+            //    options.ClientId = Configuration["App:FacebookClientId"];
+            //    options.ClientSecret = Configuration["App:FacebookClientSecret"];
+            //});
+
 
             services.AddDbContext<DataContext>(cfg =>
             {
-                cfg.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
+                cfg.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
             services.AddTransient<SeedDb>();
@@ -79,7 +104,7 @@ namespace Flights.Web
             services.AddScoped<IMailHelper, MailHelper>();
             services.AddScoped<IFlightRepository, FlightRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
-            services.AddScoped<IDocumentTypeRepository, DocumentTypeRepository>(); 
+            services.AddScoped<IDocumentTypeRepository, DocumentTypeRepository>();
             services.AddScoped<IIndicativeRepository, IndicativeRepository>();
             services.AddScoped<ITicketRepository, TicketRepository>();
 

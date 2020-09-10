@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlightTicketsSystem.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200907172830_initialDb")]
-    partial class initialDb
+    [Migration("20200910190130_InitialDb")]
+    partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -194,7 +194,6 @@ namespace FlightTicketsSystem.Web.Migrations
                     b.Property<int>("AccessFailedCount");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(70);
 
                     b.Property<string>("City")
@@ -282,19 +281,6 @@ namespace FlightTicketsSystem.Web.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Indicatives");
-                });
-
-            modelBuilder.Entity("FlightTicketsSystem.Web.Models.CreateRoleViewModel", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Role")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CreateRoleViewModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

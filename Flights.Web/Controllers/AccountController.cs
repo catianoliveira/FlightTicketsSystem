@@ -5,6 +5,7 @@ using Flights.Web.Helpers;
 using Flights.Web.Models;
 using FlightTicketsSystem.Web.Data.Repositories;
 using FlightTicketsSystem.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Flights.Web.Controllers
 {
-    //[Authorize(Roles = "Administrator")]
+    //[Authorize(Roles = "Admin")]
     //[Authorize(Roles = "Manager")]
 
     public class AccountController : Controller
@@ -33,7 +34,7 @@ namespace Flights.Web.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly DataContext _context;
-
+        private readonly SignInManager<User> _signInManager;
 
         public AccountController(
             IUserHelper userHelper,
@@ -44,7 +45,8 @@ namespace Flights.Web.Controllers
             IIndicativeRepository indicativeRepository,
             RoleManager<IdentityRole> roleManager,
             UserManager<User> userManager,
-            DataContext context)
+            DataContext context,
+            SignInManager<User> signInManager)
         {
             _userHelper = userHelper;
             _configuration = configuration;
@@ -55,18 +57,19 @@ namespace Flights.Web.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
             _context = context;
+            _signInManager = signInManager;
         }
 
-        public IActionResult Login()
+        public async Task<IActionResult> Login(string returnUrl)
         {
-            if (this.User.Identity.IsAuthenticated)
+            LoginViewModel model = new LoginViewModel
             {
-                return this.RedirectToAction("Index", "Home");
-            }
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
 
-
-            return this.View();
-        }
+            return View(model);
+        } 
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -95,6 +98,140 @@ namespace Flights.Web.Controllers
             await _userHelper.LogoutAsync();
             return this.RedirectToAction("Login", "Account");
         }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult ExternalLogin(string provider, string returnUrl)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account",
+                                            new { ReturnUrl = returnUrl });
+
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+
+            return new ChallengeResult(provider, properties);
+        }
+
+
+
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+
+            LoginViewModel loginViewModel = new LoginViewModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+                return View("Login", loginViewModel);
+            }
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+
+            if (info == null)
+            {
+                ModelState.AddModelError(string.Empty, "Error loading external login information.");
+                return View("Login", loginViewModel);
+            }
+
+            var signResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
+                                                                            info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
+            if (signResult.Succeeded)
+            {
+                return LocalRedirect(returnUrl);
+            }
+
+            else
+            {
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                if (email != null)
+                {
+                    var user = await _userHelper.GetUserByEmailAsync(email);
+                    if (user == null)
+                    {
+                        user = new User
+                        {
+                            FirstName = _userManager.FindByNameAsync(email).ToString(),
+                            LastName = _userManager.FindByNameAsync(email).ToString(),
+                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                        };
+
+                        await _userManager.CreateAsync(user);
+                    }
+
+                    await _userManager.AddLoginAsync(user, info);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return LocalRedirect(returnUrl);
+                }
+
+                ViewBag.ErrorTittle = $"Error claim not received from: {info.LoginProvider}";
+
+                return View("Error");
+            }
+        }
+
+
+
+
+
+
+
+
+        //[AllowAnonymous]
+        //public IActionResult GoogleLogin()
+        //{
+        //    string redirectUrl = Url.Action("Error");
+        //    var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
+        //    return new ChallengeResult("Google", properties);
+        //}
+
+
+        //[AllowAnonymous]
+        //public async Task<IActionResult> GoogleResponse()
+        //{
+        //    ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
+        //    if (info == null)
+        //        return RedirectToAction(nameof(Login));
+
+        //    var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+        //    string[] userInfo = { info.Principal.FindFirst(ClaimTypes.Name).Value, info.Principal.FindFirst(ClaimTypes.Email).Value };
+        //    if (result.Succeeded)
+        //        return View(userInfo);
+        //    else
+        //    {
+        //        User user = new User
+        //        {
+        //            Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
+        //            UserName = info.Principal.FindFirst(ClaimTypes.Email).Value
+        //        };
+
+        //        IdentityResult identResult = await _userManager.CreateAsync(user);
+        //        if (identResult.Succeeded)
+        //        {
+        //            identResult = await _userManager.AddLoginAsync(user, info);
+        //            if (identResult.Succeeded)
+        //            {
+        //                await _signInManager.SignInAsync(user, false);
+        //                return View(userInfo);
+        //            }
+        //        }
+        //        return NotFound();
+        //    }
+        //}
+
+
+
+
+
+
 
 
 

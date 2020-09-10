@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FlightTicketsSystem.Web.Migrations
 {
-    public partial class initialDb : Migration
+    public partial class InitialDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -33,18 +33,6 @@ namespace FlightTicketsSystem.Web.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Countries", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CreateRoleViewModel",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    Role = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CreateRoleViewModel", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -105,7 +93,7 @@ namespace FlightTicketsSystem.Web.Migrations
                     FirstName = table.Column<string>(nullable: false),
                     LastName = table.Column<string>(nullable: false),
                     DateOfBirth = table.Column<DateTime>(nullable: false),
-                    Address = table.Column<string>(maxLength: 70, nullable: false),
+                    Address = table.Column<string>(maxLength: 70, nullable: true),
                     City = table.Column<string>(maxLength: 50, nullable: false),
                     CountryId = table.Column<int>(nullable: false),
                     IndicativeId = table.Column<int>(nullable: false),
@@ -548,9 +536,6 @@ namespace FlightTicketsSystem.Web.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
-
-            migrationBuilder.DropTable(
-                name: "CreateRoleViewModel");
 
             migrationBuilder.DropTable(
                 name: "Indicatives");

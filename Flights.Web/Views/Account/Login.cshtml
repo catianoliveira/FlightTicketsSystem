@@ -40,7 +40,7 @@
                     @Html.AntiForgeryToken()
 
                     <h2>Log in</h2>
-                    <div>@Html.ValidationSummary(true,"", new { @style = "color: white" })</div>
+                    <div>@Html.ValidationSummary(true, "", new { @style = "color: white" })</div>
                     <br />
                     <p>
                         <label for="Username" class="uname" data-icon="u"><span>Your email or name</span></label>
@@ -63,12 +63,50 @@
                         </a>
                     </p>
 
+                    @*<a class="btn btn-info" asp-controller="Account" asp-action="GoogleLogin">Log In With Google</a>*@
+
                 }
 
-            
+                    @{
+                        if (Model.ExternalLogins.Count > 0)
+                        {
+                        <form method="post" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                            <div class="social-auth-links text-center mb-3">
+
+                                <div>
+                                    @foreach (var provider in Model.ExternalLogins)
+                                    {
+                                        <button type="submit" class="btn btn-block  btn-foursquare"
+                                                name="provider" value="@provider.Name"
+                                                title="Login using your @provider.DisplayName account">
+                                            @provider.DisplayName
+                                        </button>
+
+                                        @*<a href="#" class="btn btn-block btn-primary">
+                                            <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
+                                        </a>
+                                        <a href="#" class="btn btn-block btn-danger">
+                                            <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
+                                        </a>*@
+                                    }
+                                </div>
+
+
+                            </div>
+                        </form>
+                            } }
+
+
+
+
+
+            </div>
         </div>
+        <p class="agileits">© 2016 Majestic Login Form. All Rights Reserved | Design by <a href="https://w3layouts.com/" target="_blank">w3layouts</a></p>
     </div>
-    <p class="agileits">© 2016 Majestic Login Form. All Rights Reserved | Design by <a href="https://w3layouts.com/" target="_blank">w3layouts</a></p>
 </body>
 </html>
-
+section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+}

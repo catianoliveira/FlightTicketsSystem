@@ -90,11 +90,15 @@ namespace Flights.Web.Controllers
                     DepartureAirportId = flights.DepartureAirportId,
                     ArrivalsCollection = new List<Airport>(),
                     DeparturesCollection = new List<Airport>(),
-                    AirplaneId = flights.AirplaneId
+                    AirplaneId = flights.AirplaneId,
+                    BusinessPrice = flights.BusinessPrice,
+                    EconomyPrice = flights.EconomyPrice,
+                    LastMinutePrice = flights.LastMinutePrice,
+                    Date = flights.Date,
+                    Time = flights.Time
                 };
 
                 await _flightRepository.CreateAsync(flight);
-
 
                 return RedirectToAction(nameof(Index));
                 

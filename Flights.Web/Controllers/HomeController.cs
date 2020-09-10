@@ -8,6 +8,7 @@ using Flights.Web.Models;
 
 namespace Flights.Web.Controllers
 {
+    [RequireHttps]
     public class HomeController : Controller
     {
         public IActionResult Index()

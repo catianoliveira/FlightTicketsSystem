@@ -56,7 +56,6 @@ namespace Flights.Web.Data
         }
 
         //TODO quando tiver o ticket
-        public DbSet<FlightTicketsSystem.Web.Models.CreateRoleViewModel> CreateRoleViewModel { get; set; }
 
     }
 }

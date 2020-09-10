@@ -49,7 +49,6 @@ namespace Flights.Web.Data.Entities
 
         public IEnumerable<SelectListItem> AirportsEnumerable { get; set; }
 
-
         public Airport DepartureAirport { get; set; }
 
 

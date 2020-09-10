@@ -80,7 +80,5 @@ namespace Flights.Web.Data.Repositories
               .Include(c => c.ArrivalsCollection)
               .FirstOrDefaultAsync(c => c.DepartureAirportId == id);
         }
-
-
     }
 }

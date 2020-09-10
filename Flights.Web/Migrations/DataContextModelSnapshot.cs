@@ -192,7 +192,6 @@ namespace FlightTicketsSystem.Web.Migrations
                     b.Property<int>("AccessFailedCount");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(70);
 
                     b.Property<string>("City")
@@ -280,19 +279,6 @@ namespace FlightTicketsSystem.Web.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Indicatives");
-                });
-
-            modelBuilder.Entity("FlightTicketsSystem.Web.Models.CreateRoleViewModel", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Role")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CreateRoleViewModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
