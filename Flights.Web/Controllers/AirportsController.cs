@@ -88,7 +88,6 @@ namespace Flights.Web.Controllers
 
         // POST: Airports/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

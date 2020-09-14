@@ -67,25 +67,16 @@ namespace Flights.Web
                     options.ClientId = googleAuthNSection["ClientId"];
                     options.ClientSecret = googleAuthNSection["ClientSecret"];
                     options.SignInScheme = IdentityConstants.ExternalScheme;
+                })
+                .AddFacebook(options =>
+                {
+                    IConfigurationSection fbAuthNSection =
+              Configuration.GetSection("Authentication:Facebook");
 
-
+                    options.AppId = fbAuthNSection["AppId"];
+                    options.AppSecret = fbAuthNSection["AppSecret"];
+                    options.SignInScheme = IdentityConstants.ExternalScheme;
                 });
-
-            //    services.AddAuthentication()
-            //.AddGoogle(options =>
-            //{
-            //    IConfigurationSection googleAuthNSection =
-            //        Configuration.GetSection("Authentication:Google");
-
-            //    options.ClientId = googleAuthNSection["935738845675-ca2v2vqnalcn4umnb1icm879r3jusjen.apps.googleusercontent.com"];
-            //    options.ClientSecret = googleAuthNSection["uo2oHak0ALUouirwTA3UCeeE"];
-            //});
-
-            //.AddFacebook(options =>
-            //{
-            //    options.ClientId = Configuration["App:FacebookClientId"];
-            //    options.ClientSecret = Configuration["App:FacebookClientSecret"];
-            //});
 
 
             services.AddDbContext<DataContext>(cfg =>

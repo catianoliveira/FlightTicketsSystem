@@ -89,15 +89,15 @@ namespace FlightTicketsSystem.Web.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    RoleID = table.Column<string>(nullable: true),
+                    RoleId = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: false),
                     LastName = table.Column<string>(nullable: false),
                     DateOfBirth = table.Column<DateTime>(nullable: false),
                     Address = table.Column<string>(maxLength: 70, nullable: true),
-                    City = table.Column<string>(maxLength: 50, nullable: false),
+                    City = table.Column<string>(maxLength: 50, nullable: true),
                     CountryId = table.Column<int>(nullable: false),
                     IndicativeId = table.Column<int>(nullable: false),
-                    userId = table.Column<string>(nullable: true)
+                    IsActive = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -109,15 +109,9 @@ namespace FlightTicketsSystem.Web.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AspNetUsers_AspNetRoles_RoleID",
-                        column: x => x.RoleID,
+                        name: "FK_AspNetUsers_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
                         principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_AspNetUsers_userId",
-                        column: x => x.userId,
-                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -429,14 +423,9 @@ namespace FlightTicketsSystem.Web.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_RoleID",
+                name: "IX_AspNetUsers_RoleId",
                 table: "AspNetUsers",
-                column: "RoleID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_userId",
-                table: "AspNetUsers",
-                column: "userId");
+                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DocumentTypes_userId",

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -69,7 +70,7 @@ namespace Flights.Web.Controllers
             };
 
             return View(model);
-        } 
+        }
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -96,7 +97,7 @@ namespace Flights.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await _userHelper.LogoutAsync();
-            return this.RedirectToAction("Login", "Account");
+            return this.RedirectToAction("Index", "Home");
         }
 
 
@@ -160,8 +161,28 @@ namespace Flights.Web.Controllers
                             FirstName = _userManager.FindByNameAsync(email).ToString(),
                             LastName = _userManager.FindByNameAsync(email).ToString(),
                             UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
-                            Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            CountryId = 249,
+                            IsActive = true
                         };
+
+                        var result = await _userHelper.AddUserAsync(user, "123456");
+
+                        if (result != IdentityResult.Success)
+                        {
+                            throw new InvalidOperationException("Could not create the user in seeder.");
+                        }
+
+
+                        var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                        await _userHelper.ConfirmEmailAsync(user, token);
+
+
+                        var isInRole = await _userHelper.IsUserInRoleAsync(user, "Client");
+                        if (!isInRole)
+                        {
+                            await _userHelper.AddUserToRoleAsync(user, "Client");
+                        }
 
                         await _userManager.CreateAsync(user);
                     }
@@ -179,62 +200,6 @@ namespace Flights.Web.Controllers
         }
 
 
-
-
-
-
-
-
-        //[AllowAnonymous]
-        //public IActionResult GoogleLogin()
-        //{
-        //    string redirectUrl = Url.Action("Error");
-        //    var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
-        //    return new ChallengeResult("Google", properties);
-        //}
-
-
-        //[AllowAnonymous]
-        //public async Task<IActionResult> GoogleResponse()
-        //{
-        //    ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
-        //    if (info == null)
-        //        return RedirectToAction(nameof(Login));
-
-        //    var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
-        //    string[] userInfo = { info.Principal.FindFirst(ClaimTypes.Name).Value, info.Principal.FindFirst(ClaimTypes.Email).Value };
-        //    if (result.Succeeded)
-        //        return View(userInfo);
-        //    else
-        //    {
-        //        User user = new User
-        //        {
-        //            Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
-        //            UserName = info.Principal.FindFirst(ClaimTypes.Email).Value
-        //        };
-
-        //        IdentityResult identResult = await _userManager.CreateAsync(user);
-        //        if (identResult.Succeeded)
-        //        {
-        //            identResult = await _userManager.AddLoginAsync(user, info);
-        //            if (identResult.Succeeded)
-        //            {
-        //                await _signInManager.SignInAsync(user, false);
-        //                return View(userInfo);
-        //            }
-        //        }
-        //        return NotFound();
-        //    }
-        //}
-
-
-
-
-
-
-
-
-
         public IActionResult Register()
         {
 
@@ -249,31 +214,33 @@ namespace Flights.Web.Controllers
         }
 
 
-
         [HttpPost]
         public async Task<IActionResult> Register(RegisterNewUserViewModel model)
         {
-            if (ModelState.IsValid)
+            if (this.User.Identity.IsAuthenticated)
             {
-                var user = await _userHelper.GetUserByEmailAsync(model.EmailAddress);
-                if (user == null)
+
+                if (ModelState.IsValid)
                 {
-
-                    user = new User
+                    var user = await _userHelper.GetUserByEmailAsync(model.EmailAddress);
+                    if (user == null)
                     {
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        Email = model.EmailAddress,
-                        UserName = model.EmailAddress,
-                        Address = model.Address,
-                        IndicativeId = model.IndicativeId,
-                        PhoneNumber = model.PhoneNumber,
-                        City = model.City,
-                        CountryId = model.CountryId,
-                        RoleID = model.RoleID
-                    };
-
-                   await _userHelper.AddUserToRoleAsync(user, user.RoleChoices.Select(r => r.Text).ToString());
+                        user = new User
+                        {
+                            FirstName = model.FirstName,
+                            LastName = model.LastName,
+                            Email = model.EmailAddress,
+                            UserName = model.EmailAddress,
+                            Address = model.Address,
+                            IndicativeId = model.IndicativeId,
+                            PhoneNumber = model.PhoneNumber,
+                            City = model.City,
+                            CountryId = model.CountryId,
+                            RoleId = model.RoleID,
+                            IsActive = true
+                        };
+                       
+                    }
 
                     var result = await _userHelper.AddUserAsync(user, model.Password);
 
@@ -294,6 +261,68 @@ namespace Flights.Web.Controllers
                         $"Complete your registration by " +
                         $"clicking link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
                     this.ViewBag.Message = "The instructions to confirm your account have been sent to your email.";
+
+
+                    //////
+                    ///
+
+                    var roleName = await _roleManager.FindByIdAsync(user.RoleId);
+
+                    var register = await _userManager.FindByIdAsync(user.Id);
+                    await _userManager.AddToRoleAsync(register, roleName.ToString());
+                    ////
+
+                    return this.View(model);
+                }
+
+                this.ModelState.AddModelError(string.Empty, "This user already exists.");
+            }
+
+
+            if (!this.User.Identity.IsAuthenticated)
+            {
+
+                if (ModelState.IsValid)
+                {
+                    var user = await _userHelper.GetUserByEmailAsync(model.EmailAddress);
+                    if (user == null)
+                    {
+                        user = new User
+                        {
+                            FirstName = model.FirstName,
+                            LastName = model.LastName,
+                            Email = model.EmailAddress,
+                            UserName = model.EmailAddress,
+                            RoleId = model.RoleID,
+                            IsActive = true
+                        };
+                    }
+
+                    var result = await _userHelper.AddUserAsync(user, model.Password);
+
+                    if (result != IdentityResult.Success)
+                    {
+                        this.ModelState.AddModelError(string.Empty, "The user couldn't be created.");
+                        return this.View(model);
+                    }
+
+                    var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                    var tokenLink = this.Url.Action("ConfirmEmail", "Account", new
+                    {
+                        userid = user.Id,
+                        token = myToken
+                    }, protocol: HttpContext.Request.Scheme);
+
+                    _mailHelper.SendMail(model.EmailAddress, "Email confirmation", $"<h1>Email Confirmation</h1>" +
+                        $"Complete your registration by " +
+                        $"clicking link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+                    this.ViewBag.Message = "The instructions to confirm your account have been sent to your email.";
+
+
+                    //////
+                    await _userHelper.AddUserToRoleAsync(user, "Client");
+                    ////
+
 
 
                     return this.View(model);
@@ -433,6 +462,9 @@ namespace Flights.Web.Controllers
             {
                 model.FirstName = user.FirstName;
                 model.LastName = user.LastName;
+                model.PhoneNumber = user.PhoneNumber;
+                model.Address = user.Address;
+                model.City = user.City;
             }
 
             return this.View(model);
@@ -443,19 +475,19 @@ namespace Flights.Web.Controllers
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
             {
-                return this.NotFound();
+                return this.NotAuthorized();
             }
 
             var user = await _userHelper.GetUserByIdAsync(userId);
             if (user == null)
             {
-                return this.NotFound();
+                return this.NotAuthorized();
             }
 
             var result = await _userHelper.ConfirmEmailAsync(user, token);
             if (!result.Succeeded)
             {
-                return this.NotFound();
+                return NotAuthorized();
             }
 
             return View();
@@ -470,21 +502,13 @@ namespace Flights.Web.Controllers
 
                 if (user != null)
                 {
-
-
-
-
-
-
-
-
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
-                    user.Address = model.Address;
-                    user.CountryId = model.CountryId;
-                    user.City = model.City;
+                    //user.Address = model.Address;
+                    //user.CountryId = model.CountryId;
+                    //user.City = model.City;
                     user.PhoneNumber = model.PhoneNumber;
-                    user.IndicativeId = model.IndicativeId;
+                    //user.IndicativeId = model.IndicativeId;
 
 
                     var response = await _userHelper.UpdateUserAsync(user);
@@ -546,26 +570,6 @@ namespace Flights.Web.Controllers
         }
 
 
-        public IActionResult CreateRole()
-        {
-            return View();
-        }
-
-
-        //[Authorize(Roles = "Admin")]
-        [HttpPost]
-        public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                await _userHelper.CheckRoleAsync(model.Role);
-
-                return View(model);
-            }
-
-            this.ModelState.AddModelError(string.Empty, "Role already exists");
-
-            return View(model);
-        }
+        
     }
 }

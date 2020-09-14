@@ -6,13 +6,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Flights.Web.Data.Entities
+namespace FlightTicketsSystem.Web.Data.Entities
 {
-    public class User : IdentityUser
+    public class Client : IdentityUser
     {
         //TODO cada user tem uma classe e um controlador
 
-        public string RoleId { get; set; }
+        public string RoleID { get; set; }
 
 
         public IEnumerable<SelectListItem> RoleChoices { get; set; }
@@ -40,6 +40,7 @@ namespace Flights.Web.Data.Entities
 
 
 
+
         [Display(Name = "Full Name")]
         public string FullName
         {
@@ -49,51 +50,5 @@ namespace Flights.Web.Data.Entities
             }
 
         }
-
-
-
-        //TODO ver o IdentityUser 
-
-        [MaxLength(70, ErrorMessage = "The field {0} can only contain {1} characters")]
-        public string Address { get; set; }
-
-
-
-
-
-        [MaxLength(50, ErrorMessage = "The field {0} can only contain {1} characters")]
-        public string City { get; set; }
-
-
-
-
-
-        [Display(Name = "Country")]
-        public int CountryId { get; set; }
-
-
-
-
-        public Country Country { get; set; }
-
-
-
-
-
-        public IEnumerable<SelectListItem> Countries { get; set; }
-
-
-
-        [Display(Name = "Indicative")]
-        public int IndicativeId { get; set; }
-
-
-
-
-        public IEnumerable<SelectListItem> Indicatives { get; set; }
-
-
-
-        public bool IsActive { get; set; }
     }
 }

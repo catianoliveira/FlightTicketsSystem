@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlightTicketsSystem.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200910190130_InitialDb")]
+    [Migration("20200913222633_InitialDb")]
     partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -197,7 +197,6 @@ namespace FlightTicketsSystem.Web.Migrations
                         .HasMaxLength(70);
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<string>("ConcurrencyStamp")
@@ -216,6 +215,8 @@ namespace FlightTicketsSystem.Web.Migrations
                         .IsRequired();
 
                     b.Property<int>("IndicativeId");
+
+                    b.Property<bool>("IsActive");
 
                     b.Property<string>("LastName")
                         .IsRequired();
@@ -236,7 +237,7 @@ namespace FlightTicketsSystem.Web.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
-                    b.Property<string>("RoleID");
+                    b.Property<string>("RoleId");
 
                     b.Property<string>("SecurityStamp");
 
@@ -244,8 +245,6 @@ namespace FlightTicketsSystem.Web.Migrations
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
-
-                    b.Property<string>("userId");
 
                     b.HasKey("Id");
 
@@ -259,9 +258,7 @@ namespace FlightTicketsSystem.Web.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("RoleID");
-
-                    b.HasIndex("userId");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -476,11 +473,7 @@ namespace FlightTicketsSystem.Web.Migrations
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleID");
-
-                    b.HasOne("Flights.Web.Data.Entities.User", "user")
-                        .WithMany()
-                        .HasForeignKey("userId");
+                        .HasForeignKey("RoleId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

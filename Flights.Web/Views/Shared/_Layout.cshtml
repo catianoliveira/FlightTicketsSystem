@@ -32,24 +32,10 @@
                 </li>
 
 
-                @if (this.User.Identity.IsAuthenticated)
-                {
-                    <li class="nav-item d-none d-sm-inline-block">
-                        <a href="~/Account/ChangeUser" class="nav-link">@this.User.Identity.Name</a>
-                    </li>
-                    <li class="nav-item d-none d-sm-inline-block">
-                        <a href="~/Account/Logout" class="nav-link">Logout</a>
-                    </li>
-                }
-                else
-                {
-                    <li class="nav-item d-none d-sm-inline-block">
-                        <a href="~/Account/Login" class="nav-link">Login</a>
-                    </li>
-                }
+                
             </ul>
 
-            <!-- SEARCH FORM -->
+             @*SEARCH FORM 
             <form class="form-inline ml-3">
                 <div class="input-group input-group-sm">
                     <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
@@ -59,72 +45,53 @@
                         </button>
                     </div>
                 </div>
-            </form>
+            </form>*@
 
             <!-- Right navbar links -->
-            <ul class="navbar-nav ml-auto">
-                <!-- Messages Dropdown Menu -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="far fa-comments"></i>
-                        <span class="badge badge-danger navbar-badge">3</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <a href="#" class="dropdown-item">
-                            <!-- Message Start -->
-                            <div class="media">
-                                <img src="~/~/dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-                                <div class="media-body">
-                                    <h3 class="dropdown-item-title">
-                                        Brad Diesel
-                                        <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                                    </h3>
-                                    <p class="text-sm">Call me whenever you can...</p>
-                                    <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                                </div>
-                            </div>
-                            <!-- Message End -->
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <!-- Message Start -->
-                            <div class="media">
-                                <img src="~/~/dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                                <div class="media-body">
-                                    <h3 class="dropdown-item-title">
-                                        John Pierce
-                                        <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                                    </h3>
-                                    <p class="text-sm">I got your message bro</p>
-                                    <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                                </div>
-                            </div>
-                            <!-- Message End -->
-                        </a>
-
-                    </div>
+        <ul class="navbar-nav ml-auto">
+            @if (this.User.Identity.IsAuthenticated)
+            {<li class="nav-item d-none d-sm-inline-block">
+                    <a href="~/Account/Logout" class="nav-link">Logout</a>
                 </li>
+            }
+            else
+            {
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="~/Account/Login" class="nav-link">Login</a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="~/Account/Register" class="nav-link">Register</a>
+                </li>
+            }
 
-            </ul>
+        </ul>
         </nav>
         <!-- /.navbar -->
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="~/~/index3.html" class="brand-link elevation-4">
-                <span class="brand-text font-weight-light">E-Ticket System</span>
+                <img src="~/images/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light">HighFly</span>
             </a>
 
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Sidebar user (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="~/~/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-                    </div>
-                    <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
-                    </div>
+                    @if (this.User.Identity.IsAuthenticated)
+                    {
+                        <div class="info">
+                            <a href="~/Account/ChangeUser" class="d-block">@User.Identity.Name</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="info">
+                            
+                        </div>
+                    }
+
                 </div>
 
                 <!-- SidebarSearch Form -->
@@ -141,7 +108,7 @@
 
                 <!-- Sidebar Menu -->
                 @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("SuperAdmin")
-                 || this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+              || this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
                 {
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -156,7 +123,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="/Account/CreateRole" class="nav-link">
+                                <a href="/Admin/CreateRole" class="nav-link">
                                     <i class="nav-icon far fa-calendar-alt"></i>
                                     <p>
                                         Create Role
@@ -164,7 +131,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="/Staff" class="nav-link">
+                                <a href="/Account/UsersIndex" class="nav-link">
                                     <i class="nav-icon far fa-calendar-alt"></i>
                                     <p>
                                         Staff
@@ -215,7 +182,7 @@
                     </nav>
                 }
                 @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Intern")
-                 || this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
+              || this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
                 {
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -272,6 +239,14 @@
                             <!-- Add icons to the links using the .nav-icon class
                 with font-awesome or any other icon font library -->
                             <li class="nav-item">
+                                <a href="/Airports" class="nav-link">
+                                    <i class="nav-icon far fa-calendar-alt"></i>
+                                    <p>
+                                        Search Flights
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="/Account/Info" class="nav-link">
                                     <i class="nav-icon far fa-calendar-alt"></i>
                                     <p>
@@ -300,60 +275,71 @@
                 }
                 @if (!this.User.Identity.IsAuthenticated)
                 {
-                    
+                    <nav class="mt-2">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                            <li class="nav-item">
+                                <a href="/Flights" class="nav-link">
+                                    <i class="nav-icon far fa-calendar-alt"></i>
+                                    <p>
+                                        Search Flights
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 }
                 <!-- /.sidebar-menu -->
             </div>
-            <!-- /.sidebar -->
-        </aside>
+                <!-- /.sidebar -->
+            </aside>
 
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <section class="content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12">
-                            <!-- Default box -->
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+                <!-- Content Header (Page header) -->
+                <section class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12">
+                                <!-- Default box -->
 
-                            <div class="container body-content">
-                                @RenderBody()
-                                <hr />
+                                <div class="container body-content">
+                                    @RenderBody()
+                                    <hr />
 
 
+                                </div>
+                                <!-- /.card -->
                             </div>
-                            <!-- /.card -->
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
 
-        </div>
-        <!-- /.content-wrapper -->
-
-        <footer class="main-footer">
-            <div class="float-right d-none d-sm-block">
-                <b>Version</b> 3.1.0-pre
             </div>
-            <strong>Copyright &copy; 2014-2020 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-        </footer>
+            <!-- /.content-wrapper -->
 
-        <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
-        </aside>
-        <!-- /.control-sidebar -->
-    </div>
-    <!-- ./wrapper -->
-    <!-- jQuery -->
-    <script src="~/plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="~/dist/js/adminlte.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="~/dist/js/demo.js"></script>
-    @RenderSection("Scripts", required: false)
-</body>
+            <footer class="main-footer">
+                <div class="float-right d-none d-sm-block">
+                    <b>Version</b> 3.1.0-pre
+                </div>
+                <strong>Copyright &copy; 2014-2020 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+            </footer>
+
+            <!-- Control Sidebar -->
+            <aside class="control-sidebar control-sidebar-dark">
+                <!-- Control sidebar content goes here -->
+            </aside>
+            <!-- /.control-sidebar -->
+        </div>
+        <!-- ./wrapper -->
+        <!-- jQuery -->
+        <script src="~/plugins/jquery/jquery.min.js"></script>
+        <!-- Bootstrap 4 -->
+        <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- AdminLTE App -->
+        <script src="~/dist/js/adminlte.min.js"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="~/dist/js/demo.js"></script>
+        @RenderSection("Scripts", required: false)
+    </body>
 </html>

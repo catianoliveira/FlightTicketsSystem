@@ -33,7 +33,7 @@ namespace Flights.Web.Data
             await _userHelper.CheckRoleAsync("SuperAdmin");
             await _userHelper.CheckRoleAsync("Admin");
             await _userHelper.CheckRoleAsync("Employee");
-            await _userHelper.CheckRoleAsync("Intern");
+            await _userHelper.CheckRoleAsync("Client");
 
 
             if (!_context.Countries.Any())
@@ -58,6 +58,8 @@ namespace Flights.Web.Data
 
                     await _context.SaveChangesAsync();
                 }
+
+                AddCountries("null");
             }
 
             if (!_context.Airplanes.Any())
