@@ -1,1 +1,20 @@
-﻿
+﻿@model List<FlightTicketsSystem.Web.Models.UserRoleViewModel>
+
+<h1>User Roles</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@string.Join(" , ", user.Roles.ToList())</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -20,6 +20,8 @@ namespace Flights.Web.Models
         public string ReturnUrl { get; set; }
 
 
+        public bool IsActive { get; set; }
+
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
     }

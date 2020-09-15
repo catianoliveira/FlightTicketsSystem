@@ -41,7 +41,7 @@ namespace Flights.Web.Data
 
                 CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
                 List<RegionInfo> countriesList = new List<RegionInfo>();
-                var countries = new List<Airport>();
+                var countries = new List<Country>();
                 foreach (CultureInfo ci in cultures)
                 {
                     RegionInfo regionInfo = new RegionInfo(ci.Name);
@@ -354,7 +354,8 @@ namespace Flights.Web.Data
                     Address = "Rua da Luz 1 2ºEsq 1200-110 Lisboa",
                     City = "Lisboa",
                     CountryId = 179,
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    IsActive = true
                 };
 
                 var result = await _userHelper.AddUserAsync(user, "123456");

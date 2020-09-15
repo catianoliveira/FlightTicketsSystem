@@ -5,13 +5,15 @@ using FlightTicketsSystem.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FlightTicketsSystem.Web.Controllers
 {
-    [Authorize(Roles = "SuperAdmin")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "SuperAdmin")]
+    //[Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IUserHelper _userHelper;
@@ -76,99 +78,115 @@ namespace FlightTicketsSystem.Web.Controllers
             return View(model);
         }
 
-        public ActionResult ListUsers()
+        public async Task<ActionResult> ListUsers()
         {
-            var users = _userManager.Users;
-            return View(users);
+            var users = await _userManager.Users.ToListAsync();
+            var userRolesViewModel = new List<UserRoleViewModel>();
+
+            foreach (User user in users)
+            {
+                var thisViewModel = new UserRoleViewModel();
+                thisViewModel.UserId = user.Id;
+                thisViewModel.UserName = user.Email;
+                thisViewModel.Roles = await GetUserRoles(user);
+                userRolesViewModel.Add(thisViewModel);
+            }
+
+            return View(userRolesViewModel);
+        }
+
+        private async Task<List<string>> GetUserRoles(User user)
+        {
+            return new List<string>(await _userManager.GetRolesAsync(user));
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> EditUsersInRole(string roleId)
-        {
-            ViewBag.roleId = roleId;
+        //[HttpGet]
+        //public async Task<IActionResult> EditUsersInRole(string roleId)
+        //{
+        //    ViewBag.roleId = roleId;
 
-            var role = await _roleManager.FindByIdAsync(roleId);
+        //    var role = await _roleManager.FindByIdAsync(roleId);
 
-            if (role == null)
-            {
-                ViewBag.ErrorMessage = $"Role with id can't be found";
-                return View("NotFound");
-            }
+        //    if (role == null)
+        //    {
+        //        ViewBag.ErrorMessage = $"Role with id can't be found";
+        //        return View("NotFound");
+        //    }
 
-            var model = new List<UserRoleViewModel>();
+        //    var model = new List<UserRoleViewModel>();
 
-            foreach (var user in _userManager.Users)
-            {
-                var userRoleViewModel = new UserRoleViewModel
-                {
-                    UserId = user.Id,
-                    UserName = user.UserName
-                };
+        //    foreach (var user in _userManager.Users)
+        //    {
+        //        var userRoleViewModel = new UserRoleViewModel
+        //        {
+        //            UserId = user.Id,
+        //            UserName = user.UserName
+        //        };
 
-                if (await _userManager.IsInRoleAsync(user, role.Name))
-                {
-                    userRoleViewModel.IsSelected = true;
-                }
+        //        if (await _userManager.IsInRoleAsync(user, role.Name))
+        //        {
+        //            userRoleViewModel.IsSelected = true;
+        //        }
 
-                else
-                {
-                    userRoleViewModel.IsSelected = false;
-                }
+        //        else
+        //        {
+        //            userRoleViewModel.IsSelected = false;
+        //        }
 
-                model.Add(userRoleViewModel);
-            }
+        //        model.Add(userRoleViewModel);
+        //    }
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
 
-        [HttpPost]
-        public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> model, string roleId)
-        {
-            var role = await _roleManager.FindByIdAsync(roleId);
+        //[HttpPost]
+        //public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> model, string roleId)
+        //{
+        //    var role = await _roleManager.FindByIdAsync(roleId);
 
-            if (role == null)
-            {
-                return View("NotFound");
-            }
+        //    if (role == null)
+        //    {
+        //        return View("NotFound");
+        //    }
 
-            for (int i = 0; i < model.Count; i++)
-            {
-                var user = await _userManager.FindByIdAsync(model[i].UserId);
+        //    for (int i = 0; i < model.Count; i++)
+        //    {
+        //        var user = await _userManager.FindByIdAsync(model[i].UserId);
 
-                IdentityResult result = null;
+        //        IdentityResult result = null;
 
-                if (model[i].IsSelected && await _userManager.IsInRoleAsync(user, role.Name))
-                {
-                    result = await _userManager.AddToRoleAsync(user, role.Name);
-                }
+        //        if (model[i].IsSelected && await _userManager.IsInRoleAsync(user, role.Name))
+        //        {
+        //            result = await _userManager.AddToRoleAsync(user, role.Name);
+        //        }
 
-                else if (!model[i].IsSelected && await _userManager.IsInRoleAsync(user, role.Name))
-                {
-                    result = await _userManager.RemoveFromRoleAsync(user, role.Name);
-                }
+        //        else if (!model[i].IsSelected && await _userManager.IsInRoleAsync(user, role.Name))
+        //        {
+        //            result = await _userManager.RemoveFromRoleAsync(user, role.Name);
+        //        }
 
-                else
-                {
-                    continue;
-                }
+        //        else
+        //        {
+        //            continue;
+        //        }
 
-                if (result.Succeeded)
-                {
-                    if (i < (model.Count - 1))
-                    {
-                        continue;
-                    }
+        //        if (result.Succeeded)
+        //        {
+        //            if (i < (model.Count - 1))
+        //            {
+        //                continue;
+        //            }
 
-                    else
-                    {
-                        return RedirectToAction("EditRole", new { Id = roleId });
-                    }
-                }
-            }
+        //            else
+        //            {
+        //                return RedirectToAction("EditRole", new { Id = roleId });
+        //            }
+        //        }
+        //    }
 
-            return RedirectToAction("EditRole", new { Id = roleId });
-        }
+        //    return RedirectToAction("EditRole", new { Id = roleId });
+        //}
     }
 }

@@ -79,6 +79,12 @@ namespace Flights.Web.Controllers
             {
                 var result = await _userHelper.LoginAsync(model);
 
+                if (model.IsActive == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
+                    return this.View(model);
+                }
+
                 if (result.Succeeded)
                 {
                     if (this.Request.Query.Keys.Contains("ReturnURL"))
@@ -114,6 +120,7 @@ namespace Flights.Web.Controllers
                     $"<a href = \"{link}\">Reset Password</a>");
                 }
 
+                
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
