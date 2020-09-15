@@ -35,20 +35,16 @@ namespace Flights.Web.Data.Repositories
 
         public IEnumerable<SelectListItem> GetComboArrivals(int departureId)
         {
-            var departure = _context.Flights.Find(departureId);
-            var list = new List<SelectListItem>();
-            if (departure != null)
+            var list = _context.Flights.Where(p => p.DepartureAirportId == departureId).Select(p => new SelectListItem
             {
-                list = departure.ArrivalsCollection.Select(c => new SelectListItem
-                {
-                    Text = c.Name,
-                    Value = c.Id.ToString()
-                }).OrderBy(l => l.Text).ToList();
-            }
+                Text = p.ArrivalAirport.CompleteAirport,
+                Value = p.ArrivalAirportId.ToString()
+
+            }).OrderBy(p => p.Text).ToList();
 
             list.Insert(0, new SelectListItem
             {
-                Text = "(Select a airport...)",
+                Text = "Select an airport",
                 Value = "0"
             });
 
@@ -59,10 +55,10 @@ namespace Flights.Web.Data.Repositories
         {
             var list = _context.Flights.Select(p => new SelectListItem
             {
-                Text = p.DepartureAirport.ToString(),
-                Value = p.Id.ToString()
+                Text = p.DepartureAirport.CompleteAirport,
+                Value = p.DepartureAirportId.ToString()
 
-            }).ToList();
+            }).OrderBy(l => l.Text).ToList();
 
 
             list.Insert(0, new SelectListItem
@@ -74,11 +70,11 @@ namespace Flights.Web.Data.Repositories
             return list;
         }
 
-        public async Task<Flight> GetDeparturesWithArrivalsAsync(int id)
+        public async Task<Flight> GetDeparturesWithArrivalsAsync(int departureAirportId)
         {
             return await _context.Flights
               .Include(c => c.ArrivalsCollection)
-              .FirstOrDefaultAsync(c => c.DepartureAirportId == id);
+              .FirstOrDefaultAsync(d => d.DepartureAirportId == departureAirportId);
         }
     }
 }

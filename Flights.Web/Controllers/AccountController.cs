@@ -88,6 +88,36 @@ namespace Flights.Web.Controllers
 
                     return this.RedirectToAction("Index", "Home");
                 }
+
+                //TODO testar isto assim que o login com pw errada não exploda
+
+                if (result.IsLockedOut)
+                {
+                    var user = await _userHelper.GetUserByEmailAsync(model.Username);
+                    if (user == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "The email doesn't correspont to a registered user.");
+                        return this.View(model);
+                    }
+
+                    ModelState.AddModelError(string.Empty, "Your account is locked out, to reset your password click on the link sent to your email");
+
+                    var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
+
+                    var link = this.Url.Action(
+                        "ResetPassword",
+                        "Account",
+                        new { token = myToken }, protocol: HttpContext.Request.Scheme);
+
+                    _mailHelper.SendMail(model.Username, "HighFly Password Reset", $"<h1>HighFly Password Reset</h1>" +
+                    $"To reset the password click in this link:</br></br>" +
+                    $"<a href = \"{link}\">Reset Password</a>");
+                }
+
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
+                }
             }
 
             this.ModelState.AddModelError(string.Empty, "Incorrect username or password");
@@ -239,7 +269,7 @@ namespace Flights.Web.Controllers
                             RoleId = model.RoleID,
                             IsActive = true
                         };
-                       
+
                     }
 
                     var result = await _userHelper.AddUserAsync(user, model.Password);
@@ -260,17 +290,16 @@ namespace Flights.Web.Controllers
                     _mailHelper.SendMail(model.EmailAddress, "Email confirmation", $"<h1>Email Confirmation</h1>" +
                         $"Complete your registration by " +
                         $"clicking link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
-                    this.ViewBag.Message = "The instructions to confirm your account have been sent to your email.";
+
 
 
                     //////
-                    ///
 
                     var roleName = await _roleManager.FindByIdAsync(user.RoleId);
-
                     var register = await _userManager.FindByIdAsync(user.Id);
                     await _userManager.AddToRoleAsync(register, roleName.ToString());
-                    ////
+
+                    //////
 
                     return this.View(model);
                 }
@@ -294,7 +323,8 @@ namespace Flights.Web.Controllers
                             Email = model.EmailAddress,
                             UserName = model.EmailAddress,
                             RoleId = model.RoleID,
-                            IsActive = true
+                            IsActive = true,
+                            CountryId = model.CountryId
                         };
                     }
 
@@ -316,7 +346,6 @@ namespace Flights.Web.Controllers
                     _mailHelper.SendMail(model.EmailAddress, "Email confirmation", $"<h1>Email Confirmation</h1>" +
                         $"Complete your registration by " +
                         $"clicking link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
-                    this.ViewBag.Message = "The instructions to confirm your account have been sent to your email.";
 
 
                     //////
@@ -324,8 +353,7 @@ namespace Flights.Web.Controllers
                     ////
 
 
-
-                    return this.View(model);
+                    return this.View("SuccessRegistration");
                 }
 
                 this.ModelState.AddModelError(string.Empty, "This user already exists.");
@@ -569,7 +597,30 @@ namespace Flights.Web.Controllers
             return View();
         }
 
+        public IActionResult Deactivate()
+        {
+            return View();
+        }
 
-        
+        [HttpPost]
+        public async Task<IActionResult> Deactivate(DeactivateViewModel model)
+        {
+            if (this.ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+                if (user != null)
+                {
+                    user.IsActive = false;
+
+                    return View("SuccessDeactivation");
+                }
+                else
+                {
+                    this.ModelState.AddModelError(string.Empty, "User not found.");
+                }
+            }
+
+            return View(model);
+        }
     }
 }

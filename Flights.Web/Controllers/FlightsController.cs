@@ -1,12 +1,13 @@
 ﻿using Flights.Web.Data;
 using Flights.Web.Data.Entities;
 using Flights.Web.Data.Repositories;
-using FlightTicketsSystem.Web.Models;
+using FlightTicketsSystem.Web.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 
 namespace Flights.Web.Controllers
 {
@@ -101,11 +102,11 @@ namespace Flights.Web.Controllers
                 await _flightRepository.CreateAsync(flight);
 
                 return RedirectToAction(nameof(Index));
-                
+
             }
             return View(flights);
         }
-        
+
 
         // GET: Flights/Edit/5
         public async Task<IActionResult> Edit(int? id)

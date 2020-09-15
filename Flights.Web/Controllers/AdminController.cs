@@ -36,6 +36,22 @@ namespace FlightTicketsSystem.Web.Controllers
         }
 
 
+        public IActionResult IndexClients()
+        {
+            return View();
+        }
+
+
+        public IActionResult IndexEmployees()
+        {
+            return View();
+        }
+
+
+        public IActionResult IndexRoles()
+        {
+            return View();
+        }
 
         public IActionResult CreateRole()
         {

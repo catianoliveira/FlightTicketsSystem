@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlightTicketsSystem.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200913222633_InitialDb")]
+    [Migration("20200915092717_InitialDb")]
     partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,9 +63,6 @@ namespace FlightTicketsSystem.Web.Migrations
                     b.Property<int?>("FlightId1");
 
                     b.Property<string>("IATA");
-
-                    b.Property<string>("Name")
-                        .IsRequired();
 
                     b.HasKey("Id");
 

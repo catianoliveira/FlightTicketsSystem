@@ -114,7 +114,7 @@ namespace Flights.Web.Helpers
                 model.Username,
                 model.Password,
                 model.RememberMe,
-                false);
+                 lockoutOnFailure: true);
         }
 
         public async Task LogoutAsync()

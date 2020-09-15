@@ -162,7 +162,7 @@ namespace FlightTicketsSystem.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            
+
             return View(ticket);
         }
 
@@ -205,8 +205,8 @@ namespace FlightTicketsSystem.Web.Controllers
 
         public async Task<JsonResult> GetArrivalsAsync(int departureAirportId)
         {
-            var airport = await _flightRepository.GetDeparturesWithArrivalsAsync(departureAirportId);
-            return this.Json(airport.ArrivalsCollection.OrderBy(c => c.Country));
+            var arrivalAirports = await _flightRepository.GetDeparturesWithArrivalsAsync(departureAirportId);
+            return this.Json(arrivalAirports.ArrivalsCollection.OrderBy(c => c.Country));
         }
     }
 }

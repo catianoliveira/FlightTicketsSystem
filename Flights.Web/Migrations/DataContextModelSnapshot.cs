@@ -62,9 +62,6 @@ namespace FlightTicketsSystem.Web.Migrations
 
                     b.Property<string>("IATA");
 
-                    b.Property<string>("Name")
-                        .IsRequired();
-
                     b.HasKey("Id");
 
                     b.HasIndex("CountryId");

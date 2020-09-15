@@ -55,7 +55,6 @@ namespace Flights.Web.Controllers
             {
                 IATA = airport.IATA,
                 City = airport.City,
-                Name = airport.Name,
                 Country = airport.Country,
             };
 
@@ -120,7 +119,6 @@ namespace Flights.Web.Controllers
             {
                 IATA = airport.IATA,
                 City = airport.City,
-                Name = airport.Name,
                 Country = airport.Country
             };
 
