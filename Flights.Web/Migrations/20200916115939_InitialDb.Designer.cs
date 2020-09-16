@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlightTicketsSystem.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200915194915_initialdb")]
-    partial class initialdb
+    [Migration("20200916115939_InitialDb")]
+    partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -212,8 +212,6 @@ namespace FlightTicketsSystem.Web.Migrations
                         .IsRequired();
 
                     b.Property<int>("IndicativeId");
-
-                    b.Property<bool>("IsActive");
 
                     b.Property<string>("LastName")
                         .IsRequired();

@@ -35,12 +35,12 @@ namespace Flights.Web.Data.Repositories
 
         public IEnumerable<SelectListItem> GetComboArrivals(int departureId)
         {
-            var list = _context.Flights.Where(p => p.DepartureAirportId == departureId).Select(p => new SelectListItem
+            var list = _context.Flights.Where(a => a.DepartureAirportId == departureId).Select(a => new SelectListItem
             {
-                Text = p.ArrivalAirport.CompleteAirport,
-                Value = p.ArrivalAirportId.ToString()
+                Text = a.ArrivalAirport.CompleteAirport,
+                Value = a.ArrivalAirportId.ToString()
 
-            }).OrderBy(p => p.Text).ToList();
+            }).OrderBy(a => a.Text).ToList();
 
             list.Insert(0, new SelectListItem
             {
@@ -53,10 +53,10 @@ namespace Flights.Web.Data.Repositories
 
         public IEnumerable<SelectListItem> GetComboDepartures()
         {
-            var list = _context.Flights.Select(p => new SelectListItem
+            var list = _context.Flights.Select(d => new SelectListItem
             {
-                Text = p.DepartureAirport.CompleteAirport,
-                Value = p.DepartureAirportId.ToString()
+                Text = d.DepartureAirport.CompleteAirport,
+                Value = d.DepartureAirportId.ToString()
 
             }).OrderBy(l => l.Text).ToList();
 

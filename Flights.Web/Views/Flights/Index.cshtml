@@ -1,77 +1,152 @@
 ﻿@model IEnumerable<Flights.Web.Data.Entities.Flight>
 
-@{
-    ViewData["Title"] = "Index";
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Airports - HighFly</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
+</head>
+<body class="hold-transition sidebar-mini">
+    <!-- Content Wrapper. Contains page content -->
+    <!-- Content Header (Page header) -->
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+            </div>
+            <h1></h1>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/Flights/Create">Create New</a></li>
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Airports</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <table id="airports" class="display table table-bordered table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Airplanes)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DepartureAirport)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ArrivalAirport)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Date)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Time)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.EconomyPrice)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.BusinessPrice)
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Airplane.Model)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DepartureAirport.IATA)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ArrivalAirport.IATA)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Date)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Time)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EconomyPrice)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.BusinessPrice)
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Airplanes)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DepartureAirport)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ArrivalAirport)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Date)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Time)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.EconomyPrice)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.BusinessPrice)
+                                </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+        <!-- /.row -->
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+    <!-- /.content-wrapper -->
+    <!-- ./wrapper -->
 
-<h2>Index</h2>
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Airplanes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DepartureAirport)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ArrivalAirport)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Time)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EconomyPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BusinessPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastMinutePrice)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Airplane.Model)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DepartureAirport.IATA)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ArrivalAirport.IATA)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Time)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EconomyPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BusinessPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastMinutePrice)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        <script>
+
+            $(document).ready(function () {
+                $('#airports').DataTable();
+            });</script>
+
+        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    }
+
+
+</body>
+</html>

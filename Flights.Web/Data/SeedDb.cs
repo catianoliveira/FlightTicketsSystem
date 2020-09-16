@@ -355,7 +355,7 @@ namespace Flights.Web.Data
                     City = "Lisboa",
                     CountryId = 179,
                     EmailConfirmed = true,
-                    IsActive = true
+                    //IsActive = true
                 };
 
                 var result = await _userHelper.AddUserAsync(user, "123456");

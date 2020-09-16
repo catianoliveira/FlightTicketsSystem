@@ -79,11 +79,11 @@ namespace Flights.Web.Controllers
             {
                 var result = await _userHelper.LoginAsync(model);
 
-                if (model.IsActive == false)
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
-                    return this.View(model);
-                }
+                //if (model.IsActive == false)
+                //{
+                //    ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
+                //    return this.View(model);
+                //}
 
                 if (result.Succeeded)
                 {
@@ -138,103 +138,103 @@ namespace Flights.Web.Controllers
         }
 
 
-        [HttpPost]
-        [AllowAnonymous]
-        public IActionResult ExternalLogin(string provider, string returnUrl)
-        {
-            var redirectUrl = Url.Action("ExternalLoginCallback", "Account",
-                                            new { ReturnUrl = returnUrl });
+        //[HttpPost]
+        //[AllowAnonymous]
+        //public IActionResult ExternalLogin(string provider, string returnUrl)
+        //{
+        //    var redirectUrl = Url.Action("ExternalLoginCallback", "Account",
+        //                                    new { ReturnUrl = returnUrl });
 
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+        //    var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
 
-            return new ChallengeResult(provider, properties);
-        }
-
-
-
-        [AllowAnonymous]
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
-        {
-            returnUrl = returnUrl ?? Url.Content("~/");
-
-            LoginViewModel loginViewModel = new LoginViewModel
-            {
-                ReturnUrl = returnUrl,
-                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
-            };
-
-            if (remoteError != null)
-            {
-                ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
-                return View("Login", loginViewModel);
-            }
-
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-
-            if (info == null)
-            {
-                ModelState.AddModelError(string.Empty, "Error loading external login information.");
-                return View("Login", loginViewModel);
-            }
-
-            var signResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
-                                                                            info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
-
-            if (signResult.Succeeded)
-            {
-                return LocalRedirect(returnUrl);
-            }
-
-            else
-            {
-                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                if (email != null)
-                {
-                    var user = await _userHelper.GetUserByEmailAsync(email);
-                    if (user == null)
-                    {
-                        user = new User
-                        {
-                            FirstName = _userManager.FindByNameAsync(email).ToString(),
-                            LastName = _userManager.FindByNameAsync(email).ToString(),
-                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
-                            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
-                            CountryId = 249,
-                            IsActive = true
-                        };
-
-                        var result = await _userHelper.AddUserAsync(user, "123456");
-
-                        if (result != IdentityResult.Success)
-                        {
-                            throw new InvalidOperationException("Could not create the user in seeder.");
-                        }
+        //    return new ChallengeResult(provider, properties);
+        //}
 
 
-                        var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
-                        await _userHelper.ConfirmEmailAsync(user, token);
+
+        //[AllowAnonymous]
+        //public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        //{
+        //    returnUrl = returnUrl ?? Url.Content("~/");
+
+        //    LoginViewModel loginViewModel = new LoginViewModel
+        //    {
+        //        ReturnUrl = returnUrl,
+        //        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+        //    };
+
+        //    if (remoteError != null)
+        //    {
+        //        ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+        //        return View("Login", loginViewModel);
+        //    }
+
+        //    var info = await _signInManager.GetExternalLoginInfoAsync();
+
+        //    if (info == null)
+        //    {
+        //        ModelState.AddModelError(string.Empty, "Error loading external login information.");
+        //        return View("Login", loginViewModel);
+        //    }
+
+        //    var signResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
+        //                                                                    info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
+        //    if (signResult.Succeeded)
+        //    {
+        //        return LocalRedirect(returnUrl);
+        //    }
+
+        //    else
+        //    {
+        //        var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+        //        if (email != null)
+        //        {
+        //            var user = await _userHelper.GetUserByEmailAsync(email);
+        //            if (user == null)
+        //            {
+        //                user = new User
+        //                {
+        //                    FirstName = _userManager.FindByNameAsync(email).ToString(),
+        //                    LastName = _userManager.FindByNameAsync(email).ToString(),
+        //                    UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+        //                    Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+        //                    CountryId = 249,
+        //                    IsActive = true
+        //                };
+
+        //                var result = await _userHelper.AddUserAsync(user, "123456");
+
+        //                if (result != IdentityResult.Success)
+        //                {
+        //                    throw new InvalidOperationException("Could not create the user in seeder.");
+        //                }
 
 
-                        var isInRole = await _userHelper.IsUserInRoleAsync(user, "Client");
-                        if (!isInRole)
-                        {
-                            await _userHelper.AddUserToRoleAsync(user, "Client");
-                        }
+        //                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+        //                await _userHelper.ConfirmEmailAsync(user, token);
 
-                        await _userManager.CreateAsync(user);
-                    }
 
-                    await _userManager.AddLoginAsync(user, info);
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+        //                var isInRole = await _userHelper.IsUserInRoleAsync(user, "Client");
+        //                if (!isInRole)
+        //                {
+        //                    await _userHelper.AddUserToRoleAsync(user, "Client");
+        //                }
 
-                    return LocalRedirect(returnUrl);
-                }
+        //                await _userManager.CreateAsync(user);
+        //            }
 
-                ViewBag.ErrorTittle = $"Error claim not received from: {info.LoginProvider}";
+        //            await _userManager.AddLoginAsync(user, info);
+        //            await _signInManager.SignInAsync(user, isPersistent: false);
 
-                return View("Error");
-            }
-        }
+        //            return LocalRedirect(returnUrl);
+        //        }
+
+        //        ViewBag.ErrorTittle = $"Error claim not received from: {info.LoginProvider}";
+
+        //        return View("Error");
+        //    }
+        //}
 
 
         public IActionResult Register()
@@ -274,7 +274,7 @@ namespace Flights.Web.Controllers
                             City = model.City,
                             CountryId = model.CountryId,
                             RoleId = model.RoleID,
-                            IsActive = true
+                            //IsActive = true
                         };
 
                     }
@@ -330,7 +330,7 @@ namespace Flights.Web.Controllers
                             Email = model.EmailAddress,
                             UserName = model.EmailAddress,
                             RoleId = model.RoleID,
-                            IsActive = true,
+                            //IsActive = true,
                             CountryId = model.CountryId
                         };
                     }
@@ -617,7 +617,7 @@ namespace Flights.Web.Controllers
                 var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 if (user != null)
                 {
-                    user.IsActive = false;
+                    //user.IsActive = false;
 
                     return View("SuccessDeactivation");
                 }

@@ -94,6 +94,17 @@ namespace Flights.Web.Data.Entities
 
 
 
-        public bool IsActive { get; set; }
+        //public bool IsActive { get; set; }
+
+
+        public string FullAdress
+        {
+            get
+            {
+                return $"{this.Address}, {this.City}, {this.Country}";
+            }
+        }
+
+        
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FlightTicketsSystem.Web.Migrations
 {
-    public partial class initialdb : Migration
+    public partial class InitialDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -96,8 +96,7 @@ namespace FlightTicketsSystem.Web.Migrations
                     Address = table.Column<string>(maxLength: 70, nullable: true),
                     City = table.Column<string>(maxLength: 50, nullable: true),
                     CountryId = table.Column<int>(nullable: false),
-                    IndicativeId = table.Column<int>(nullable: false),
-                    IsActive = table.Column<bool>(nullable: false)
+                    IndicativeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

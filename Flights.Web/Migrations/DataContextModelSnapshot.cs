@@ -211,8 +211,6 @@ namespace FlightTicketsSystem.Web.Migrations
 
                     b.Property<int>("IndicativeId");
 
-                    b.Property<bool>("IsActive");
-
                     b.Property<string>("LastName")
                         .IsRequired();
 

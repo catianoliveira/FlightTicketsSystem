@@ -104,14 +104,30 @@ namespace FlightTicketsSystem.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Ticket ticket)
+        public async Task<IActionResult> Create(Ticket tickets)
         {
             if (ModelState.IsValid)
             {
+                //await _flightRepository.CreateAsync(flight);
+
+
+                Ticket ticket = new Ticket
+                {
+                    ArrivalAirportId = tickets.ArrivalAirportId,
+                    DepartureAirportId = tickets.DepartureAirportId,
+                    PassangerName = tickets.PassangerName,
+                    TravelClass = tickets.TravelClass,
+                    DocumentNumber = tickets.DocumentNumber,
+                    DocumentTypeId = tickets.DocumentTypeId,
+                    SeatNumber = 1
+                };
+
                 await _ticketRepository.CreateAsync(ticket);
+
                 return RedirectToAction(nameof(Index));
+
             }
-            return View(ticket);
+            return View(tickets);
         }
 
         // GET: Tickets/Edit/5

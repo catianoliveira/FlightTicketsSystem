@@ -60,17 +60,17 @@ namespace Flights.Web.Data.Entities
         public IEnumerable<SelectListItem> DocumentTypes { get; set; }
 
 
-
+        [Required]
         public string DocumentNumber { get; set; }
 
 
 
         public int SeatNumber { get; set; }
 
-
+        [Required]
         public string TravelClass { get; set; }
 
-
+        [Required]
         public bool Lugagge { get; set; }
 
 

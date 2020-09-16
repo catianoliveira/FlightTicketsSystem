@@ -1,4 +1,4 @@
-﻿@model Flights.Web.Data.Entities.Ticket
+﻿@model FlightTicketsSystem.Web.Models.UserRoleViewModel
 
 
 <!DOCTYPE html>
@@ -35,7 +35,7 @@
             <h1></h1>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="/Airports">Airports</a></li>
+                    <li class="breadcrumb-item"><a href="/Admin/ListUsers">Users List</a></li>
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
                 </ol>
             </div>
@@ -51,63 +51,54 @@
 
                 </div>
                 <!-- Content Header (Page header) -->
-                @using (Html.BeginForm("Details", "Tickets", FormMethod.Post, new { @autocomplete = "on" }))
-                {
-                    <div class="card-body">
+                <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <dl class="dl-horizontal">
                                     <dt>
-                                        @Html.DisplayNameFor(model => model.DepartureAirport)
+                                        @Html.DisplayNameFor(model => model.Name)
                                     </dt>
                                     <dd>
-                                        @Html.DisplayFor(model => model.DepartureAirport.Id)
+                                        @Html.DisplayFor(model => model.Name)
                                     </dd>
                                     <dt>
-                                        @Html.DisplayNameFor(model => model.PassangerName)
+                                        @Html.DisplayNameFor(model => model.Role)
                                     </dt>
                                     <dd>
-                                        @Html.DisplayFor(model => model.PassangerName)
+                                        @Html.DisplayFor(model => model.Role)
                                     </dd>
                                     <dt>
-                                        @Html.DisplayNameFor(model => model.DocumentType)
+                                        @Html.DisplayNameFor(model => model.UserName)
                                     </dt>
                                     <dd>
-                                        @Html.DisplayFor(model => model.DocumentType.Id)
+                                        @Html.DisplayFor(model => model.UserName)
                                     </dd>
                                     <dt>
-                                        @Html.DisplayNameFor(model => model.DocumentNumber)
+                                        @Html.DisplayNameFor(model => model.DateOfBirth)
                                     </dt>
                                     <dd>
-                                        @Html.DisplayFor(model => model.DocumentNumber)
+                                        @Html.DisplayFor(model => model.DateOfBirth)
                                     </dd>
                                     <dt>
-                                        @Html.DisplayNameFor(model => model.SeatNumber)
+                                        @Html.DisplayNameFor(model => model.PhoneNumber)
                                     </dt>
                                     <dd>
-                                        @Html.DisplayFor(model => model.SeatNumber)
+                                        @Html.DisplayFor(model => model.PhoneNumber)
                                     </dd>
                                     <dt>
-                                        @Html.DisplayNameFor(model => model.TravelClass)
+                                        @Html.DisplayNameFor(model => model.Address)
                                     </dt>
                                     <dd>
-                                        @Html.DisplayFor(model => model.TravelClass)
+                                        @Html.DisplayFor(model => model.Address)
                                     </dd>
-                                    <dt>
-                                        @Html.DisplayNameFor(model => model.Lugagge)
-                                    </dt>
-                                    <dd>
-                                        @Html.DisplayFor(model => model.Lugagge)
-                                    </dd>
-
                                 </dl>
                             </div>
                         </div>
                     </div>
-                }
+                
             </div>
             <div>
-                <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+                <a asp-action="Edit" asp-route-id="@Model.UserId">Edit</a> |
                 <a asp-action="Index">Back to List</a>
             </div>
         </div>
@@ -144,3 +135,4 @@
     }
 </body>
 </html>
+
