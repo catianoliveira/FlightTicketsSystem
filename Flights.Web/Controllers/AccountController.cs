@@ -29,7 +29,6 @@ namespace Flights.Web.Controllers
         private readonly IConfiguration _configuration;
         private readonly ICountryRepository _countryRepository;
         private readonly IMailHelper _mailHelper;
-        private readonly IDocumentTypeRepository _documentTypeRepository;
         private readonly IIndicativeRepository _indicativeRepository;
 
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -42,7 +41,6 @@ namespace Flights.Web.Controllers
             IConfiguration configuration,
             ICountryRepository countryRepository,
             IMailHelper mailHelper,
-            IDocumentTypeRepository documentTypeRepository,
             IIndicativeRepository indicativeRepository,
             RoleManager<IdentityRole> roleManager,
             UserManager<User> userManager,
@@ -53,7 +51,6 @@ namespace Flights.Web.Controllers
             _configuration = configuration;
             _countryRepository = countryRepository;
             _mailHelper = mailHelper;
-            _documentTypeRepository = documentTypeRepository;
             _indicativeRepository = indicativeRepository;
             _roleManager = roleManager;
             _userManager = userManager;
@@ -243,7 +240,6 @@ namespace Flights.Web.Controllers
             var model = new RegisterNewUserViewModel
             {
                 Countries = _countryRepository.GetComboCountries(),
-                DocumentTypes = _documentTypeRepository.GetComboDocumentTypes(),
                 Indicatives = _indicativeRepository.GetComboIndicatives(),
                 RoleChoices = _userHelper.GetComboRoles()
             };
@@ -488,7 +484,6 @@ namespace Flights.Web.Controllers
             var model = new ChangeUserViewModel
             {
                 Countries = _countryRepository.GetComboCountries(),
-                DocumentTypes = _documentTypeRepository.GetComboDocumentTypes(),
                 Indicatives = _indicativeRepository.GetComboIndicatives()
             };
 

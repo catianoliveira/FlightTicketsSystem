@@ -38,7 +38,7 @@ namespace Flights.Web.Controllers
                 .Include(a => a.Airplane)
                 .Include(a => a.DepartureAirport)
                 .Include(a => a.ArrivalAirport)
-                .OrderBy(p => p.Date);
+                .OrderBy(p => p.DateTime);
 
             return View(model.ToList());
         }
@@ -95,8 +95,9 @@ namespace Flights.Web.Controllers
                     BusinessPrice = flights.BusinessPrice,
                     EconomyPrice = flights.EconomyPrice,
                     LastMinutePrice = flights.LastMinutePrice,
-                    Date = flights.Date,
-                    Time = flights.Time
+                    DateTime = flights.DateTime,
+                    ArrivalAirport = flights.ArrivalAirport,
+                    DepartureAirport = flights.DepartureAirport
                 };
 
                 await _flightRepository.CreateAsync(flight);

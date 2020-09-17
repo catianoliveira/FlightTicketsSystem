@@ -19,7 +19,7 @@
             <h1></h1>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="/Tickets/Create">Create New</a></li>
+                    <li class="breadcrumb-item"><a href="/Tickets/ChooseFlight">BuyTicket</a></li>
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
                 </ol>
             </div>
@@ -39,16 +39,10 @@
                         <thead>
                             <tr>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.DepartureAirport)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.ArrivalAirport)
+                                    @Html.DisplayNameFor(model => model.Flight.CompleteFlight)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.PassangerName)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.DocumentNumber)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.TravelClass)
@@ -67,16 +61,10 @@
                             {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.DepartureAirport)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.ArrivalAirport)
+                                    @Html.DisplayFor(modelItem => item.Flight.CompleteFlight)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.PassangerName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.DocumentNumber)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.TravelClass)
@@ -97,16 +85,10 @@
                         </tbody>
                         <tfoot>
                             <tr><th>
-                                    @Html.DisplayNameFor(model => model.DepartureAirport)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.ArrivalAirport)
+                                    @Html.DisplayNameFor(model => model.Flight.CompleteFlight)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.PassangerName)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.DocumentNumber)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.TravelClass)

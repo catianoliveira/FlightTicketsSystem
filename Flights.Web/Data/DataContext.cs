@@ -17,8 +17,6 @@ namespace Flights.Web.Data
 
         public DbSet<Flight> Flights { get; set; }
 
-        public DbSet<DocumentType> DocumentTypes { get; set; }
-
         public DbSet<Indicative> Indicatives { get; set; }
 
         public DbSet<Ticket> Tickets { get; set; }

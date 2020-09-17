@@ -62,29 +62,6 @@ namespace Flights.Web.Models
 
 
 
-
-        [Display(Name = "Document Type")]
-        [Required(ErrorMessage = "You must select a {0}")]
-        public int DocumentTypeId { get; set; }
-
-
-
-
-        public IEnumerable<SelectListItem> DocumentTypes { get; set; }
-
-
-
-
-        public DocumentType DocumentType { get; set; }
-
-
-
-
-        public string DocumentNumber { get; set; }
-
-
-
-
         [Display(Name = "City")]
         [Required]
         public string City { get; set; }

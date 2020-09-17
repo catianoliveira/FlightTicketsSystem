@@ -7,8 +7,6 @@ namespace Flights.Web.Data.Entities
     public class Airport : IEntity
     {
 
-        Country country = new Country();
-
         public int Id { get; set; }
 
         [Required]

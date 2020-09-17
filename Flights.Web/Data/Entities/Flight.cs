@@ -56,17 +56,10 @@ namespace Flights.Web.Data.Entities
 
 
 
-        [Required]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = false)]
-        [GreaterThanDateAttributte]
-        public DateTime Date { get; set; }
-
-
 
         [Required]
-        [DataType(DataType.Time)]
-        [Display(Name = "Time")]
-        public DateTime Time { get; set; }
+        [Display(Name = "Date and Time")]
+        public DateTime DateTime { get; set; }
 
 
 
@@ -114,7 +107,7 @@ namespace Flights.Web.Data.Entities
         {
             get
             {
-                return $"From {this.DepartureAirport} to {this.ArrivalAirport}";
+                return $"{this.DepartureAirport} -> {this.ArrivalAirport}";
             }
         }
 

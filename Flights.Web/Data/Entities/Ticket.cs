@@ -17,27 +17,17 @@ namespace Flights.Web.Data.Entities
         public User User { get; set; }
 
 
+        
         [Required]
-        [ForeignKey("Departure Airport")]
-        public int DepartureAirportId { get; set; }
+        [ForeignKey("Flight")]
+        public int FlightId { get; set; }
 
 
-        [Required]
-        [ForeignKey("Arrival Airport")]
-        public int ArrivalAirportId { get; set; }
-
-
-        public Flight DepartureAirport { get; set; }
+        public Flight Flight { get; set; }
 
 
 
-        public Flight ArrivalAirport { get; set; }
-
-
-
-        public IEnumerable<SelectListItem> ArrivalAirports { get; set; }
-
-        public IEnumerable<SelectListItem> DepartureAirports { get; set; }
+        //public IEnumerable<SelectListItem> Flights { get; set; }
 
 
 
@@ -45,23 +35,6 @@ namespace Flights.Web.Data.Entities
         [Required]
         public string PassangerName { get; set; }
 
-
-
-        [Display(Name = "Document Type")]
-        [Required(ErrorMessage = "You must select a {0}")]
-        public int DocumentTypeId { get; set; }
-
-
-
-        public DocumentType DocumentType { get; set; }
-
-
-
-        public IEnumerable<SelectListItem> DocumentTypes { get; set; }
-
-
-        [Required]
-        public string DocumentNumber { get; set; }
 
 
 
@@ -74,12 +47,12 @@ namespace Flights.Web.Data.Entities
         public bool Lugagge { get; set; }
 
 
-        public string CompleteTicket
-        {
-            get
-            {
-                return $"{this.ArrivalAirport} {this.DepartureAirport}";
-            }
-        }
+        //public string CompleteTicket
+        //{
+        //    get
+        //    {
+        //        return $"{this.ArrivalAirport} {this.DepartureAirport}";
+        //    }
+        //}
     }
 }

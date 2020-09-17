@@ -88,23 +88,6 @@ namespace FlightTicketsSystem.Web.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("Flights.Web.Data.Entities.DocumentType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Type");
-
-                    b.Property<string>("userId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("DocumentTypes");
-                });
-
             modelBuilder.Entity("Flights.Web.Data.Entities.Flight", b =>
                 {
                     b.Property<int>("Id")
@@ -117,15 +100,13 @@ namespace FlightTicketsSystem.Web.Migrations
 
                     b.Property<double>("BusinessPrice");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime>("DateTime");
 
                     b.Property<int>("DepartureAirportId");
 
                     b.Property<double>("EconomyPrice");
 
                     b.Property<int>("LastMinutePrice");
-
-                    b.Property<DateTime>("Time");
 
                     b.Property<string>("userId");
 
@@ -148,13 +129,10 @@ namespace FlightTicketsSystem.Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ArrivalAirportId");
+                    b.Property<string>("DocumentNumber")
+                        .IsRequired();
 
-                    b.Property<int>("DepartureAirportId");
-
-                    b.Property<string>("DocumentNumber");
-
-                    b.Property<int>("DocumentTypeId");
+                    b.Property<int>("FlightId");
 
                     b.Property<bool>("Lugagge");
 
@@ -163,18 +141,15 @@ namespace FlightTicketsSystem.Web.Migrations
 
                     b.Property<int>("SeatNumber");
 
-                    b.Property<string>("TravelClass");
+                    b.Property<string>("TravelClass")
+                        .IsRequired();
 
                     b.Property<string>("UserId")
                         .IsRequired();
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArrivalAirportId");
-
-                    b.HasIndex("DepartureAirportId");
-
-                    b.HasIndex("DocumentTypeId");
+                    b.HasIndex("FlightId");
 
                     b.HasIndex("UserId");
 
@@ -405,13 +380,6 @@ namespace FlightTicketsSystem.Web.Migrations
                         .HasForeignKey("FlightId1");
                 });
 
-            modelBuilder.Entity("Flights.Web.Data.Entities.DocumentType", b =>
-                {
-                    b.HasOne("Flights.Web.Data.Entities.User", "user")
-                        .WithMany()
-                        .HasForeignKey("userId");
-                });
-
             modelBuilder.Entity("Flights.Web.Data.Entities.Flight", b =>
                 {
                     b.HasOne("Flights.Web.Data.Entities.Airplane", "Airplane")
@@ -436,19 +404,9 @@ namespace FlightTicketsSystem.Web.Migrations
 
             modelBuilder.Entity("Flights.Web.Data.Entities.Ticket", b =>
                 {
-                    b.HasOne("Flights.Web.Data.Entities.Flight", "ArrivalAirport")
+                    b.HasOne("Flights.Web.Data.Entities.Flight", "Flight")
                         .WithMany()
-                        .HasForeignKey("ArrivalAirportId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Flights.Web.Data.Entities.Flight", "DepartureAirport")
-                        .WithMany()
-                        .HasForeignKey("DepartureAirportId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Flights.Web.Data.Entities.DocumentType", "DocumentType")
-                        .WithMany()
-                        .HasForeignKey("DocumentTypeId")
+                        .HasForeignKey("FlightId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Flights.Web.Data.Entities.User", "User")

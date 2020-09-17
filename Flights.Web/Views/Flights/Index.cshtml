@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Airports - HighFly</title>
+    <title>Flights - HighFly</title>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
 </head>
 <body class="hold-transition sidebar-mini">
@@ -30,7 +30,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Airports</h3>
+                    <h3 class="card-title">Flights</h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -41,16 +41,13 @@
                                     @Html.DisplayNameFor(model => model.Airplanes)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.DepartureAirport)
+                                    @Html.DisplayNameFor(model => model.DepartureAirport.CompleteAirport)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.ArrivalAirport)
+                                    @Html.DisplayNameFor(model => model.ArrivalAirport.CompleteAirport)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.Date)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Time)
+                                    @Html.DisplayNameFor(model => model.DateTime)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.EconomyPrice)
@@ -69,16 +66,13 @@
                                         @Html.DisplayFor(modelItem => item.Airplane.Model)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.DepartureAirport.IATA)
+                                        @Html.DisplayFor(modelItem => item.DepartureAirport.CompleteAirport)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.ArrivalAirport.IATA)
+                                        @Html.DisplayFor(modelItem => item.ArrivalAirport.CompleteAirport)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Date)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Time)
+                                        @Html.DisplayFor(modelItem => item.DateTime)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.EconomyPrice)
@@ -100,16 +94,13 @@
                                     @Html.DisplayNameFor(model => model.Airplanes)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.DepartureAirport)
+                                    @Html.DisplayNameFor(model => model.DepartureAirport.CompleteAirport)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.ArrivalAirport)
+                                    @Html.DisplayNameFor(model => model.ArrivalAirport.CompleteAirport)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.Date)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Time)
+                                    @Html.DisplayNameFor(model => model.DateTime)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.EconomyPrice)

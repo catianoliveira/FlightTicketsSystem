@@ -72,15 +72,6 @@ namespace Flights.Web.Data
             }
 
 
-            
-            if (!_context.DocumentTypes.Any())
-            {
-                this.AddDocuments("Identity Card");
-                this.AddDocuments("Passport");
-
-                await _context.SaveChangesAsync();
-            }
-
 
             if (!_context.Airports.Any())
             {
@@ -432,8 +423,7 @@ namespace Flights.Web.Data
                 AirplaneId = airplane,
                 DepartureAirportId = departure,
                 ArrivalAirportId = arrival,
-                Date = date,
-                Time = time,
+                DateTime = date,
                 EconomyPrice = economy,
                 BusinessPrice = business,
                 LastMinutePrice = lastMinute
@@ -445,14 +435,6 @@ namespace Flights.Web.Data
             _context.Countries.Add(new Country
             {
                 Name = name
-            });
-        }
-
-        private void AddDocuments(string document)
-        {
-            _context.DocumentTypes.Add(new DocumentType
-            {
-                Type = document
             });
         }
     }

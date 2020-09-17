@@ -10,31 +10,35 @@ using Flights.Web.Data.Entities;
 using FlightTicketsSystem.Web.Data.Repositories;
 using Flights.Web.Data.Repositories;
 using FlightTicketsSystem.Web.Models;
+using Flights.Web.Helpers;
 
 namespace FlightTicketsSystem.Web.Controllers
 {
     public class TicketsController : Controller
     {
         private readonly DataContext _context;
-        private readonly IDocumentTypeRepository _documentTypeRepository;
         private readonly ICountryRepository _countryRepository;
         private readonly IFlightRepository _flightRepository;
         private readonly ITicketRepository _ticketRepository;
+        private readonly IIndicativeRepository _indicativeRepository;
+        private readonly IUserHelper _userHelper;
         private readonly IAirportRepository _airportRepository;
 
         public TicketsController(
             DataContext context,
-            IDocumentTypeRepository documentTypeRepository,
             ICountryRepository countryRepository,
             IFlightRepository flightRepository,
             ITicketRepository ticketRepository,
-            IAirportRepository airportRepository)
+            IAirportRepository airportRepository,
+            IIndicativeRepository indicativeRepository,
+            IUserHelper userHelper)
         {
             _context = context;
-            _documentTypeRepository = documentTypeRepository;
             _countryRepository = countryRepository;
             _flightRepository = flightRepository;
             _ticketRepository = ticketRepository;
+            _indicativeRepository = indicativeRepository;
+            _userHelper = userHelper;
             _airportRepository = airportRepository;
         }
 
@@ -42,9 +46,7 @@ namespace FlightTicketsSystem.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var dataContext = _context.Tickets
-                .Include(t => t.DocumentType)
-                .Include(t => t.ArrivalAirport)
-                .Include(t => t.DepartureAirport);
+                .Include(t => t.Flight);
             return View(await dataContext.ToListAsync());
         }
 
@@ -56,7 +58,7 @@ namespace FlightTicketsSystem.Web.Controllers
                 .Include(a => a.Airplane)
                 .Include(a => a.DepartureAirport)
                 .Include(a => a.ArrivalAirport)
-                .OrderBy(p => p.Date);
+                .OrderBy(p => p.DateTime);
 
             return View(model.ToList());
         }
@@ -72,9 +74,7 @@ namespace FlightTicketsSystem.Web.Controllers
             }
 
             var ticket = await _context.Tickets
-                .Include(t => t.DocumentType)
-                .Include(t => t.ArrivalAirport)
-                .Include(t => t.DepartureAirport)
+                .Include(t => t.Flight)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (ticket == null)
@@ -90,9 +90,8 @@ namespace FlightTicketsSystem.Web.Controllers
         {
             var model = new Ticket
             {
-                DocumentTypes = _documentTypeRepository.GetComboDocumentTypes(),
-                ArrivalAirports = _flightRepository.GetComboArrivals(0),
-                DepartureAirports = _flightRepository.GetComboDepartures()
+                //ArrivalAirports = _flightRepository.GetComboArrivals(0),
+                //DepartureAirports = _flightRepository.GetComboDepartures()
             };
 
             return this.View(model);
@@ -110,16 +109,15 @@ namespace FlightTicketsSystem.Web.Controllers
             {
                 //await _flightRepository.CreateAsync(flight);
 
+                Flight flight = _context.Flights.Find(tickets.FlightId);
 
                 Ticket ticket = new Ticket
                 {
-                    ArrivalAirportId = tickets.ArrivalAirportId,
-                    DepartureAirportId = tickets.DepartureAirportId,
+                    FlightId = flight.Id,
                     PassangerName = tickets.PassangerName,
                     TravelClass = tickets.TravelClass,
-                    DocumentNumber = tickets.DocumentNumber,
-                    DocumentTypeId = tickets.DocumentTypeId,
                     SeatNumber = 1
+                    //TODO user
                 };
 
                 await _ticketRepository.CreateAsync(ticket);
@@ -191,8 +189,7 @@ namespace FlightTicketsSystem.Web.Controllers
             }
 
             var ticket = await _context.Tickets
-                .Include(t => t.DocumentType)
-                .Include(t => t.DepartureAirport)
+                .Include(t => t.Flight)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (ticket == null)
             {
@@ -223,6 +220,57 @@ namespace FlightTicketsSystem.Web.Controllers
         {
             var arrivalAirports = await _flightRepository.GetDeparturesWithArrivalsAsync(departureAirportId);
             return this.Json(arrivalAirports.ArrivalsCollection.OrderBy(c => c.Country));
+        }
+
+
+        public async Task<IActionResult> BuyTicket(int? id)
+        {
+            if (id == 0)
+            {
+                return NotFound();
+            }
+
+            var ticket = await _context.Tickets
+                .Include(t => t.Flight.ArrivalAirport)
+                 .Include(t => t.Flight.DepartureAirport)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
+
+            var model = new BuyTicketViewModel
+            {
+                PhoneNumber = user.PhoneNumber,
+                IndicativeId = user.IndicativeId,
+                Indicatives = _indicativeRepository.GetComboIndicatives(),
+                PassangerName = user.FullName
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BuyTicket(Ticket tickets)
+        {
+            if (ModelState.IsValid)
+            {
+
+                Flight flight = _context.Flights.Find(tickets.FlightId);
+
+                Ticket ticket = new Ticket
+                {
+                    FlightId = flight.Id,
+                    PassangerName = tickets.PassangerName,
+                    TravelClass = tickets.TravelClass,
+                    SeatNumber = 1
+                    //TODO user
+                };
+
+                await _ticketRepository.CreateAsync(ticket);
+
+                return RedirectToAction(nameof(Index));
+
+            }
+            return View(tickets);
         }
     }
 }

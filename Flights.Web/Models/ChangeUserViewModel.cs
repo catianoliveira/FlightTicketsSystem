@@ -11,23 +11,7 @@ namespace Flights.Web.Models
 {
     public class ChangeUserViewModel
     {
-        [Display(Name = "Document Type")]
-        [Required(ErrorMessage = "You must select a {0}")]
-        public int DocumentTypeId { get; set; }
-
-
         
-        public DocumentType DocumentType { get; set; }
-
-
-        public IEnumerable<SelectListItem> DocumentTypes { get; set; }
-
-
-
-        [Display(Name = "Document Number")]
-        [Required]
-        public string DocumentNumber { get; set; }
-
 
         [Required]
         [Display(Name = "First Name")]
