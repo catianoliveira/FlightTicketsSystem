@@ -36,7 +36,6 @@
             <h1></h1>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="/Flightss">Flights</a></li>
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
                 </ol>
             </div>
@@ -48,12 +47,12 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Create Flights</h3>
+                    <h3 class="card-title">Buy Ticket</h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <form asp-action="Create">
+                            <form asp-action="BuyTicket">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 <div class="form-group">
                                     <label asp-for="PassangerName">Passanger Name</label>
@@ -61,19 +60,32 @@
                                     <span asp-validation-for="PassangerName" class="text-warning"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="PhoneNumber">Passanger Name</label>
-                                    <input asp-for="PassangerName" class="form-control" />
-                                    <span asp-validation-for="PassangerName" class="text-warning"></span>
+                                    <label asp-for="FlightId">FlightId</label>
+                                    <input asp-for="@Model.FlightId" class="form-control" disabled />
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="IndicativeId" class="control-label"></label>
+                                    <select asp-for="IndicativeId" asp-items="Model.Indicatives" class="form-control"></select>
+                                    <span asp-validation-for="IndicativeId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="PhoneNumber">Phone Number</label>
+                                    <input asp-for="PhoneNumber" class="form-control" />
+                                    <span asp-validation-for="PhoneNumber" class="text-warning"></span>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="TravelClass">Travel Class</label>
-                                    <br/>
+                                    <br />
                                     @Html.DropDownList("TravelClass", new SelectList(new[] { "Economy", "Business" }))
                                     <span asp-validation-for="TravelClass" class="text-warning"></span>
                                 </div>
                                 <div class="form-group">
+                                    <label asp-for="Price">Price</label>
+                                    <label asp-for="Price"> </label>
+                                </div>
+                                <div class="form-group">
                                     <label asp-for="Lugagge">Lugagge</label>
-                                    <input asp-for="Lugagge" type="checkbox"/>
+                                    <input asp-for="Lugagge" type="checkbox" />
                                 </div>
                                 <div class="form-group">
                                     <input type="submit" value="Confirm" class="btn btn-default" />

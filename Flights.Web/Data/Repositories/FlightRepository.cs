@@ -1,5 +1,6 @@
 ﻿using Flights.Web.Data.Entities;
 using FlightTicketsSystem.Web.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -76,5 +77,56 @@ namespace Flights.Web.Data.Repositories
               .Include(c => c.ArrivalsCollection)
               .FirstOrDefaultAsync(d => d.DepartureAirportId == departureAirportId);
         }
+
+        
+        public async Task<int> GetEconomySeats(int flightId)
+        {
+            //vai buscar o id do avião
+            var airplaneId = _context.Set<Airplane>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Id == flightId);
+
+
+            //vai buscar a quantidade de lugares que há no avião
+            var economySeats = _context.Airplanes
+                .Include(a => a.EconomySeats)
+                .Where(a => a.Id == airplaneId.Id);
+
+
+            //vai buscar o ultimo lugar ocupado no voo
+            var lastSeatTaken = _context.Tickets
+                .Include(a => a.SeatNumber);
+
+
+            //ultimo lugar mais um
+            var nextSeat = Convert.ToInt32(lastSeatTaken) + 1;
+
+
+            //compara o ultimo lugar aos lugares disponiveis
+            if (lastSeatTaken == economySeats)
+            {
+                //voo cheio
+                return 0;
+            }
+
+            else if (lastSeatTaken == null)
+            {
+                //primeiro lugar
+                nextSeat = 1;
+                return nextSeat;
+            }
+
+            else
+            {
+                //ultimo lugar mais um
+                return nextSeat;
+            }
+        }
+
+
+        //public async Task<Flight> GetBusinessSeats(int airplaneId)
+        //{
+            
+        //}
     }
 }

@@ -86,47 +86,47 @@ namespace FlightTicketsSystem.Web.Controllers
         }
 
         // GET: Tickets/Create
-        public IActionResult Create()
-        {
-            var model = new Ticket
-            {
-                //ArrivalAirports = _flightRepository.GetComboArrivals(0),
-                //DepartureAirports = _flightRepository.GetComboDepartures()
-            };
+        //public IActionResult Create()
+        //{
+        //    var model = new Ticket
+        //    {
+        //        //ArrivalAirports = _flightRepository.GetComboArrivals(0),
+        //        //DepartureAirports = _flightRepository.GetComboDepartures()
+        //    };
 
-            return this.View(model);
-        }
+        //    return this.View(model);
+        //}
 
 
         // POST: Tickets/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Ticket tickets)
-        {
-            if (ModelState.IsValid)
-            {
-                //await _flightRepository.CreateAsync(flight);
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create(Ticket tickets)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        //await _flightRepository.CreateAsync(flight);
 
-                Flight flight = _context.Flights.Find(tickets.FlightId);
+        //        Flight flight = _context.Flights.Find(tickets.FlightId);
 
-                Ticket ticket = new Ticket
-                {
-                    FlightId = flight.Id,
-                    PassangerName = tickets.PassangerName,
-                    TravelClass = tickets.TravelClass,
-                    SeatNumber = 1
-                    //TODO user
-                };
+        //        Ticket ticket = new Ticket
+        //        {
+        //            FlightId = flight.Id,
+        //            PassangerName = tickets.PassangerName,
+        //            TravelClass = tickets.TravelClass,
+        //            SeatNumber = 1
+        //            //TODO user
+        //        };
 
-                await _ticketRepository.CreateAsync(ticket);
+        //        await _ticketRepository.CreateAsync(ticket);
 
-                return RedirectToAction(nameof(Index));
+        //        return RedirectToAction(nameof(Index));
 
-            }
-            return View(tickets);
-        }
+        //    }
+        //    return View(tickets);
+        //}
 
         // GET: Tickets/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -230,15 +230,11 @@ namespace FlightTicketsSystem.Web.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.Tickets
-                .Include(t => t.Flight.ArrivalAirport)
-                 .Include(t => t.Flight.DepartureAirport)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
             var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
 
             var model = new BuyTicketViewModel
             {
+                FlightId = id.Value,
                 PhoneNumber = user.PhoneNumber,
                 IndicativeId = user.IndicativeId,
                 Indicatives = _indicativeRepository.GetComboIndicatives(),
@@ -249,28 +245,36 @@ namespace FlightTicketsSystem.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> BuyTicket(Ticket tickets)
+        public async Task<IActionResult> BuyTicket(BuyTicketViewModel model)
         {
             if (ModelState.IsValid)
             {
 
-                Flight flight = _context.Flights.Find(tickets.FlightId);
+                var nextSeat = await _flightRepository.GetEconomySeats(model.FlightId);
 
-                Ticket ticket = new Ticket
+                if (Convert.ToInt32(nextSeat) == 0)
                 {
-                    FlightId = flight.Id,
-                    PassangerName = tickets.PassangerName,
-                    TravelClass = tickets.TravelClass,
-                    SeatNumber = 1
-                    //TODO user
-                };
+                    this.ModelState.AddModelError(string.Empty, "Flight is full");
+                }
 
-                await _ticketRepository.CreateAsync(ticket);
+                else
+                {
+                    var ticket = new Ticket
+                    {
+                        FlightId = model.FlightId,
+                        PassangerName = model.PassangerName,
+                        TravelClass = model.TravelClass,
+                        SeatNumber = Convert.ToInt32(nextSeat)
+                        //TODO user
+                    };
+
+                    await _ticketRepository.CreateAsync(ticket);
+                }
 
                 return RedirectToAction(nameof(Index));
-
             }
-            return View(tickets);
+
+            return View(model);
         }
     }
 }

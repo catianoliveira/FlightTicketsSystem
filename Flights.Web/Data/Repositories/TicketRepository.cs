@@ -25,23 +25,9 @@ namespace FlightTicketsSystem.Web.Data.Repositories
             _userHelper = userHelper;
         }
 
-        //public IEnumerable<SelectListItem> GetComboTickets()
+        //public async Task<Flight> CheckAvailability(int flightId)
         //{
-        //    var list = _context.Tickets.Select(p => new SelectListItem
-        //    {
-        //        Text = p.CompleteTicket,
-        //        Value = p.Id.ToString()
 
-        //    }).ToList();
-
-
-        //    list.Insert(0, new SelectListItem
-        //    {
-        //        Text = "Select a Ticket",
-        //        Value = "0"
-        //    });
-
-        //    return list;
         //}
 
 

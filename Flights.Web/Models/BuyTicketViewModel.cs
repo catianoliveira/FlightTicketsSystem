@@ -24,7 +24,7 @@ namespace FlightTicketsSystem.Web.Models
 
         
 
-        //public int SeatNumber { get; set; }
+        public int SeatNumber { get; set; }
 
 
 
@@ -48,5 +48,9 @@ namespace FlightTicketsSystem.Web.Models
 
         [Required]
         public bool Lugagge { get; set; }
+
+
+        [Required]
+        public bool Price { get; set; }
     }
 }

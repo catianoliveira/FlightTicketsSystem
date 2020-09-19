@@ -21,6 +21,7 @@ namespace Flights.Web.Data.Repositories
         Task<Flight> GetDeparturesWithArrivalsAsync(int id);
 
 
+        Task<int> GetEconomySeats(int flightId);
 
     }
 }
