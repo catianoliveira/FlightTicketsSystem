@@ -22,6 +22,7 @@ namespace FlightTicketsSystem.Web.Controllers
         private readonly ITicketRepository _ticketRepository;
         private readonly IIndicativeRepository _indicativeRepository;
         private readonly IUserHelper _userHelper;
+        private readonly IAirplaneRepository _airplaneRepository;
         private readonly IAirportRepository _airportRepository;
 
         public TicketsController(
@@ -31,7 +32,8 @@ namespace FlightTicketsSystem.Web.Controllers
             ITicketRepository ticketRepository,
             IAirportRepository airportRepository,
             IIndicativeRepository indicativeRepository,
-            IUserHelper userHelper)
+            IUserHelper userHelper,
+            IAirplaneRepository airplaneRepository)
         {
             _context = context;
             _countryRepository = countryRepository;
@@ -39,15 +41,24 @@ namespace FlightTicketsSystem.Web.Controllers
             _ticketRepository = ticketRepository;
             _indicativeRepository = indicativeRepository;
             _userHelper = userHelper;
+            _airplaneRepository = airplaneRepository;
             _airportRepository = airportRepository;
         }
 
         // GET: Tickets
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var dataContext = _context.Tickets
-                .Include(t => t.Flight);
-            return View(await dataContext.ToListAsync());
+            var tickets = _context.Tickets
+                .Include(t => t.FlightId)
+                .Include(t => t.Flight.ArrivalAirport.CompleteAirport)
+                .Include(t => t.Flight.DepartureAirport.CompleteAirport)
+                .Include(t => t.PassangerName)
+                .Include(t => t.TravelClass)
+                .Include(t => t.SeatNumber)
+                .Include(t => t.Lugagge)
+                .Where(a => a.Flight.DateTime >= DateTime.Today.ToUniversalTime());
+
+            return View(tickets);
         }
 
 
@@ -238,7 +249,7 @@ namespace FlightTicketsSystem.Web.Controllers
                 PhoneNumber = user.PhoneNumber,
                 IndicativeId = user.IndicativeId,
                 Indicatives = _indicativeRepository.GetComboIndicatives(),
-                PassangerName = user.FullName
+                PassangerName = user.FullName,
             };
 
             return View(model);
@@ -249,28 +260,61 @@ namespace FlightTicketsSystem.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                var nextSeat = await _flightRepository.GetEconomySeats(model.FlightId);
-
-                if (Convert.ToInt32(nextSeat) == 0)
+                if (model.TravelClass == "Economy")
                 {
-                    this.ModelState.AddModelError(string.Empty, "Flight is full");
-                }
+                    var nextSeat = _flightRepository.GetEconomySeats(model.FlightId);
 
-                else
-                {
-                    var ticket = new Ticket
+                    if (nextSeat == 0)
                     {
-                        FlightId = model.FlightId,
-                        PassangerName = model.PassangerName,
-                        TravelClass = model.TravelClass,
-                        SeatNumber = Convert.ToInt32(nextSeat)
-                        //TODO user
-                    };
+                        this.ModelState.AddModelError(string.Empty, "Flight is full");
+                    }
 
-                    await _ticketRepository.CreateAsync(ticket);
+                    else
+                    {
+                        var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
+
+                        var ticket = new Ticket
+                        {
+                            FlightId = model.FlightId,
+                            PassangerName = model.PassangerName,
+                            TravelClass = model.TravelClass,
+                            SeatNumber = nextSeat,
+                            User = user,
+
+                        };
+
+
+                        await _ticketRepository.CreateAsync(ticket);
+                    }
                 }
 
+                else if (model.TravelClass == "Business")
+                {
+                    var nextSeat = _flightRepository.GetBusinessSeats(model.FlightId);
+
+                    if (nextSeat == 0)
+                    {
+                        this.ModelState.AddModelError(string.Empty, "Flight is full");
+                    }
+
+                    else
+                    {
+                        var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
+
+                        var ticket = new Ticket
+                        {
+                            FlightId = model.FlightId,
+                            PassangerName = model.PassangerName,
+                            TravelClass = model.TravelClass,
+                            SeatNumber = nextSeat,
+                            User = user,
+
+                        };
+
+
+                        await _ticketRepository.CreateAsync(ticket);
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
 

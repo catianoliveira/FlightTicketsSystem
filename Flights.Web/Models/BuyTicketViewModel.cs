@@ -10,7 +10,7 @@ namespace FlightTicketsSystem.Web.Models
 {
     public class BuyTicketViewModel
     {
-        public int UserId { get; set; }
+        public User User { get; set; }
 
 
 

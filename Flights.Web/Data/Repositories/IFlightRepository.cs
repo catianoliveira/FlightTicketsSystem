@@ -1,9 +1,6 @@
 ﻿using Flights.Web.Data.Entities;
-using FlightTicketsSystem.Web.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Flights.Web.Data.Repositories
@@ -21,7 +18,11 @@ namespace Flights.Web.Data.Repositories
         Task<Flight> GetDeparturesWithArrivalsAsync(int id);
 
 
-        Task<int> GetEconomySeats(int flightId);
+        int GetEconomySeats(int flightId);
+
+        int GetBusinessSeats(int flightId);
+
+        //Ticket GetLastSeat(int? id);
 
     }
 }

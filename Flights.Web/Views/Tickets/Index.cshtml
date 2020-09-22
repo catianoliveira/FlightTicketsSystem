@@ -38,9 +38,15 @@
                     <table id="Tickets" class="display table table-bordered table-striped" style="width:100%">
                         <thead>
                             <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Flight.CompleteFlight)
-                                </th>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.FlightId)
+                                </td>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.Flight.ArrivalAirport.CompleteAirport)
+                                </td>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.Flight.DepartureAirport.CompleteAirport)
+                                </td>
                                 <th>
                                     @Html.DisplayNameFor(model => model.PassangerName)
                                 </th>
@@ -61,7 +67,13 @@
                             {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Flight.CompleteFlight)
+                                    @Html.DisplayFor(modelItem => item.FlightId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Flight.ArrivalAirport.CompleteAirport)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Flight.DepartureAirport.CompleteAirport)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.PassangerName)
@@ -84,9 +96,16 @@
                             }
                         </tbody>
                         <tfoot>
-                            <tr><th>
-                                    @Html.DisplayNameFor(model => model.Flight.CompleteFlight)
-                                </th>
+                            <tr>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.FlightId)
+                                </td>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.Flight.ArrivalAirport.CompleteAirport)
+                                </td>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.Flight.DepartureAirport.CompleteAirport)
+                                </td>
                                 <th>
                                     @Html.DisplayNameFor(model => model.PassangerName)
                                 </th>
@@ -122,7 +141,7 @@
         <script>
 
             $(document).ready(function () {
-                $('#airports').DataTable();
+                $('#tickets').DataTable();
             });</script>
 
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>

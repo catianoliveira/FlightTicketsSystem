@@ -78,55 +78,143 @@ namespace Flights.Web.Data.Repositories
               .FirstOrDefaultAsync(d => d.DepartureAirportId == departureAirportId);
         }
 
-        
-        public async Task<int> GetEconomySeats(int flightId)
+
+        public int GetBusinessSeats(int flightId)
         {
             //vai buscar o id do avião
-            var airplaneId = _context.Set<Airplane>()
+            var airplane = _context.Airplanes
                 .AsNoTracking()
-                .FirstOrDefaultAsync(e => e.Id == flightId);
+                .FirstOrDefault(a => a.Id == flightId);
 
 
             //vai buscar a quantidade de lugares que há no avião
-            var economySeats = _context.Airplanes
-                .Include(a => a.EconomySeats)
-                .Where(a => a.Id == airplaneId.Id);
+            var totalSeats = _context.Airplanes
+                .AsNoTracking()
+                .Include(a => a.BusinessSeats)
+                .Where(a => a.Id == airplane.Id);
 
 
-            //vai buscar o ultimo lugar ocupado no voo
-            var lastSeatTaken = _context.Tickets
-                .Include(a => a.SeatNumber);
+            //vê se o voo existe nos bilhetes
+            var flightIsInTickets = _context.Tickets
+                .AsNoTracking()
+                .FirstOrDefault(a => a.FlightId == flightId);
 
 
-            //ultimo lugar mais um
-            var nextSeat = Convert.ToInt32(lastSeatTaken) + 1;
-
-
-            //compara o ultimo lugar aos lugares disponiveis
-            if (lastSeatTaken == economySeats)
+            if (flightIsInTickets != null)
             {
-                //voo cheio
-                return 0;
-            }
+                var travelClass = "Business";
 
-            else if (lastSeatTaken == null)
-            {
-                //primeiro lugar
-                nextSeat = 1;
-                return nextSeat;
+                //vai buscar o ultimo lugar ocupado no voo se o voo existir
+                var lastSeatTaken = _context.Tickets
+                    .AsNoTracking()
+                    .FirstOrDefault(a => a.FlightId == flightId && a.TravelClass == travelClass);
+
+
+
+
+                //ultimo lugar mais um
+                var nextSeat = Convert.ToInt32(lastSeatTaken.SeatNumber) + 1;
+
+
+                //compara o ultimo lugar aos lugares disponiveis
+                if (lastSeatTaken == totalSeats)
+                {
+                    //voo cheio
+                    return 0;
+                }
+
+
+                else if (lastSeatTaken.SeatNumber == 0)
+                {
+                    //primeiro lugar
+                    return 1;
+                }
+
+
+                else
+                {
+                    //ultimo lugar mais um
+                    return nextSeat;
+                }
             }
 
             else
             {
-                //ultimo lugar mais um
-                return nextSeat;
+                return 1;
             }
         }
 
 
-        //public async Task<Flight> GetBusinessSeats(int airplaneId)
-        //{
-            
-        //}
+        public int GetEconomySeats(int flightId)
+        {
+            //vai buscar o id do avião
+            var airplane = _context.Airplanes
+                .AsNoTracking()
+                .FirstOrDefault(a => a.Id == flightId);
+
+
+            //vai buscar a quantidade de lugares que há no avião
+            var totalSeats = _context.Airplanes
+                .AsNoTracking()
+                .Include(a => a.EconomySeats)
+                .Where(a => a.Id == airplane.Id);
+
+            var travelClass = "Economy";
+
+            //vê se o voo existe nos bilhetes
+            var flightIsInTickets = _context.Tickets
+                .AsNoTracking()
+                .FirstOrDefault(a => a.FlightId == flightId && a.TravelClass == travelClass);
+
+
+            //se sim ^o vê se os lugares são economicos ou executivos
+            //var typeOfSeat = _context.Tickets
+            //    .AsNoTracking()
+            //    .Include(a => a.TravelClass)
+            //    .LastOrDefault(a => a.FlightId == flightId);
+
+
+
+            if (flightIsInTickets != null)
+            {
+                
+
+                //vai buscar o ultimo lugar ocupado no voo se o voo existir
+                var lastSeatTaken = _context.Tickets
+                    .AsNoTracking()
+                    .FirstOrDefault(a => a.FlightId == flightId && a.TravelClass == travelClass);
+
+
+                //ultimo lugar mais um
+                var nextSeat = Convert.ToInt32(lastSeatTaken.SeatNumber) + 1;
+
+
+                //compara o ultimo lugar aos lugares disponiveis
+                if (lastSeatTaken == totalSeats)
+                {
+                    //voo cheio
+                    return 0;
+                }
+
+
+                else if (lastSeatTaken.SeatNumber == 0)
+                {
+                    //primeiro lugar
+                    return 1;
+                }
+
+
+                else
+                {
+                    //ultimo lugar mais um
+                    return nextSeat;
+                }
+            }
+
+            else
+            {
+                return 1;
+            }
+        }
     }
 }

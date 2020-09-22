@@ -129,9 +129,6 @@ namespace FlightTicketsSystem.Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("DocumentNumber")
-                        .IsRequired();
-
                     b.Property<int>("FlightId");
 
                     b.Property<bool>("Lugagge");

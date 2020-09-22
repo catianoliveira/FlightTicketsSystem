@@ -45,7 +45,6 @@ namespace Flights.Web.Helpers
             return await this._userManager.ChangePasswordAsync(user, oldPassword, newPassword);
         }
 
-        //verifica se existe o role se não cria
         public async Task CheckRoleAsync(string roleName)
         {
             var roleExists = await _roleManager.RoleExistsAsync(roleName);

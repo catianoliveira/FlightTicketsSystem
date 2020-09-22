@@ -370,8 +370,25 @@ namespace Flights.Web.Data
                 }
 
                 await _context.SaveChangesAsync();
-
             }
+        }
+
+        private void AddFlights(
+       int airplane, int arrival, int departure,
+       double economy, double business, int lastMinute,
+       DateTime dateTime)
+        {
+
+            _context.Flights.Add(new Flight
+            {
+                AirplaneId = airplane,
+                ArrivalAirportId = arrival,
+                DepartureAirportId = departure,
+                EconomyPrice = economy,
+                BusinessPrice = business,
+                LastMinutePrice = lastMinute,
+                DateTime = dateTime
+            });
         }
 
 

@@ -299,7 +299,6 @@ namespace FlightTicketsSystem.Web.Migrations
                     UserId = table.Column<string>(nullable: false),
                     FlightId = table.Column<int>(nullable: false),
                     PassangerName = table.Column<string>(nullable: false),
-                    DocumentNumber = table.Column<string>(nullable: false),
                     SeatNumber = table.Column<int>(nullable: false),
                     TravelClass = table.Column<string>(nullable: false),
                     Lugagge = table.Column<bool>(nullable: false)
