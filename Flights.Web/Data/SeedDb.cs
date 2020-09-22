@@ -373,24 +373,6 @@ namespace Flights.Web.Data
             }
         }
 
-        private void AddFlights(
-       int airplane, int arrival, int departure,
-       double economy, double business, int lastMinute,
-       DateTime dateTime)
-        {
-
-            _context.Flights.Add(new Flight
-            {
-                AirplaneId = airplane,
-                ArrivalAirportId = arrival,
-                DepartureAirportId = departure,
-                EconomyPrice = economy,
-                BusinessPrice = business,
-                LastMinutePrice = lastMinute,
-                DateTime = dateTime
-            });
-        }
-
 
         private void AddIndicatives(
         string country, string code)
@@ -430,22 +412,6 @@ namespace Flights.Web.Data
         }
 
 
-        private void AddFlights(
-            int airplane, int arrival, int departure,
-            DateTime date, DateTime time, double economy, 
-            double business, int lastMinute)
-        {
-            _context.Flights.Add(new Flight
-            {
-                AirplaneId = airplane,
-                DepartureAirportId = departure,
-                ArrivalAirportId = arrival,
-                DateTime = date,
-                EconomyPrice = economy,
-                BusinessPrice = business,
-                LastMinutePrice = lastMinute
-            });
-        }
 
         private void AddCountries(string name)
         {

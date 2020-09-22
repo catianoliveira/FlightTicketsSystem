@@ -65,42 +65,15 @@ namespace Flights.Web.Data.Entities
 
         [Required]
         [Display(Name = "Economy C. Price")]
-        public double EconomyPrice { get; set; }
+        public decimal EconomyPrice { get; set; }
 
 
 
 
         [Required]
         [Display(Name = "Business C. Price")]
-        public double BusinessPrice { get; set; }
+        public decimal BusinessPrice { get; set; }
 
-
-
-        [Required]
-        [Display(Name = "Last Minute Buy")]
-        public int LastMinutePrice { get; set; }
-
-
-
-
-        //public List<Ticket> Tickets { get; set; }
-
-
-        public string EconomyLastMinutePrice
-        {
-            get
-            {
-                return $"{((LastMinutePrice * EconomyPrice)/100)+EconomyPrice}";
-            }
-        }
-
-        public string BusinessLastMinutePrice
-        {
-            get
-            {
-                return $"{((LastMinutePrice * BusinessPrice) / 100) + BusinessPrice}";
-            }
-        }
 
 
         public string CompleteFlight

@@ -27,32 +27,23 @@ namespace Flights.Web.Data.Entities
 
 
 
-        //public IEnumerable<SelectListItem> Flights { get; set; }
-
-
-
-
         [Required]
         public string PassangerName { get; set; }
 
 
 
-
         public int SeatNumber { get; set; }
+
+
 
         [Required]
         public string TravelClass { get; set; }
+
+
 
         [Required]
         public bool Lugagge { get; set; }
 
 
-        //public string CompleteTicket
-        //{
-        //    get
-        //    {
-        //        return $"{this.ArrivalAirport} {this.DepartureAirport}";
-        //    }
-        //}
     }
 }

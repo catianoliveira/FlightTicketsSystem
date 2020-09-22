@@ -233,9 +233,8 @@ namespace FlightTicketsSystem.Web.Migrations
                     DepartureAirportId = table.Column<int>(nullable: false),
                     ArrivalAirportId = table.Column<int>(nullable: false),
                     DateTime = table.Column<DateTime>(nullable: false),
-                    EconomyPrice = table.Column<double>(nullable: false),
-                    BusinessPrice = table.Column<double>(nullable: false),
-                    LastMinutePrice = table.Column<int>(nullable: false)
+                    EconomyPrice = table.Column<decimal>(nullable: false),
+                    BusinessPrice = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
                 {

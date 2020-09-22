@@ -21,8 +21,8 @@ namespace FlightTicketsSystem.Web.Models
         public string PassangerName { get; set; }
 
 
+        public Flight Flight { get; set; }
 
-        
 
         public int SeatNumber { get; set; }
 
@@ -50,7 +50,6 @@ namespace FlightTicketsSystem.Web.Models
         public bool Lugagge { get; set; }
 
 
-        [Required]
-        public bool Price { get; set; }
+        public decimal Price { get; set; }
     }
 }

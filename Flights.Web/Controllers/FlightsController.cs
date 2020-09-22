@@ -94,7 +94,6 @@ namespace Flights.Web.Controllers
                     AirplaneId = flights.AirplaneId,
                     BusinessPrice = flights.BusinessPrice,
                     EconomyPrice = flights.EconomyPrice,
-                    LastMinutePrice = flights.LastMinutePrice,
                     DateTime = flights.DateTime,
                     ArrivalAirport = flights.ArrivalAirport,
                     DepartureAirport = flights.DepartureAirport

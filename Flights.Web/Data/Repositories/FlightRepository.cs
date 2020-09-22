@@ -81,9 +81,10 @@ namespace Flights.Web.Data.Repositories
 
         public int GetBusinessSeats(int flightId)
         {
-            //vai buscar o id do avião
-            var airplane = _context.Airplanes
+            //vai buscar o id do aviao
+            var airplane = _context.Flights
                 .AsNoTracking()
+                .Where(a => a.Airplane.Id == a.AirplaneId)
                 .FirstOrDefault(a => a.Id == flightId);
 
 
@@ -94,22 +95,20 @@ namespace Flights.Web.Data.Repositories
                 .Where(a => a.Id == airplane.Id);
 
 
+            var travelClass = "Business";
+
             //vê se o voo existe nos bilhetes
             var flightIsInTickets = _context.Tickets
                 .AsNoTracking()
-                .FirstOrDefault(a => a.FlightId == flightId);
+                .FirstOrDefault(a => a.FlightId == flightId && a.TravelClass == travelClass);
 
 
             if (flightIsInTickets != null)
             {
-                var travelClass = "Business";
-
                 //vai buscar o ultimo lugar ocupado no voo se o voo existir
                 var lastSeatTaken = _context.Tickets
                     .AsNoTracking()
                     .FirstOrDefault(a => a.FlightId == flightId && a.TravelClass == travelClass);
-
-
 
 
                 //ultimo lugar mais um
@@ -147,9 +146,10 @@ namespace Flights.Web.Data.Repositories
 
         public int GetEconomySeats(int flightId)
         {
-            //vai buscar o id do avião
-            var airplane = _context.Airplanes
+            //vai buscar o id do aviao
+            var airplane = _context.Flights
                 .AsNoTracking()
+                .Where(a => a.Airplane.Id == a.AirplaneId)
                 .FirstOrDefault(a => a.Id == flightId);
 
 
@@ -167,18 +167,8 @@ namespace Flights.Web.Data.Repositories
                 .FirstOrDefault(a => a.FlightId == flightId && a.TravelClass == travelClass);
 
 
-            //se sim ^o vê se os lugares são economicos ou executivos
-            //var typeOfSeat = _context.Tickets
-            //    .AsNoTracking()
-            //    .Include(a => a.TravelClass)
-            //    .LastOrDefault(a => a.FlightId == flightId);
-
-
-
             if (flightIsInTickets != null)
             {
-                
-
                 //vai buscar o ultimo lugar ocupado no voo se o voo existir
                 var lastSeatTaken = _context.Tickets
                     .AsNoTracking()
@@ -206,7 +196,7 @@ namespace Flights.Web.Data.Repositories
 
                 else
                 {
-                    //ultimo lugar mais um
+                    //ultimo lugar ocupado mais um
                     return nextSeat;
                 }
             }
@@ -216,5 +206,23 @@ namespace Flights.Web.Data.Repositories
                 return 1;
             }
         }
+
+        //public decimal GetEconomyPrice(int flightId)
+        //{
+        //    //vê o preço dos bilhetes
+        //    var price = _context.Flights
+        //        .AsNoTracking()
+        //        .FirstOrDefault(a => a.Id == flightId && a.TravelClass == "Economy");
+
+        //    return price.Flight.EconomyPrice;
+        //}
+
+        //public decimal GetBusinessPrice(int flightId)
+        //{
+        //    //vê o preço dos bilhetes
+        //    var flightIsInTickets = _context.Tickets
+        //        .AsNoTracking()
+        //        .FirstOrDefault(a => a.FlightId == flightId && a.TravelClass == "Business");
+        //}
     }
 }

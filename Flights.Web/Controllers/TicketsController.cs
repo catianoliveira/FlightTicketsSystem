@@ -96,48 +96,6 @@ namespace FlightTicketsSystem.Web.Controllers
             return View(ticket);
         }
 
-        // GET: Tickets/Create
-        //public IActionResult Create()
-        //{
-        //    var model = new Ticket
-        //    {
-        //        //ArrivalAirports = _flightRepository.GetComboArrivals(0),
-        //        //DepartureAirports = _flightRepository.GetComboDepartures()
-        //    };
-
-        //    return this.View(model);
-        //}
-
-
-        // POST: Tickets/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create(Ticket tickets)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        //await _flightRepository.CreateAsync(flight);
-
-        //        Flight flight = _context.Flights.Find(tickets.FlightId);
-
-        //        Ticket ticket = new Ticket
-        //        {
-        //            FlightId = flight.Id,
-        //            PassangerName = tickets.PassangerName,
-        //            TravelClass = tickets.TravelClass,
-        //            SeatNumber = 1
-        //            //TODO user
-        //        };
-
-        //        await _ticketRepository.CreateAsync(ticket);
-
-        //        return RedirectToAction(nameof(Index));
-
-        //    }
-        //    return View(tickets);
-        //}
 
         // GET: Tickets/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -250,6 +208,7 @@ namespace FlightTicketsSystem.Web.Controllers
                 IndicativeId = user.IndicativeId,
                 Indicatives = _indicativeRepository.GetComboIndicatives(),
                 PassangerName = user.FullName,
+                
             };
 
             return View(model);
@@ -272,6 +231,7 @@ namespace FlightTicketsSystem.Web.Controllers
                     else
                     {
                         var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
+                        //var price = _flightRepository.GetEconomyPrice(model.FlightId);
 
                         var ticket = new Ticket
                         {
@@ -279,8 +239,7 @@ namespace FlightTicketsSystem.Web.Controllers
                             PassangerName = model.PassangerName,
                             TravelClass = model.TravelClass,
                             SeatNumber = nextSeat,
-                            User = user,
-
+                            User = user
                         };
 
 

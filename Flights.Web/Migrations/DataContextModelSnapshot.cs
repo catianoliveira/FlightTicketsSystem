@@ -98,15 +98,13 @@ namespace FlightTicketsSystem.Web.Migrations
 
                     b.Property<int>("ArrivalAirportId");
 
-                    b.Property<double>("BusinessPrice");
+                    b.Property<decimal>("BusinessPrice");
 
                     b.Property<DateTime>("DateTime");
 
                     b.Property<int>("DepartureAirportId");
 
-                    b.Property<double>("EconomyPrice");
-
-                    b.Property<int>("LastMinutePrice");
+                    b.Property<decimal>("EconomyPrice");
 
                     b.Property<string>("userId");
 
