@@ -345,11 +345,9 @@ namespace Flights.Web.Data
                     Address = "Rua da Luz 1 2ºEsq 1200-110 Lisboa",
                     City = "Lisboa",
                     CountryId = 179,
-                    EmailConfirmed = true,
-                    //IsActive = true
-                };
+                    EmailConfirmed = true                };
 
-                var result = await _userHelper.AddUserAsync(user, "123456");
+                var result = await _userHelper.AddUserAsync(user, "HighFly123*");
 
 
 

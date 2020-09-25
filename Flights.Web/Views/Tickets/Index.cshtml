@@ -19,7 +19,7 @@
             <h1></h1>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="/Tickets/ChooseFlight">BuyTicket</a></li>
+                    <li class="breadcrumb-item"><a href="/Tickets/ChooseFlight">Buy Ticket</a></li>
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
                 </ol>
             </div>
@@ -42,10 +42,10 @@
                                     @Html.DisplayNameFor(model => model.FlightId)
                                 </td>
                                 <td>
-                                    @Html.DisplayNameFor(model => model.Flight.ArrivalAirport.CompleteAirport)
+                                    @Html.DisplayNameFor(model => model.Flight.ArrivalAirport)
                                 </td>
                                 <td>
-                                    @Html.DisplayNameFor(model => model.Flight.DepartureAirport.CompleteAirport)
+                                    @Html.DisplayNameFor(model => model.Flight.DepartureAirport)
                                 </td>
                                 <th>
                                     @Html.DisplayNameFor(model => model.PassangerName)
@@ -56,43 +56,39 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.SeatNumber)
                                 </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Lugagge)
-                                </th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.FlightId)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Flight.ArrivalAirport.CompleteAirport)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Flight.DepartureAirport.CompleteAirport)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PassangerName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.TravelClass)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.SeatNumber)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Lugagge)
-                                </td>
-                                <td>
-                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                                </td>
-                            </tr>
+                                @using (Html.BeginForm("Delete", "Tickets", new { id = item.Id }))
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.FlightId)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Flight.ArrivalAirport.CompleteAirport)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Flight.DepartureAirport.CompleteAirport)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PassangerName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TravelClass)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.SeatNumber)
+                                        </td>
+                                        <td id="@item.Id">
+                                            <a class="btn btn-primary pull-right" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                            <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@item.Id" id="btnDelete">Delete</a>
+                                        </td>
+                                    </tr>
+                                }
                             }
                         </tbody>
                         <tfoot>
@@ -101,10 +97,10 @@
                                     @Html.DisplayNameFor(model => model.FlightId)
                                 </td>
                                 <td>
-                                    @Html.DisplayNameFor(model => model.Flight.ArrivalAirport.CompleteAirport)
+                                    @Html.DisplayNameFor(model => model.Flight.ArrivalAirport)
                                 </td>
                                 <td>
-                                    @Html.DisplayNameFor(model => model.Flight.DepartureAirport.CompleteAirport)
+                                    @Html.DisplayNameFor(model => model.Flight.DepartureAirport)
                                 </td>
                                 <th>
                                     @Html.DisplayNameFor(model => model.PassangerName)
@@ -114,9 +110,6 @@
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.SeatNumber)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Lugagge)
                                 </th>
                                 <th></th>
                             </tr>
@@ -135,17 +128,63 @@
     <!-- /.content-wrapper -->
     <!-- ./wrapper -->
 
+    <div id="deleteDialog" class="modal fade">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
+                    <h4 class="modal-title">Delete</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Do you want to delete this ticket?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="btnYesDelete">Delete</button>
+                    <button type="button" class="btn btn-success" id="btnNoDelete">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     @section Scripts {
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
+
+        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                var id = 0;
+
+                $('a[id*=btnDelete]').click(function () {
+                    debugger;
+                    id = $(this).parent()[0].id;
+                    $("#deleteDialog").modal('show');
+                    return false;
+                });
+
+                $("#btnNoDelete").click(function () {
+                    $("#deleteDialog").modal('hide');
+                    return false;
+                });
+
+
+                $("#btnYesDelete").click(function () {
+                    window.location.href = '/Tickets/Delete/' + id;
+                });
+
+            });
+        </script>
         <script>
 
             $(document).ready(function () {
                 $('#tickets').DataTable();
             });</script>
 
-        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
     }
 
 

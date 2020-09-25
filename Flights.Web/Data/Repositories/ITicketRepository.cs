@@ -9,7 +9,13 @@ namespace FlightTicketsSystem.Web.Data.Repositories
     {
         //IEnumerable<SelectListItem> GetComboTickets();
 
+        int GetEconomySeats(int flightId);
 
+        int GetBusinessSeats(int flightId);
+
+        decimal GetEconomyPrice(int flightId);
+
+        decimal GetBusinessPrice(int flightId);
 
     }
 }

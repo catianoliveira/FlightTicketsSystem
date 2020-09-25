@@ -13,11 +13,13 @@ namespace Flights.Web.Models
         public string OldPassword { get; set; }
 
         [Required]
+        [DataType(DataType.Password)]
         [Display(Name = "New Password")]
         public string NewPassword { get; set; }
 
         [Required]
         [Compare("NewPassword")]
+        [DataType(DataType.Password)]
         public string Confirm { get; set; }
     }
 }

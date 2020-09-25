@@ -50,6 +50,8 @@ namespace FlightTicketsSystem.Web.Models
         public bool Lugagge { get; set; }
 
 
-        public decimal Price { get; set; }
+        public decimal BusinessPrice { get; set; }
+
+        public decimal EconomyPrice { get; set; }
     }
 }

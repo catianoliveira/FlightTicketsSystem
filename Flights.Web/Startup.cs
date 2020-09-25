@@ -34,11 +34,11 @@ namespace Flights.Web
                 cfg.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
                 cfg.SignIn.RequireConfirmedEmail = true;
                 cfg.User.RequireUniqueEmail = true;
-                cfg.Password.RequireDigit = false;
-                cfg.Password.RequiredUniqueChars = 0;
-                cfg.Password.RequireLowercase = false;
-                cfg.Password.RequireNonAlphanumeric = false;
-                cfg.Password.RequireUppercase = false;
+                cfg.Password.RequireDigit = true;
+                cfg.Password.RequiredUniqueChars = 1;
+                cfg.Password.RequireLowercase = true;
+                cfg.Password.RequireNonAlphanumeric = true;
+                cfg.Password.RequireUppercase = true;
                 cfg.Password.RequiredLength = 6;
             })
             .AddRoles<IdentityRole>()
@@ -91,7 +91,6 @@ namespace Flights.Web
             services.AddScoped<IAirportRepository, AirportRepository>();
             services.AddScoped<IImageHelper, ImageHelper>();
             services.AddScoped<IUserHelper, UserHelper>();
-            //services.AddScoped<IConverterHelper, ConverterHelper>();
             services.AddScoped<IMailHelper, MailHelper>();
             services.AddScoped<IFlightRepository, FlightRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();

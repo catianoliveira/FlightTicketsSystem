@@ -8,14 +8,6 @@ namespace Flights.Web.Data.Entities
         public int Id { get; set; }
 
 
-        public User User { get; set; }
-
-
-
-
-
-        //TODO WasDeleted
-        //public bool WasDeleted { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -45,7 +37,5 @@ namespace Flights.Web.Data.Entities
                 return EconomySeats + BusinessSeats;
             }
         }
-
-       //TODO ? public User User { get; set; }
     }
 }

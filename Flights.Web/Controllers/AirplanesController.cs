@@ -12,7 +12,10 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Flights.Web.Controllers
 {
-    //[Authorize] //Todo meter authorize em tudo
+    //[Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "SuperAdmin")]
+    //[Authorize(Roles = "Employee")]
+
     public class AirplanesController : Controller
     {
         private readonly IAirplaneRepository _airplaneRepository;
@@ -62,8 +65,6 @@ namespace Flights.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                airplane.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-
                 await _airplaneRepository.CreateAsync(airplane);
                 return RedirectToAction(nameof(Index));
             }
@@ -118,21 +119,28 @@ namespace Flights.Web.Controllers
             return View(airplane);
         }
 
-
-
-
-        // POST: Airplanes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
-                //TODO return new NotFoundViewResult("NotFound");
+                return NotFound();
             }
-            
+
             var airplane = await _airplaneRepository.GetByIdAsync(id.Value);
-            await _airplaneRepository.DeleteAsync(airplane);
+
+            if (airplane == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _airplaneRepository.DeleteAsync(airplane);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
 
             return RedirectToAction(nameof(Index));
         }

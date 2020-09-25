@@ -11,9 +11,13 @@ using FlightTicketsSystem.Web.Data.Repositories;
 using Flights.Web.Data.Repositories;
 using FlightTicketsSystem.Web.Models;
 using Flights.Web.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FlightTicketsSystem.Web.Controllers
 {
+    //[Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "SuperAdmin")]
+    //[Authorize(Roles = "Employee")]
     public class TicketsController : Controller
     {
         private readonly DataContext _context;
@@ -23,6 +27,7 @@ namespace FlightTicketsSystem.Web.Controllers
         private readonly IIndicativeRepository _indicativeRepository;
         private readonly IUserHelper _userHelper;
         private readonly IAirplaneRepository _airplaneRepository;
+        private readonly IMailHelper _mailHelper;
         private readonly IAirportRepository _airportRepository;
 
         public TicketsController(
@@ -33,7 +38,8 @@ namespace FlightTicketsSystem.Web.Controllers
             IAirportRepository airportRepository,
             IIndicativeRepository indicativeRepository,
             IUserHelper userHelper,
-            IAirplaneRepository airplaneRepository)
+            IAirplaneRepository airplaneRepository,
+            IMailHelper mailHelper)
         {
             _context = context;
             _countryRepository = countryRepository;
@@ -42,33 +48,30 @@ namespace FlightTicketsSystem.Web.Controllers
             _indicativeRepository = indicativeRepository;
             _userHelper = userHelper;
             _airplaneRepository = airplaneRepository;
+            _mailHelper = mailHelper;
             _airportRepository = airportRepository;
         }
 
-        // GET: Tickets
+
+
         public IActionResult Index()
         {
-            var tickets = _context.Tickets
-                .Include(t => t.FlightId)
-                .Include(t => t.Flight.ArrivalAirport.CompleteAirport)
-                .Include(t => t.Flight.DepartureAirport.CompleteAirport)
-                .Include(t => t.PassangerName)
-                .Include(t => t.TravelClass)
-                .Include(t => t.SeatNumber)
-                .Include(t => t.Lugagge)
-                .Where(a => a.Flight.DateTime >= DateTime.Today.ToUniversalTime());
+            var model = _context.Tickets
+                .Include(a => a.Flight.DepartureAirport)
+                .Include(a => a.Flight.ArrivalAirport)
+                .OrderBy(p => p.Flight.DateTime);
 
-            return View(tickets);
+            return View(model.ToList());
         }
 
-
-
+        [AllowAnonymous]
         public IActionResult ChooseFlight()
         {
             var model = _context.Flights
                 .Include(a => a.Airplane)
                 .Include(a => a.DepartureAirport)
                 .Include(a => a.ArrivalAirport)
+                .Where(a => a.DateTime >= DateTime.Today.ToUniversalTime())
                 .OrderBy(p => p.DateTime);
 
             return View(model.ToList());
@@ -105,36 +108,43 @@ namespace FlightTicketsSystem.Web.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.Tickets.FindAsync(id);
+            var ticket = await _ticketRepository.GetByIdAsync(id.Value);
+
             if (ticket == null)
             {
                 return NotFound();
             }
-            return View(ticket);
+
+            var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
+
+
+            var model = new Ticket
+            {
+                PassangerName = ticket.PassangerName,
+                User = user,
+                TravelClass = ticket.TravelClass,
+
+            };
+
+            return View(model);
         }
 
-        // POST: Tickets/Edit/5
+        // POST: Airplanes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FlightID,PassangerName,DocumentTypeId,DocumentNumber,SeatNumber,TravelClass,Lugagge")] Ticket ticket)
+        public async Task<IActionResult> Edit(Ticket ticket)
         {
-            if (id != ticket.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(ticket);
-                    await _context.SaveChangesAsync();
+                    await _ticketRepository.UpdateAsync(ticket);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TicketExists(ticket.Id))
+                    if (!await _ticketRepository.ExistAsync(ticket.Id))
                     {
                         return NotFound();
                     }
@@ -145,11 +155,10 @@ namespace FlightTicketsSystem.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-
             return View(ticket);
         }
 
-        // GET: Tickets/Delete/5
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -157,71 +166,73 @@ namespace FlightTicketsSystem.Web.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.Tickets
-                .Include(t => t.Flight)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var ticket = await _ticketRepository.GetByIdAsync(id.Value);
+
             if (ticket == null)
             {
                 return NotFound();
             }
 
-            return View(ticket);
-        }
+            try
+            {
+                await _ticketRepository.DeleteAsync(ticket);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
 
-        // POST: Tickets/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var ticket = await _context.Tickets.FindAsync(id);
-            _context.Tickets.Remove(ticket);
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TicketExists(int id)
+
+
+        //[Authorize(Roles = "Client")]
+        public async Task<IActionResult> BuyTicket(int id)
         {
-            return _context.Tickets.Any(e => e.Id == id);
-        }
-
-
-        public async Task<JsonResult> GetArrivalsAsync(int departureAirportId)
-        {
-            var arrivalAirports = await _flightRepository.GetDeparturesWithArrivalsAsync(departureAirportId);
-            return this.Json(arrivalAirports.ArrivalsCollection.OrderBy(c => c.Country));
-        }
-
-
-        public async Task<IActionResult> BuyTicket(int? id)
-        {
-            if (id == 0)
+            if (this.User.Identity.IsAuthenticated)
             {
-                return NotFound();
+                if (id == 0)
+                {
+                    return NotFound();
+                }
+
+                var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
+                var businessPrice = _ticketRepository.GetBusinessPrice(id);
+                var economyPrice = _ticketRepository.GetEconomyPrice(id);
+
+                var model = new BuyTicketViewModel
+                {
+                    FlightId = id,
+                    PhoneNumber = user.PhoneNumber,
+                    IndicativeId = user.IndicativeId,
+                    Indicatives = _indicativeRepository.GetComboIndicatives(),
+                    PassangerName = user.FullName,
+                    EconomyPrice = economyPrice,
+                    BusinessPrice = businessPrice
+                };
+
+                return View(model);
             }
 
-            var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
-
-            var model = new BuyTicketViewModel
+            else
             {
-                FlightId = id.Value,
-                PhoneNumber = user.PhoneNumber,
-                IndicativeId = user.IndicativeId,
-                Indicatives = _indicativeRepository.GetComboIndicatives(),
-                PassangerName = user.FullName,
-                
-            };
-
-            return View(model);
+                return RedirectToAction("Login", "Account");
+            }
         }
 
+
+        //[Authorize(Roles = "Client")]
         [HttpPost]
         public async Task<IActionResult> BuyTicket(BuyTicketViewModel model)
         {
             if (ModelState.IsValid)
             {
-                if (model.TravelClass == "Economy")
+                var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
+
+                if (model.TravelClass.Contains("Economy"))
                 {
-                    var nextSeat = _flightRepository.GetEconomySeats(model.FlightId);
+                    var nextSeat = _ticketRepository.GetEconomySeats(model.FlightId);
 
                     if (nextSeat == 0)
                     {
@@ -230,26 +241,43 @@ namespace FlightTicketsSystem.Web.Controllers
 
                     else
                     {
-                        var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
-                        //var price = _flightRepository.GetEconomyPrice(model.FlightId);
-
                         var ticket = new Ticket
                         {
                             FlightId = model.FlightId,
                             PassangerName = model.PassangerName,
-                            TravelClass = model.TravelClass,
+                            TravelClass = "Economy",
                             SeatNumber = nextSeat,
-                            User = user
+                            User = user,
+                            PaidPrice = model.EconomyPrice
                         };
 
-
                         await _ticketRepository.CreateAsync(ticket);
+
+                        var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                        var tokenLink = this.Url.Action("ConfirmEmail", "Account", new
+                        {
+                            userid = user.Id,
+                            token = myToken
+                        }, protocol: HttpContext.Request.Scheme);
+
+
+                        var flight = await _flightRepository.GetByIdAsync(model.FlightId);
+
+                        var arrival = await _airportRepository.GetByIdAsync(flight.ArrivalAirportId);
+
+                        var departure = await _airportRepository.GetByIdAsync(flight.DepartureAirportId);
+
+
+                        _mailHelper.SendMail(user.Email, $"Your reservation for flight nº{ticket.FlightId}:", $"<h1>Was completed successfully!</h1>" +
+                            $"Here are the details:<br/>From {departure.CompleteAirport} to {arrival.CompleteAirport}<br/>" +
+                            $"On: {flight.DateTime}<br/><br/>Name: {ticket.PassangerName}<br/>Travel Class: {ticket.TravelClass}<br/>" +
+                            $"Seat Number: {ticket.SeatNumber}");
                     }
                 }
 
-                else if (model.TravelClass == "Business")
+                else if (model.TravelClass.Contains("Business"))
                 {
-                    var nextSeat = _flightRepository.GetBusinessSeats(model.FlightId);
+                    var nextSeat = _ticketRepository.GetBusinessSeats(model.FlightId);
 
                     if (nextSeat == 0)
                     {
@@ -258,20 +286,36 @@ namespace FlightTicketsSystem.Web.Controllers
 
                     else
                     {
-                        var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
-
                         var ticket = new Ticket
                         {
                             FlightId = model.FlightId,
                             PassangerName = model.PassangerName,
-                            TravelClass = model.TravelClass,
+                            TravelClass = "Business",
                             SeatNumber = nextSeat,
                             User = user,
-
+                            PaidPrice = model.BusinessPrice
                         };
 
-
                         await _ticketRepository.CreateAsync(ticket);
+
+                        var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                        var tokenLink = this.Url.Action("ConfirmEmail", "Account", new
+                        {
+                            userid = user.Id,
+                            token = myToken
+                        }, protocol: HttpContext.Request.Scheme);
+
+                        var flight = await _flightRepository.GetByIdAsync(model.FlightId);
+
+                        var arrival = await _airportRepository.GetByIdAsync(flight.ArrivalAirportId);
+
+                        var departure = await _airportRepository.GetByIdAsync(flight.DepartureAirportId);
+
+
+                        _mailHelper.SendMail(user.Email, $"Your reservation for flight nº{ticket.FlightId}:", $"<h1>Was completed successfully!</h1>" +
+                            $"Here are the details:<br/>From {departure.CompleteAirport} to {arrival.CompleteAirport}<br/>" +
+                            $"On: {flight.DateTime}<br/><br/>Name: {ticket.PassangerName}<br/>Travel Class: {ticket.TravelClass}<br/>" +
+                            $"Seat Number: {ticket.SeatNumber}");
                     }
                 }
                 return RedirectToAction(nameof(Index));
@@ -279,5 +323,7 @@ namespace FlightTicketsSystem.Web.Controllers
 
             return View(model);
         }
+
     }
 }
+

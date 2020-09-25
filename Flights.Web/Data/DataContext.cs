@@ -24,22 +24,26 @@ namespace Flights.Web.Data
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-            //instância local serve para todos conseguirem abrir o mesmo projeto sme ter que alterar nome do servidor
-
-
         }
 
-        //TODO quando tiver o ticket
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Ticket>()
-            //    .Property(p => p.Price)
-            //    .HasColumnType("decimal(18,2");
+            modelBuilder.Entity<Flight>()
+                .Property(p => p.BusinessPrice)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Flight>()
+                .Property(p => p.EconomyPrice)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Ticket>()
+                .Property(p => p.PaidPrice)
+                .HasColumnType("decimal(18,2)");
 
             modelBuilder.Ignore<SelectListItem>();
             modelBuilder.Ignore<SelectListGroup>();
 
-            // habilitar a cascade delete rule
             var cascadeFKs = modelBuilder.Model
                 .GetEntityTypes()
                 .SelectMany(t => t.GetForeignKeys())
@@ -52,8 +56,5 @@ namespace Flights.Web.Data
 
             base.OnModelCreating(modelBuilder);
         }
-
-        //TODO quando tiver o ticket
-
     }
 }

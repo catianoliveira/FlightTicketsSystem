@@ -18,11 +18,9 @@ namespace Flights.Web.Data.Repositories
         Task<Flight> GetDeparturesWithArrivalsAsync(int id);
 
 
-        int GetEconomySeats(int flightId);
+        
 
-        int GetBusinessSeats(int flightId);
-
-        //Ticket GetLastSeat(int? id);
+        //IEnumerable<SelectListItem> GetComboDepartures();
 
     }
 }

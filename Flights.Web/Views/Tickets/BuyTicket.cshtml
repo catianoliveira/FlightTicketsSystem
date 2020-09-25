@@ -52,6 +52,8 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4">
+                            @using (Html.BeginForm("BuyTicket", "Tickets"))
+                            {
                             <form asp-action="BuyTicket">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 <input type="hidden" asp-for="FlightId" />
@@ -75,15 +77,13 @@
                                     <span asp-validation-for="PhoneNumber" class="text-warning"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="TravelClass">Travel Class</label>
+                                    <label asp-for="TravelClass" class="control-label">Travel Class</label>
                                     <br />
-                                    @Html.DropDownList("TravelClass", new SelectList(new[] { "Economy", "Business" }))
+                                    @Html.DropDownList("TravelClass", new SelectList(new[] {$"Economy: {@Model.EconomyPrice}€" , $"Business: {@Model.BusinessPrice}€" }))
                                     <span asp-validation-for="TravelClass" class="text-warning"></span>
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="Price">Business Price</label>
-                                    <input asp-for="Price" class="form-control" disabled/>
-                                </div>
+
+
                                 <div class="form-group">
                                     <label asp-for="Lugagge">Lugagge</label>
                                     <input asp-for="Lugagge" type="checkbox" />
@@ -92,6 +92,7 @@
                                     <input type="submit" value="Confirm" class="btn btn-default" />
                                 </div>
                             </form>
+                            }
                         </div>
                     </div>
                 </div>

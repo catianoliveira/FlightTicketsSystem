@@ -33,86 +33,93 @@
                     <h3 class="card-title">Flights</h3>
                 </div>
                 <!-- /.card-header -->
-                <div class="card-body">
-                    <table id="airports" class="display table table-bordered table-striped" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Airplanes)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.DepartureAirport.CompleteAirport)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.ArrivalAirport.CompleteAirport)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.DateTime)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.EconomyPrice)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.BusinessPrice)
-                                </th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
+                @using (Html.BeginForm("Index", "Flights", FormMethod.Post, new { @autocomplete = "on" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @style = "color: black" })
+                    <div class="card-body">
+                        <table id="airports" class="display table table-bordered table-striped" style="width:100%">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Airplane.Model)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.DepartureAirport.CompleteAirport)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ArrivalAirport.CompleteAirport)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.DateTime)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EconomyPrice)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.BusinessPrice)
-                                    </td>
-                                    <td>
-                                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                                    </td>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Airplanes)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DepartureAirport)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.ArrivalAirport)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DateTime)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.EconomyPrice)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.BusinessPrice)
+                                    </th>
+                                    <th></th>
                                 </tr>
-                            }
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Airplanes)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.DepartureAirport.CompleteAirport)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.ArrivalAirport.CompleteAirport)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.DateTime)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.EconomyPrice)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.BusinessPrice)
-                                </th>
-                                <th></th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    @using (Html.BeginForm("Delete", "Flights", new { id = item.Id }))
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Airplane.Model)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DepartureAirport.CompleteAirport)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ArrivalAirport.CompleteAirport)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DateTime)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.EconomyPrice)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.BusinessPrice)
+                                            </td>
+                                            <td id="@item.Id">
+                                                <a class="btn btn-primary pull-right" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                                <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@item.Id" id="btnDelete">Delete</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Airplanes)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DepartureAirport)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.ArrivalAirport)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DateTime)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.EconomyPrice)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.BusinessPrice)
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                }
                 <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -125,17 +132,87 @@
     <!-- /.content-wrapper -->
     <!-- ./wrapper -->
 
+
+    <div id="deleteDialog" class="modal fade">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
+                    <h4 class="modal-title">Delete</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Do you want to delete this flight?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="btnYesDelete">Delete</button>
+                    <button type="button" class="btn btn-success" id="btnNoDelete">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     @section Scripts {
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
+        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+
+        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                var id = 0;
+
+                $('a[id*=btnDelete]').click(function () {
+                    debugger;
+                    id = $(this).parent()[0].id;
+                    $("#deleteDialog").modal('show');
+                    return false;
+                });
+
+                $("#btnNoDelete").click(function () {
+                    $("#deleteDialog").modal('hide');
+                    return false;
+                });
+
+
+                $("#btnYesDelete").click(function () {
+                    window.location.href = '/Flights/Delete/' + id;
+                });
+
+            });
+        </script>
         <script>
 
             $(document).ready(function () {
                 $('#airports').DataTable();
             });</script>
 
-        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+        <script src="~/~/plugins/moment/moment.min.js"></script>
+        <script src="~/~/plugins/inputmask/jquery.inputmask.min.js"></script>
+        <!-- date-range-picker -->
+        <script src="~/~/plugins/daterangepicker/daterangepicker.js"></script>
+        <!-- jQuery -->
+        <script src="~/~/plugins/jquery/jquery.min.js"></script>
+        <!-- Bootstrap 4 -->
+        <script src="~/~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- Bootstrap4 Duallistbox -->
+        <script src=".~/~/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+        <!-- Tempusdominus Bootstrap 4 -->
+        <script src="~/~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+        <!-- DataTables -->
+        <script src="~/~/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="~/~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+        <script src="~/~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="~/~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+        <!-- AdminLTE App -->
+        <script src="~/~/dist/js/adminlte.min.js"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="~/~/dist/js/demo.js"></script>
+        <!-- page script -->
     }
 
 

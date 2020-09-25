@@ -60,9 +60,6 @@ namespace FlightTicketsSystem.Web.Controllers
             return View();
         }
 
-        //TODO isactive
-
-        //[Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
         {

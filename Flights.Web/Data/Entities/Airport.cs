@@ -17,18 +17,15 @@ namespace Flights.Web.Data.Entities
         public string Country { get; set; }
 
 
-
+        [Required]
         public string IATA { get; set; }
-
-
-        //public User User { get; set; }
 
 
         public string CompleteAirport
         {
             get
             {
-                return $"{this.IATA} {this.City} {this.Country}";           
+                return $"{this.IATA} - {this.City} - {this.Country}";           
             }
         }
     }

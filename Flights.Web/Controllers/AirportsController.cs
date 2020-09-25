@@ -2,13 +2,19 @@
 using Flights.Web.Data.Entities;
 using Flights.Web.Data.Repositories;
 using Flights.Web.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Flights.Web.Controllers
 {
+    //[Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "SuperAdmin")]
+    //[Authorize(Roles = "Employee")]
+
     public class AirportsController : Controller
     {
         private readonly IAirportRepository _airportRepository;
@@ -85,20 +91,32 @@ namespace Flights.Web.Controllers
 
 
 
-        // POST: Airports/Delete/5
-        [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
-                //TODO return new NotFoundViewResult("NotFound");
+                return NotFound();
             }
 
             var airport = await _airportRepository.GetByIdAsync(id.Value);
-            await _airportRepository.DeleteAsync(airport);
+
+            if (airport == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _airportRepository.DeleteAsync(airport);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
 
             return RedirectToAction(nameof(Index));
         }
+
 
         // GET: Airplanes/Edit/5
         public async Task<IActionResult> Edit(int? id)

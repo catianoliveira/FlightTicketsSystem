@@ -1,9 +1,10 @@
 ﻿using Flights.Web.Data;
 using Flights.Web.Data.Entities;
 using Flights.Web.Data.Repositories;
-using FlightTicketsSystem.Web.Data.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,10 @@ using System.Threading.Tasks;
 
 namespace Flights.Web.Controllers
 {
+    //[Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "SuperAdmin")]
+    //[Authorize(Roles = "Employee")]
+
     public class FlightsController : Controller
     {
         private readonly DataContext _context;
@@ -116,36 +121,45 @@ namespace Flights.Web.Controllers
                 return NotFound();
             }
 
-            var flight = await _context.Flights.FindAsync(id);
+            var flight = await _flightRepository.GetByIdAsync(id.Value);
+
             if (flight == null)
             {
                 return NotFound();
             }
-            return View(flight);
+
+            var model = new Flight
+            {
+                AirportsEnumerable = _airportRepository.GetComboAirports(),
+                Airplanes = _airplaneRepository.GetComboAirplanes(),
+                AirplaneId = flight.AirplaneId,
+                DepartureAirportId = flight.DepartureAirportId,
+                ArrivalAirportId = flight.ArrivalAirportId,
+                BusinessPrice = flight.BusinessPrice,
+                EconomyPrice = flight.EconomyPrice,
+                DateTime = flight.DateTime
+            };
+
+            return View(model);
         }
 
-        // POST: Flights/Edit/5
+        // POST: Airplanes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AirplaneId")] Flight flight)
+        public async Task<IActionResult> Edit(Flight flight)
         {
-            if (id != flight.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(flight);
-                    await _context.SaveChangesAsync();
+                    //TODO airplane.User = await _userHelper.GetUserByEmailAsync();
+                    await _flightRepository.UpdateAsync(flight);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FlightExists(flight.Id))
+                    if (!await _flightRepository.ExistAsync(flight.Id))
                     {
                         return NotFound();
                     }
@@ -159,7 +173,6 @@ namespace Flights.Web.Controllers
             return View(flight);
         }
 
-        // GET: Flights/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -167,30 +180,23 @@ namespace Flights.Web.Controllers
                 return NotFound();
             }
 
-            var flight = await _context.Flights
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var flight = await _flightRepository.GetByIdAsync(id.Value);
+
             if (flight == null)
             {
                 return NotFound();
             }
 
-            return View(flight);
-        }
+            try
+            {
+                await _flightRepository.DeleteAsync(flight);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
 
-        // POST: Flights/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var flight = await _context.Flights.FindAsync(id);
-            _context.Flights.Remove(flight);
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool FlightExists(int id)
-        {
-            return _context.Flights.Any(e => e.Id == id);
         }
     }
 }

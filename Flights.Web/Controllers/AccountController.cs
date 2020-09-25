@@ -4,14 +4,12 @@ using Flights.Web.Data.Repositories;
 using Flights.Web.Helpers;
 using Flights.Web.Models;
 using FlightTicketsSystem.Web.Data.Repositories;
-using FlightTicketsSystem.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -20,9 +18,6 @@ using System.Threading.Tasks;
 
 namespace Flights.Web.Controllers
 {
-    //[Authorize(Roles = "Admin")]
-    //[Authorize(Roles = "Manager")]
-
     public class AccountController : Controller
     {
         private readonly IUserHelper _userHelper;
@@ -58,15 +53,14 @@ namespace Flights.Web.Controllers
             _signInManager = signInManager;
         }
 
-        public async Task<IActionResult> Login(string returnUrl)
+        public IActionResult Login(string returnUrl)
         {
-            LoginViewModel model = new LoginViewModel
+            if (this.User.Identity.IsAuthenticated)
             {
-                ReturnUrl = returnUrl,
-                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
-            };
+                return this.RedirectToAction("Index", "Home");
+            }
 
-            return View(model);
+            return this.View();
         }
 
         [HttpPost]
@@ -75,12 +69,6 @@ namespace Flights.Web.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _userHelper.LoginAsync(model);
-
-                //if (model.IsActive == false)
-                //{
-                //    ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
-                //    return this.View(model);
-                //}
 
                 if (result.Succeeded)
                 {
@@ -92,7 +80,7 @@ namespace Flights.Web.Controllers
                     return this.RedirectToAction("Index", "Home");
                 }
 
-                //TODO testar isto assim que o login com pw errada não exploda
+                //TODO testar 
 
                 if (result.IsLockedOut)
                 {
@@ -117,10 +105,10 @@ namespace Flights.Web.Controllers
                     $"<a href = \"{link}\">Reset Password</a>");
                 }
 
-                
+
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
+                    ModelState.AddModelError(string.Empty, "Try again!");
                 }
             }
 
@@ -133,105 +121,6 @@ namespace Flights.Web.Controllers
             await _userHelper.LogoutAsync();
             return this.RedirectToAction("Index", "Home");
         }
-
-
-        //[HttpPost]
-        //[AllowAnonymous]
-        //public IActionResult ExternalLogin(string provider, string returnUrl)
-        //{
-        //    var redirectUrl = Url.Action("ExternalLoginCallback", "Account",
-        //                                    new { ReturnUrl = returnUrl });
-
-        //    var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-
-        //    return new ChallengeResult(provider, properties);
-        //}
-
-
-
-        //[AllowAnonymous]
-        //public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
-        //{
-        //    returnUrl = returnUrl ?? Url.Content("~/");
-
-        //    LoginViewModel loginViewModel = new LoginViewModel
-        //    {
-        //        ReturnUrl = returnUrl,
-        //        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
-        //    };
-
-        //    if (remoteError != null)
-        //    {
-        //        ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
-        //        return View("Login", loginViewModel);
-        //    }
-
-        //    var info = await _signInManager.GetExternalLoginInfoAsync();
-
-        //    if (info == null)
-        //    {
-        //        ModelState.AddModelError(string.Empty, "Error loading external login information.");
-        //        return View("Login", loginViewModel);
-        //    }
-
-        //    var signResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
-        //                                                                    info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
-
-        //    if (signResult.Succeeded)
-        //    {
-        //        return LocalRedirect(returnUrl);
-        //    }
-
-        //    else
-        //    {
-        //        var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-        //        if (email != null)
-        //        {
-        //            var user = await _userHelper.GetUserByEmailAsync(email);
-        //            if (user == null)
-        //            {
-        //                user = new User
-        //                {
-        //                    FirstName = _userManager.FindByNameAsync(email).ToString(),
-        //                    LastName = _userManager.FindByNameAsync(email).ToString(),
-        //                    UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
-        //                    Email = info.Principal.FindFirstValue(ClaimTypes.Email),
-        //                    CountryId = 249,
-        //                    IsActive = true
-        //                };
-
-        //                var result = await _userHelper.AddUserAsync(user, "123456");
-
-        //                if (result != IdentityResult.Success)
-        //                {
-        //                    throw new InvalidOperationException("Could not create the user in seeder.");
-        //                }
-
-
-        //                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
-        //                await _userHelper.ConfirmEmailAsync(user, token);
-
-
-        //                var isInRole = await _userHelper.IsUserInRoleAsync(user, "Client");
-        //                if (!isInRole)
-        //                {
-        //                    await _userHelper.AddUserToRoleAsync(user, "Client");
-        //                }
-
-        //                await _userManager.CreateAsync(user);
-        //            }
-
-        //            await _userManager.AddLoginAsync(user, info);
-        //            await _signInManager.SignInAsync(user, isPersistent: false);
-
-        //            return LocalRedirect(returnUrl);
-        //        }
-
-        //        ViewBag.ErrorTittle = $"Error claim not received from: {info.LoginProvider}";
-
-        //        return View("Error");
-        //    }
-        //}
 
 
         public IActionResult Register()
@@ -269,13 +158,11 @@ namespace Flights.Web.Controllers
                             PhoneNumber = model.PhoneNumber,
                             City = model.City,
                             CountryId = model.CountryId,
-                            RoleId = model.RoleID,
-                            //IsActive = true
+                            RoleId = model.RoleID
                         };
-
                     }
 
-                    var result = await _userHelper.AddUserAsync(user, model.Password);
+                    var result = await _userHelper.AddUserAsync(user, "HighFly123*");
 
                     if (result != IdentityResult.Success)
                     {
@@ -326,7 +213,6 @@ namespace Flights.Web.Controllers
                             Email = model.EmailAddress,
                             UserName = model.EmailAddress,
                             RoleId = model.RoleID,
-                            //IsActive = true,
                             CountryId = model.CountryId
                         };
                     }
@@ -429,7 +315,7 @@ namespace Flights.Web.Controllers
                     return this.View(model);
                 }
 
-                ModelState.AddModelError(string.Empty, "Click the link on your email to change your password");
+                ModelState.AddModelError(string.Empty, "Click on the link send to your email to change your password");
 
 
                 var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
@@ -534,11 +420,11 @@ namespace Flights.Web.Controllers
                 {
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
-                    //user.Address = model.Address;
-                    //user.CountryId = model.CountryId;
-                    //user.City = model.City;
+                    user.Address = model.Address;
+                    user.CountryId = model.CountryId;
+                    user.City = model.City;
                     user.PhoneNumber = model.PhoneNumber;
-                    //user.IndicativeId = model.IndicativeId;
+                    user.IndicativeId = model.IndicativeId;
 
 
                     var response = await _userHelper.UpdateUserAsync(user);
@@ -597,32 +483,6 @@ namespace Flights.Web.Controllers
         public IActionResult NotAuthorized()
         {
             return View();
-        }
-
-        public IActionResult Deactivate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Deactivate(DeactivateViewModel model)
-        {
-            if (this.ModelState.IsValid)
-            {
-                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-                if (user != null)
-                {
-                    //user.IsActive = false;
-
-                    return View("SuccessDeactivation");
-                }
-                else
-                {
-                    this.ModelState.AddModelError(string.Empty, "User not found.");
-                }
-            }
-
-            return View(model);
         }
     }
 }

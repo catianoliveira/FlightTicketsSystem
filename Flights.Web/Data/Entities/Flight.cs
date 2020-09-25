@@ -13,16 +13,13 @@ namespace Flights.Web.Data.Entities
     {
         public int Id { get; set; }
 
-        public User user { get; set; }
-
-
-
+        
         [Required]
         [Display(Name = "Airplane")]
         [Range(1, int.MaxValue, ErrorMessage = "You must select an airport.")]
         public int AirplaneId { get; set; }
 
-
+        [Display(Name = "Airplane")]
         public IEnumerable<SelectListItem> Airplanes { get; set; }
 
 
@@ -36,6 +33,7 @@ namespace Flights.Web.Data.Entities
 
 
         [Required]
+
         [Display(Name = "Arrival Airport")]
         [ForeignKey("ArrivalAirport")]
         public int ArrivalAirportId { get; set; }
@@ -49,9 +47,11 @@ namespace Flights.Web.Data.Entities
 
         public IEnumerable<SelectListItem> AirportsEnumerable { get; set; }
 
+
+        [Display(Name = "Departure Airport")]
         public Airport DepartureAirport { get; set; }
 
-
+        [Display(Name = "Arrival Airport")]
         public Airport ArrivalAirport { get; set; }
 
 

@@ -54,6 +54,7 @@ namespace Flights.Web.Data.Entities
 
         //TODO ver o IdentityUser 
 
+        [Required]
         [MaxLength(70, ErrorMessage = "The field {0} can only contain {1} characters")]
         public string Address { get; set; }
 
@@ -61,6 +62,7 @@ namespace Flights.Web.Data.Entities
 
 
 
+        [Required]
         [MaxLength(50, ErrorMessage = "The field {0} can only contain {1} characters")]
         public string City { get; set; }
 
@@ -68,6 +70,7 @@ namespace Flights.Web.Data.Entities
 
 
 
+        [Required]
         [Display(Name = "Country")]
         public int CountryId { get; set; }
 
@@ -94,7 +97,6 @@ namespace Flights.Web.Data.Entities
 
 
 
-        //public bool IsActive { get; set; }
 
 
         public string FullAdress
@@ -103,8 +105,6 @@ namespace Flights.Web.Data.Entities
             {
                 return $"{this.Address}, {this.City}, {this.Country}";
             }
-        }
-
-        
+        }        
     }
 }

@@ -2,58 +2,106 @@
 
 
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Edit</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Ticket - HighFly</title>
+
 </head>
-<body>
-
-<h4>Ticket</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            @*<div class="form-group">
-                <label asp-for="DepartureAirportId" class="control-label"></label>
-                <select asp-for="DepartureAirportId" class="form-control" asp-items="Flights"></select>
-                <span asp-validation-for="DepartureAirportId" class="text-danger"></span>
-            </div>*@
-            <div class="form-group">
-                <label asp-for="PassangerName" class="control-label"></label>
-                <input asp-for="PassangerName" class="form-control" />
-                <span asp-validation-for="PassangerName" class="text-danger"></span>
+<body class="hold-transition sidebar-mini">
+    <!-- Content Wrapper. Contains page content -->
+    <!-- Content Header (Page header) -->
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
             </div>
-            <div class="form-group">
-                <label asp-for="SeatNumber" class="control-label"></label>
-                <input asp-for="SeatNumber" class="form-control" />
-                <span asp-validation-for="SeatNumber" class="text-danger"></span>
+            <h1></h1>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/Tickets">Tickets</a></li>
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                </ol>
             </div>
-            <div class="form-group">
-                <label asp-for="TravelClass" class="control-label"></label>
-                <input asp-for="TravelClass" class="form-control" />
-                <span asp-validation-for="TravelClass" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="Lugagge" /> @Html.DisplayNameFor(model => model.Lugagge)
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+    <!-- /.container-fluid -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Edit Ticket</h3>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+                </div>
+                <!-- Content Header (Page header) -->
 
+                @using (Html.BeginForm("Edit", "Tickets", FormMethod.Post, new { @autocomplete = "on" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @style = "color: black" })
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" />
+                                <div class="form-group">
+                                    <label asp-for="PassangerName" class="control-label"></label>
+                                    <input asp-for="PassangerName" class="form-control" />
+                                    <span asp-validation-for="PassangerName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="User.UserName" class="control-label"></label>
+                                    <input asp-for="User.UserName" class="form-control" disabled/>
+                                    <span asp-validation-for="User.UserName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="TravelClass" class="control-label"></label>
+                                    <input asp-for="TravelClass" class="form-control" disabled />
+                                    <span asp-validation-for="TravelClass" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="Save" class="btn btn-default" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+    <!-- /.content-wrapper -->
+    <!-- ./wrapper -->
+
+
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        <!-- InputMask -->
+        <script src="~/~/plugins/moment/moment.min.js"></script>
+        <script src="~/~/plugins/inputmask/jquery.inputmask.min.js"></script>
+        <!-- date-range-picker -->
+        <script src="~/~/plugins/daterangepicker/daterangepicker.js"></script>
+        <!-- jQuery -->
+        <script src="~/~/plugins/jquery/jquery.min.js"></script>
+        <!-- Bootstrap 4 -->
+        <script src="~/~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- Bootstrap4 Duallistbox -->
+        <script src=".~/~/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+        <!-- Tempusdominus Bootstrap 4 -->
+        <script src="~/~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+        <!-- DataTables -->
+        <script src="~/~/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="~/~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+        <script src="~/~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="~/~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+        <!-- AdminLTE App -->
+        <script src="~/~/dist/js/adminlte.min.js"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="~/~/dist/js/demo.js"></script>
+        <!-- page script -->
+    }
 </body>
 </html>
