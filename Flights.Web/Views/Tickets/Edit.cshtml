@@ -39,7 +39,6 @@
                 @using (Html.BeginForm("Edit", "Tickets", FormMethod.Post, new { @autocomplete = "on" }))
                 {
                     @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @style = "color: black" })
 
                     <div class="card-body">
                         <div class="row">

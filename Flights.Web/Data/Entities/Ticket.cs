@@ -16,7 +16,6 @@ namespace Flights.Web.Data.Entities
         [Required]
         public User User { get; set; }
 
-
         
         [Required]
         [Display(Name = "Flight Id")]
@@ -25,7 +24,6 @@ namespace Flights.Web.Data.Entities
 
 
         public Flight Flight { get; set; }
-
 
 
         [Required]
@@ -38,17 +36,12 @@ namespace Flights.Web.Data.Entities
         public int SeatNumber { get; set; }
 
 
-
         [Required]
         [Display(Name = "Travel Class")]
         public string TravelClass { get; set; }
 
 
-
         [Required]
         public bool Lugagge { get; set; }
-
-
-        public decimal PaidPrice { get; set; }
     }
 }

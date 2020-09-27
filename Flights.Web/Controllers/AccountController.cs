@@ -4,7 +4,6 @@ using Flights.Web.Data.Repositories;
 using Flights.Web.Helpers;
 using Flights.Web.Models;
 using FlightTicketsSystem.Web.Data.Repositories;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -53,16 +52,24 @@ namespace Flights.Web.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Login(string returnUrl)
+        public IActionResult Login()
         {
             if (this.User.Identity.IsAuthenticated)
             {
                 return this.RedirectToAction("Index", "Home");
             }
 
-            return this.View();
+            return this.View(new LoginViewModel());
         }
 
+
+        /// <summary>
+        /// Checks if user and password are correct. 
+        /// Locks out user for 10min if password is incorret for 5 times
+        /// Send email to reset password
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
@@ -79,8 +86,6 @@ namespace Flights.Web.Controllers
 
                     return this.RedirectToAction("Index", "Home");
                 }
-
-                //TODO testar 
 
                 if (result.IsLockedOut)
                 {
@@ -108,150 +113,130 @@ namespace Flights.Web.Controllers
 
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Try again!");
+                    ModelState.AddModelError(string.Empty, "Incorrect username or password");
                 }
             }
-
-            this.ModelState.AddModelError(string.Empty, "Incorrect username or password");
-            return this.View(model);
+            return View(model);
         }
 
         public async Task<IActionResult> Logout()
         {
             await _userHelper.LogoutAsync();
-            return this.RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home");
         }
 
 
         public IActionResult Register()
         {
-
             var model = new RegisterNewUserViewModel
             {
                 Countries = _countryRepository.GetComboCountries(),
                 Indicatives = _indicativeRepository.GetComboIndicatives(),
                 RoleChoices = _userHelper.GetComboRoles()
             };
-            return this.View(model);
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterNewUserViewModel model)
-        {
-            if (this.User.Identity.IsAuthenticated)
-            {
-
-                if (ModelState.IsValid)
-                {
-                    var user = await _userHelper.GetUserByEmailAsync(model.EmailAddress);
-                    if (user == null)
-                    {
-                        user = new User
-                        {
-                            FirstName = model.FirstName,
-                            LastName = model.LastName,
-                            Email = model.EmailAddress,
-                            UserName = model.EmailAddress,
-                            Address = model.Address,
-                            IndicativeId = model.IndicativeId,
-                            PhoneNumber = model.PhoneNumber,
-                            City = model.City,
-                            CountryId = model.CountryId,
-                            RoleId = model.RoleID
-                        };
-                    }
-
-                    var result = await _userHelper.AddUserAsync(user, "HighFly123*");
-
-                    if (result != IdentityResult.Success)
-                    {
-                        this.ModelState.AddModelError(string.Empty, "The user couldn't be created.");
-                        return this.View(model);
-                    }
-
-                    var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
-                    var tokenLink = this.Url.Action("ConfirmEmail", "Account", new
-                    {
-                        userid = user.Id,
-                        token = myToken
-                    }, protocol: HttpContext.Request.Scheme);
-
-                    _mailHelper.SendMail(model.EmailAddress, "Email confirmation", $"<h1>Email Confirmation</h1>" +
-                        $"Complete your registration by " +
-                        $"clicking link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
-
-
-
-                    //////
-
-                    var roleName = await _roleManager.FindByIdAsync(user.RoleId);
-                    var register = await _userManager.FindByIdAsync(user.Id);
-                    await _userManager.AddToRoleAsync(register, roleName.ToString());
-
-                    //////
-
-                    return this.View(model);
-                }
-
-                this.ModelState.AddModelError(string.Empty, "This user already exists.");
-            }
-
-
-            if (!this.User.Identity.IsAuthenticated)
-            {
-
-                if (ModelState.IsValid)
-                {
-                    var user = await _userHelper.GetUserByEmailAsync(model.EmailAddress);
-                    if (user == null)
-                    {
-                        user = new User
-                        {
-                            FirstName = model.FirstName,
-                            LastName = model.LastName,
-                            Email = model.EmailAddress,
-                            UserName = model.EmailAddress,
-                            RoleId = model.RoleID,
-                            CountryId = model.CountryId
-                        };
-                    }
-
-                    var result = await _userHelper.AddUserAsync(user, model.Password);
-
-                    if (result != IdentityResult.Success)
-                    {
-                        this.ModelState.AddModelError(string.Empty, "The user couldn't be created.");
-                        return this.View(model);
-                    }
-
-                    var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
-                    var tokenLink = this.Url.Action("ConfirmEmail", "Account", new
-                    {
-                        userid = user.Id,
-                        token = myToken
-                    }, protocol: HttpContext.Request.Scheme);
-
-                    _mailHelper.SendMail(model.EmailAddress, "Email confirmation", $"<h1>Email Confirmation</h1>" +
-                        $"Complete your registration by " +
-                        $"clicking link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
-
-
-                    //////
-                    await _userHelper.AddUserToRoleAsync(user, "Client");
-                    ////
-
-
-                    return this.View("SuccessRegistration");
-                }
-
-                this.ModelState.AddModelError(string.Empty, "This user already exists.");
-
-            }
-
             return View(model);
         }
 
+
+        /// <summary>
+        /// checks if user is logged in. if yes, then the admin or super admin
+        /// gets to choose the new user's role and the password is "HighFly123*".
+        /// otherwise the new user's role is "client" and he gets to choose a new 
+        /// password
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterNewUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(model.EmailAddress);
+                if (user == null)
+                {
+                    user = new User
+                    {
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        Email = model.EmailAddress,
+                        UserName = model.EmailAddress,
+                        Address = model.Address,
+                        IndicativeId = model.IndicativeId,
+                        PhoneNumber = model.PhoneNumber,
+                        City = model.City,
+                        CountryId = model.CountryId,
+                        RoleId = model.RoleID
+                    };
+                }
+
+                if (User.Identity.IsAuthenticated)
+                {
+                    try
+                    {
+                        var result = await _userHelper.AddUserAsync(user, "HighFly123*");
+
+                        if (result != IdentityResult.Success)
+                        {
+                            ModelState.AddModelError(string.Empty, "The user couldn't be created.");
+                            return View(model);
+                        }
+
+                        var roleName = await _roleManager.FindByIdAsync(user.RoleId);
+                        var register = await _userManager.FindByIdAsync(user.Id);
+                        await _userManager.AddToRoleAsync(register, roleName.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
+                }
+
+                else if (!User.Identity.IsAuthenticated)
+                {
+                    try
+                    {
+                        var result = await _userHelper.AddUserAsync(user, model.Password);
+
+                        if (result != IdentityResult.Success)
+                        {
+                            this.ModelState.AddModelError(string.Empty, "The user couldn't be created.");
+                            return this.View(model);
+                        }
+
+                        ModelState.AddModelError(string.Empty, "Click the link sent to your email to confirm your account!");
+
+                        await _userHelper.AddUserToRoleAsync(user, "Client");
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
+                }
+                var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                var tokenLink = Url.Action("ConfirmEmail", "Account", new
+                {
+                    userid = user.Id,
+                    token = myToken
+                }, protocol: HttpContext.Request.Scheme);
+
+                try
+                {
+                    _mailHelper.SendMail(model.EmailAddress, "Email confirmation", $"<h1>Email Confirmation</h1>" +
+                    $"Complete your registration by " +
+                    $"clicking link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+                return View(model);
+            }
+
+            ModelState.AddModelError(string.Empty, "This user already exists.");
+            return View(model);
+        }
 
 
         [HttpPost]
@@ -298,7 +283,7 @@ namespace Flights.Web.Controllers
 
         public IActionResult RecoverPassword()
         {
-            return this.View();
+            return View();
         }
 
 
@@ -306,21 +291,21 @@ namespace Flights.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> RecoverPassword(RecoverPasswordViewModel model)
         {
-            if (this.ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var user = await _userHelper.GetUserByEmailAsync(model.Email);
                 if (user == null)
                 {
                     ModelState.AddModelError(string.Empty, "The email doesn't correspont to a registered user.");
-                    return this.View(model);
+                    return View(model);
                 }
 
-                ModelState.AddModelError(string.Empty, "Click on the link send to your email to change your password");
+                ModelState.AddModelError(string.Empty, "Click on the link send to your email to recover your password");
 
 
                 var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
 
-                var link = this.Url.Action(
+                var link = Url.Action(
                     "ResetPassword",
                     "Account",
                     new { token = myToken }, protocol: HttpContext.Request.Scheme);
@@ -329,11 +314,11 @@ namespace Flights.Web.Controllers
                 $"To reset the password click in this link:</br></br>" +
                 $"<a href = \"{link}\">Reset Password</a>");
 
-                return this.View();
+                return View();
 
             }
 
-            return this.View(model);
+            return View(model);
         }
 
         public IActionResult ResetPassword(string token)
@@ -351,17 +336,18 @@ namespace Flights.Web.Controllers
                 var result = await _userHelper.ResetPasswordAsync(user, model.Token, model.Password);
                 if (result.Succeeded)
                 {
-                    this.ViewBag.Message = "Password reset successful.";
-                    return this.View();
+                    ModelState.AddModelError(string.Empty, "Password reset successful.");
+                    return View();
                 }
 
-                this.ViewBag.Message = "Error while resetting the password.";
+                ModelState.AddModelError(string.Empty, "Error while reseting the password. Try again later.");
                 return View(model);
             }
 
-            this.ViewBag.Message = "User not found.";
+            ModelState.AddModelError(string.Empty, "User not found.");
             return View(model);
         }
+
 
         public async Task<IActionResult> ChangeUser()
         {
@@ -381,9 +367,11 @@ namespace Flights.Web.Controllers
                 model.PhoneNumber = user.PhoneNumber;
                 model.Address = user.Address;
                 model.City = user.City;
+                model.CountryId = user.CountryId;
+                model.IndicativeId = user.IndicativeId;
             }
 
-            return this.View(model);
+            return View(model);
         }
 
 
@@ -410,6 +398,7 @@ namespace Flights.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeUser(ChangeUserViewModel model)
         {
             if (this.ModelState.IsValid)

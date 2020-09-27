@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlightTicketsSystem.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200924185914_InitialDb")]
+    [Migration("20200926144639_InitialDb")]
     partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,6 +68,9 @@ namespace FlightTicketsSystem.Web.Migrations
                     b.HasIndex("FlightId");
 
                     b.HasIndex("FlightId1");
+
+                    b.HasIndex("IATA")
+                        .IsUnique();
 
                     b.ToTable("Airports");
                 });
@@ -127,9 +130,6 @@ namespace FlightTicketsSystem.Web.Migrations
                     b.Property<int>("FlightId");
 
                     b.Property<bool>("Lugagge");
-
-                    b.Property<decimal>("PaidPrice")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("PassangerName")
                         .IsRequired();
@@ -215,6 +215,10 @@ namespace FlightTicketsSystem.Web.Migrations
 
                     b.HasIndex("CountryId");
 
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
 
@@ -225,7 +229,30 @@ namespace FlightTicketsSystem.Web.Migrations
 
                     b.HasIndex("RoleId");
 
+                    b.HasIndex("UserName")
+                        .IsUnique()
+                        .HasFilter("[UserName] IS NOT NULL");
+
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("FlightTicketsSystem.Web.Data.Entities.History", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("TicketId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TicketId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Histories");
                 });
 
             modelBuilder.Entity("FlightTicketsSystem.Web.Data.Entities.Indicative", b =>
@@ -411,6 +438,17 @@ namespace FlightTicketsSystem.Web.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId");
+                });
+
+            modelBuilder.Entity("FlightTicketsSystem.Web.Data.Entities.History", b =>
+                {
+                    b.HasOne("Flights.Web.Data.Entities.Ticket", "Ticket")
+                        .WithMany()
+                        .HasForeignKey("TicketId");
+
+                    b.HasOne("Flights.Web.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

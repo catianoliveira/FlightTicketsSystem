@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -65,7 +66,27 @@ namespace FlightTicketsSystem.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _userHelper.CheckRoleAsync(model.Role);
+                try
+                {
+                    await _userHelper.CheckRoleAsync(model.Role);
+                    ModelState.AddModelError(string.Empty, "Role created with success");
+                    return View(model);
+                }
+                catch (DbUpdateException dbUpdateException)
+                {
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "There's a role with the same name.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
 
                 return View(model);
             }
@@ -82,11 +103,13 @@ namespace FlightTicketsSystem.Web.Controllers
 
             foreach (User user in users)
             {
-                var thisViewModel = new UserRoleViewModel();
-                thisViewModel.UserId = user.Id;
-                thisViewModel.Name = user.FullName;
-                thisViewModel.UserName = user.Email;
-                thisViewModel.Roles = await GetUserRoles(user);
+                var thisViewModel = new UserRoleViewModel
+                {
+                    UserId = user.Id,
+                    Name = user.FullName,
+                    UserName = user.Email,
+                    Roles = await GetUserRoles(user)
+                };
                 userRolesViewModel.Add(thisViewModel);
             }
 
@@ -125,6 +148,5 @@ namespace FlightTicketsSystem.Web.Controllers
 
             return View(model);
         }
-
     }
 }

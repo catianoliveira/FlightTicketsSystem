@@ -5,6 +5,7 @@ using Flights.Web.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FlightTicketsSystem.Web.Data.Repositories
 {
@@ -172,6 +173,17 @@ namespace FlightTicketsSystem.Web.Data.Repositories
 
 
             return price.BusinessPrice;
+        }
+
+        public async Task<Ticket> GetDetailsTicketAsync(int ticketId)
+        {
+            var ticket = await _context.Tickets
+                .Include(t => t.Flight.CompleteFlight)
+                .Include(t => t.Flight.DateTime)
+                .Include(t => t.PassangerName)
+                .FirstOrDefaultAsync(t => t.Id == ticketId);
+
+            return ticket;
         }
 
     }

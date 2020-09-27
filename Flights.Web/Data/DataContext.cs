@@ -1,5 +1,6 @@
 ﻿using Flights.Web.Data.Entities;
 using FlightTicketsSystem.Web.Data.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,8 @@ namespace Flights.Web.Data
 
         public DbSet<Ticket> Tickets { get; set; }
 
+        public DbSet<History> Histories { get; set; }
+
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -37,12 +40,24 @@ namespace Flights.Web.Data
                 .Property(p => p.EconomyPrice)
                 .HasColumnType("decimal(18,2)");
 
-            modelBuilder.Entity<Ticket>()
-                .Property(p => p.PaidPrice)
-                .HasColumnType("decimal(18,2)");
+           
+
+            modelBuilder.Entity<Airport>()
+                .HasIndex(a => a.IATA)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(a => a.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(a => a.UserName)
+                .IsUnique();
+
 
             modelBuilder.Ignore<SelectListItem>();
             modelBuilder.Ignore<SelectListGroup>();
+
 
             var cascadeFKs = modelBuilder.Model
                 .GetEntityTypes()

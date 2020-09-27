@@ -1,7 +1,72 @@
-﻿@{
-    ViewData["Title"] = "About";
-}
-<h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home - HighFly</title>
 
-<p>Use this area to provide additional information.</p>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/~/plugins/fontawesome-free/css/all.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/~/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition sidebar-mini">
+    <!-- Content Wrapper. Contains page content -->
+    <!-- Content Header (Page header) -->
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+            </div>
+            <h1></h1>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">About Us</h2>
+
+                </div>
+                <!-- Content Header (Page header) -->
+                <div class="card-body">
+                    <h5>We are committed to delivering ‘Low Fares Done Right’!</h5> <br/>This is more than a tagline. It’s our driving philosophy.<br /><br />
+
+                    Why are low fares so important? <br />Because we believe travel should be for everyone. <br />
+                    Low fares allow people to travel more often, see new places, connect with family and loved ones and develop business opportunities.
+
+                    <br/>We work harder than anyone in the airline industry to help you save money on your flights, but we know that low fares alone aren’t 
+                    enough. <br />That’s why we make a bigger commitment to our customers-- the ‘Done Right’ promise. This means providing you with a real 
+                    choice – with options that allow you to customize your flight to match both your wants and your wallet. And we are committed 
+                    to providing safe, on-time and reliable service while at the same time treating you with Rocky Mountain hospitality 
+                    like only we can provide.<br /><br />
+
+                    Headquartered in Lisbon, we currently serve more than 100 cities all over the world. <br />Our commitment to you is supported by a 
+                    team of approximately 3,000 hard-working, aviation professionals. We are the proud recipient of the Federal Aviation Administration’s 
+                    2015 Diamond Award for maintenance excellence, and we were recently named the industry’s most fuel-efficient airline by The International 
+                    Council on Clean Transportation (ICCT) as a result of superior technology and operational efficiency.<br /><br />
+
+                    <h5>We hope to see you soon on one of our flights.</h5>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+
+
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    }
+
+</body>
+</html>

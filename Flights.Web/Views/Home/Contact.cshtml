@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | DataTables</title>
+    <title>Home - HighFly</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -21,14 +21,8 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>DataTables</h1>
             </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active">DataTables</li>
-                </ol>
-            </div>
+            <h1></h1>
         </div>
     </div>
     <!-- /.container-fluid -->
@@ -37,74 +31,26 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">DataTable with default features</h3>
+                    <h2 class="card-title">Contact Us</h2>
+
                 </div>
-                <!-- /.card-header -->
+                <!-- Content Header (Page header) -->
                 <div class="card-body">
-
-
-
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="../forms/general.html" class="nav-link active">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>General Elements</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../forms/advanced.html" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Advanced Elements</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../forms/editors.html" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Editors</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../forms/validation.html" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Validation</p>
-                            </a>
-                        </li>
-                    </ul>
-
-
-
-
-
+                    
                 </div>
-                <!-- /.card-body -->
             </div>
-            <!-- /.card -->
         </div>
-        <!-- /.col -->
-        <!-- /.row -->
-        <!-- /.container-fluid -->
+
     </section>
-    <!-- /.content -->
-    <!-- /.content-wrapper -->
-    <!-- ./wrapper -->
-    <!-- jQuery -->
-    <script src="~/~/plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="~/~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- DataTables -->
-    <script src="~/~/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="~/~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="~/~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="~/~/dist/js/adminlte.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="~/~/dist/js/demo.js"></script>
-    <script>
-        $(function () {
-            bsCustomFileInput.init();
-        });
-    </script>
+
+
+
+
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    }
+
 </body>
 </html>
-

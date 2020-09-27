@@ -286,8 +286,7 @@ namespace FlightTicketsSystem.Web.Migrations
                     PassangerName = table.Column<string>(nullable: false),
                     SeatNumber = table.Column<int>(nullable: false),
                     TravelClass = table.Column<string>(nullable: false),
-                    Lugagge = table.Column<bool>(nullable: false),
-                    PaidPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Lugagge = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -300,6 +299,32 @@ namespace FlightTicketsSystem.Web.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Tickets_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Histories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    TicketId = table.Column<int>(nullable: true),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Histories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Histories_Tickets_TicketId",
+                        column: x => x.TicketId,
+                        principalTable: "Tickets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Histories_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -320,6 +345,12 @@ namespace FlightTicketsSystem.Web.Migrations
                 name: "IX_Airports_FlightId1",
                 table: "Airports",
                 column: "FlightId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Airports_IATA",
+                table: "Airports",
+                column: "IATA",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -354,6 +385,13 @@ namespace FlightTicketsSystem.Web.Migrations
                 column: "CountryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_Email",
+                table: "AspNetUsers",
+                column: "Email",
+                unique: true,
+                filter: "[Email] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
@@ -371,6 +409,13 @@ namespace FlightTicketsSystem.Web.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_UserName",
+                table: "AspNetUsers",
+                column: "UserName",
+                unique: true,
+                filter: "[UserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Flights_AirplaneId",
                 table: "Flights",
                 column: "AirplaneId");
@@ -384,6 +429,16 @@ namespace FlightTicketsSystem.Web.Migrations
                 name: "IX_Flights_DepartureAirportId",
                 table: "Flights",
                 column: "DepartureAirportId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Histories_TicketId",
+                table: "Histories",
+                column: "TicketId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Histories_UserId",
+                table: "Histories",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_FlightId",
@@ -440,6 +495,9 @@ namespace FlightTicketsSystem.Web.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Histories");
 
             migrationBuilder.DropTable(
                 name: "Indicatives");

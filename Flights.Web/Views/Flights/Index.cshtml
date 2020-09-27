@@ -36,7 +36,6 @@
                 @using (Html.BeginForm("Index", "Flights", FormMethod.Post, new { @autocomplete = "on" }))
                 {
                     @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @style = "color: black" })
                     <div class="card-body">
                         <table id="airports" class="display table table-bordered table-striped" style="width:100%">
                             <thead>

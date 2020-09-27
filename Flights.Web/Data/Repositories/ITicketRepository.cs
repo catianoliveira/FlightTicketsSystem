@@ -17,5 +17,6 @@ namespace FlightTicketsSystem.Web.Data.Repositories
 
         decimal GetBusinessPrice(int flightId);
 
+        Task<Ticket> GetDetailsTicketAsync(int flightId);
     }
 }

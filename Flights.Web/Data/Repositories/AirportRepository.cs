@@ -20,33 +20,6 @@ namespace Flights.Web.Data
             _countryRepository = countryRepository;
         }
 
-
-
-        //public async Task CheckCity(City city)
-        //{
-        //    var globalAirports = new GlobalAirports();
-
-        //    //if (_context.Cities.Any())
-        //    //{
-        //    //    globalAirports.GetByCity(city);
-
-        //    //    if (true)
-        //    //    {
-
-        //    //    }
-        //    //}
-
-        //    //else
-        //    //{
-
-        //    //}
-        //}
-
-        public IQueryable GetAllWithUsers()
-        {
-            return _context.Airports;
-        }
-
         public IEnumerable<SelectListItem> GetComboAirports()
         {
             var list = _context.Airports.OrderBy(p => p.Country).Select(p => new SelectListItem

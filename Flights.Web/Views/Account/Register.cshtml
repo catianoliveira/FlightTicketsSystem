@@ -38,11 +38,6 @@
             <div class="col-sm-6">
             </div>
             <h1></h1>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                </ol>
-            </div>
         </div>
     </div>
     <!-- /.container-fluid -->
@@ -60,14 +55,13 @@
                 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @autocomplete = "on" }))
                 {
                     @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @style = "color: black" })
 
                     <div class="card-body">
-                        <divv class="row">
+                        <div class="row">
                             <div class="col-md-6">
 
                                 @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("SuperAdmin")
-                                    || this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                                   || this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
                                 {
                                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                     <div class="form-group">
@@ -82,9 +76,9 @@
                                     <span asp-validation-for="FirstName" class="text-warning"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="DateOfBirth">Date of Birth</label>
-                                    <input asp-for="DateOfBirth" class="form-control" />
-                                    <span asp-validation-for="DateOfBirth" class="text-warning"></span>
+                                    <label asp-for="LastName">Last Name</label>
+                                    <input asp-for="LastName" class="form-control" />
+                                    <span asp-validation-for="LastName" class="text-warning"></span>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="City">City</label>
@@ -96,16 +90,19 @@
                                     <select asp-for="IndicativeId" asp-items="Model.Indicatives" class="form-control"></select>
                                     <span asp-validation-for="IndicativeId" class="text-danger"></span>
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="Password">Password</label>
-                                    <input asp-for="Password" type="password" class="form-control" />
-                                    <span asp-validation-for="Password" class="text-warning"></span>
+                                @if (!this.User.Identity.IsAuthenticated)
+                                {
+                                    <div class="form-group">
+                                        <label asp-for="Password">Password</label>
+                                        <input asp-for="Password" type="password" class="form-control" />
+                                        <span asp-validation-for="Password" class="text-warning"></span>
+                                    </div>
+                                    <br />
+                                }
+                                    <div class="form-group">
+                                        <input type="submit" value="Register New User" class="btn btn-success" />
+                                    </div>
                                 </div>
-                                <br />
-                                <div class="form-group">
-                                    <input type="submit" value="Register New User" class="btn btn-success" />
-                                </div>
-                            </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label asp-for="EmailAddress">Email Address</label>
@@ -114,9 +111,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label asp-for="LastName">Last Name</label>
-                                    <input asp-for="LastName" class="form-control" />
-                                    <span asp-validation-for="LastName" class="text-warning"></span>
+                                    <label asp-for="DateOfBirth">Date of Birth</label>
+                                    <input asp-for="DateOfBirth" class="form-control" />
+                                    <span asp-validation-for="DateOfBirth" class="text-warning"></span>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Address">Address</label>
@@ -133,13 +130,16 @@
                                     <input asp-for="PhoneNumber" class="form-control" />
                                     <span asp-validation-for="PhoneNumber" class="text-warning"></span>
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="Confirm">Confirm</label>
-                                    <input asp-for="Confirm" type="password" class="form-control" />
-                                    <span asp-validation-for="Confirm" class="text-warning"></span>
+                                @if (!this.User.Identity.IsAuthenticated)
+                                {
+                                    <div class="form-group">
+                                        <label asp-for="Confirm">Confirm</label>
+                                        <input asp-for="Confirm" type="password" class="form-control" />
+                                        <span asp-validation-for="Confirm" class="text-warning"></span>
+                                    </div>
+                                }
                                 </div>
-                            </div>
-                        </divv>
+                        </div>
                     </div>
                 }
             </div>

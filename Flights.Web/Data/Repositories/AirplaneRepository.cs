@@ -14,9 +14,7 @@ namespace Flights.Web.Data
 
         public AirplaneRepository(DataContext context) : base(context)
         {
-            //é necessario o interface porque no startup temos que 
-            //implementar o interface e o T
-            _context = context;
+           _context = context;
         }
 
         public IQueryable GetAllWithUsers()

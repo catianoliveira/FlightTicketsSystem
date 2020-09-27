@@ -87,27 +87,30 @@ namespace Flights.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                //await _flightRepository.CreateAsync(flight);
-
-
-                Flight flight = new Flight
+                try
                 {
-                    ArrivalAirportId = flights.ArrivalAirportId,
-                    DepartureAirportId = flights.DepartureAirportId,
-                    ArrivalsCollection = new List<Airport>(),
-                    DeparturesCollection = new List<Airport>(),
-                    AirplaneId = flights.AirplaneId,
-                    BusinessPrice = flights.BusinessPrice,
-                    EconomyPrice = flights.EconomyPrice,
-                    DateTime = flights.DateTime,
-                    ArrivalAirport = flights.ArrivalAirport,
-                    DepartureAirport = flights.DepartureAirport
-                };
+                    Flight flight = new Flight
+                    {
+                        ArrivalAirportId = flights.ArrivalAirportId,
+                        DepartureAirportId = flights.DepartureAirportId,
+                        ArrivalsCollection = new List<Airport>(),
+                        DeparturesCollection = new List<Airport>(),
+                        AirplaneId = flights.AirplaneId,
+                        BusinessPrice = flights.BusinessPrice,
+                        EconomyPrice = flights.EconomyPrice,
+                        DateTime = flights.DateTime,
+                        ArrivalAirport = flights.ArrivalAirport,
+                        DepartureAirport = flights.DepartureAirport
+                    };
 
-                await _flightRepository.CreateAsync(flight);
+                    await _flightRepository.CreateAsync(flight);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
 
                 return RedirectToAction(nameof(Index));
-
             }
             return View(flights);
         }
@@ -168,6 +171,11 @@ namespace Flights.Web.Controllers
                         throw;
                     }
                 }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(flight);

@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit Ticket - HighFly</title>
+    <title>Edit Flight - HighFly</title>
 
 </head>
 <body class="hold-transition sidebar-mini">
@@ -18,7 +18,7 @@
             <h1></h1>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="/Tickets">Tickets</a></li>
+                    <li class="breadcrumb-item"><a href="/Flights">Flights</a></li>
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
                 </ol>
             </div>
@@ -30,7 +30,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Edit Ticket</h3>
+                    <h3 class="card-title">Edit Flight</h3>
 
                 </div>
                 <!-- Content Header (Page header) -->
@@ -38,7 +38,6 @@
                 @using (Html.BeginForm("Edit", "Flights", FormMethod.Post, new { @autocomplete = "on" }))
                 {
                     @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @style = "color: black" })
 
                     <div class="card-body">
                         <div class="row">

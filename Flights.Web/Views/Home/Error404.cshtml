@@ -1,27 +1,43 @@
-﻿@{
-    ViewData["Title"] = "Error";
-}
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>404 Page not found - HighFly</title>
 
-<section class="page_404">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12 ">
-                <div class="col-sm-10 col-sm-offset-1  text-center">
-                    <div class="four_zero_four_bg">
-                        <h1 class="text-center ">404</h1>
+</head>
+<body>
+            <!-- Main content -->
+            <section class="content">
+                <div class="error-page">
+                    <h2 class="headline text-warning"> 404</h2>
+
+                    <div class="error-content">
+                        <h3><i class="fas fa-exclamation-triangle text-warning"></i> Oops! Page not found.</h3>
+
+                        <p>
+                            We could not find the page you were looking for.
+                            Meanwhile, you may <a href="~/~/index.html">return to dashboard</a>.
+                        </p>
+
+                        <form class="search-form">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control" placeholder="Search">
+
+                                <div class="input-group-append">
+                                    <button type="submit" name="submit" class="btn btn-warning">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- /.input-group -->
+                        </form>
                     </div>
-
-                    <div class="contant_box_404">
-                        <h3 class="h2">
-                            Look like you're lost
-                        </h3>
-
-                        <p>the page you are looking for not avaible!</p>
-
-                        <a href="" class="link_404">Go to Home</a>
-                    </div>
+                    <!-- /.error-content -->
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
+                <!-- /.error-page -->
+            </section>
+            <!-- /.content -->
+
+</body>
+</html>

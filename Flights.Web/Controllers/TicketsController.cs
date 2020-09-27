@@ -53,7 +53,6 @@ namespace FlightTicketsSystem.Web.Controllers
         }
 
 
-
         public IActionResult Index()
         {
             var model = _context.Tickets
@@ -76,8 +75,6 @@ namespace FlightTicketsSystem.Web.Controllers
 
             return View(model.ToList());
         }
-
-
 
         // GET: Tickets/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -123,7 +120,6 @@ namespace FlightTicketsSystem.Web.Controllers
                 PassangerName = ticket.PassangerName,
                 User = user,
                 TravelClass = ticket.TravelClass,
-
             };
 
             return View(model);
@@ -152,6 +148,10 @@ namespace FlightTicketsSystem.Web.Controllers
                     {
                         throw;
                     }
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -228,102 +228,107 @@ namespace FlightTicketsSystem.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
-
-                if (model.TravelClass.Contains("Economy"))
+                try
                 {
-                    var nextSeat = _ticketRepository.GetEconomySeats(model.FlightId);
 
-                    if (nextSeat == 0)
+
+                    var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
+
+                    if (model.TravelClass.Contains("Economy"))
                     {
-                        this.ModelState.AddModelError(string.Empty, "Flight is full");
+                        var nextSeat = _ticketRepository.GetEconomySeats(model.FlightId);
+
+                        if (nextSeat == 0)
+                        {
+                            this.ModelState.AddModelError(string.Empty, "Flight is full");
+                        }
+
+                        else
+                        {
+                            var ticket = new Ticket
+                            {
+                                FlightId = model.FlightId,
+                                PassangerName = model.PassangerName,
+                                TravelClass = "Economy",
+                                SeatNumber = nextSeat,
+                                User = user
+                            };
+
+                            await _ticketRepository.CreateAsync(ticket);
+
+                            var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                            var tokenLink = this.Url.Action("ConfirmEmail", "Account", new
+                            {
+                                userid = user.Id,
+                                token = myToken
+                            }, protocol: HttpContext.Request.Scheme);
+
+
+                            var flight = await _flightRepository.GetByIdAsync(model.FlightId);
+
+                            var arrival = await _airportRepository.GetByIdAsync(flight.ArrivalAirportId);
+
+                            var departure = await _airportRepository.GetByIdAsync(flight.DepartureAirportId);
+
+
+                            _mailHelper.SendMail(user.Email, $"Your reservation for flight nº HFA000{ticket.FlightId}:", $"<h1>Was completed successfully!</h1>" +
+                                $"Here are the details:<br/>From {departure.CompleteAirport} to {arrival.CompleteAirport}<br/>" +
+                                $"On: {flight.DateTime}<br/><br/>Name: {ticket.PassangerName}<br/>Travel Class: {ticket.TravelClass}<br/>" +
+                                $"Seat Number: {ticket.SeatNumber}");
+                        }
                     }
 
-                    else
+                    else if (model.TravelClass.Contains("Business"))
                     {
-                        var ticket = new Ticket
+                        var nextSeat = _ticketRepository.GetBusinessSeats(model.FlightId);
+
+                        if (nextSeat == 0)
                         {
-                            FlightId = model.FlightId,
-                            PassangerName = model.PassangerName,
-                            TravelClass = "Economy",
-                            SeatNumber = nextSeat,
-                            User = user,
-                            PaidPrice = model.EconomyPrice
-                        };
+                            this.ModelState.AddModelError(string.Empty, "Flight is full");
+                        }
 
-                        await _ticketRepository.CreateAsync(ticket);
-
-                        var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
-                        var tokenLink = this.Url.Action("ConfirmEmail", "Account", new
+                        else
                         {
-                            userid = user.Id,
-                            token = myToken
-                        }, protocol: HttpContext.Request.Scheme);
+                            var ticket = new Ticket
+                            {
+                                FlightId = model.FlightId,
+                                PassangerName = model.PassangerName,
+                                TravelClass = "Business",
+                                SeatNumber = nextSeat,
+                                User = user,
+                            };
+
+                            await _ticketRepository.CreateAsync(ticket);
+
+                            var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                            var tokenLink = this.Url.Action("ConfirmEmail", "Account", new
+                            {
+                                userid = user.Id,
+                                token = myToken
+                            }, protocol: HttpContext.Request.Scheme);
+
+                            var flight = await _flightRepository.GetByIdAsync(model.FlightId);
+
+                            var arrival = await _airportRepository.GetByIdAsync(flight.ArrivalAirportId);
+
+                            var departure = await _airportRepository.GetByIdAsync(flight.DepartureAirportId);
 
 
-                        var flight = await _flightRepository.GetByIdAsync(model.FlightId);
-
-                        var arrival = await _airportRepository.GetByIdAsync(flight.ArrivalAirportId);
-
-                        var departure = await _airportRepository.GetByIdAsync(flight.DepartureAirportId);
-
-
-                        _mailHelper.SendMail(user.Email, $"Your reservation for flight nº{ticket.FlightId}:", $"<h1>Was completed successfully!</h1>" +
-                            $"Here are the details:<br/>From {departure.CompleteAirport} to {arrival.CompleteAirport}<br/>" +
-                            $"On: {flight.DateTime}<br/><br/>Name: {ticket.PassangerName}<br/>Travel Class: {ticket.TravelClass}<br/>" +
-                            $"Seat Number: {ticket.SeatNumber}");
+                            _mailHelper.SendMail(user.Email, $"Your reservation for flight nº HFA000{ticket.FlightId}:", $"<h1>Was completed successfully!</h1>" +
+                                $"Here are the details:<br/>From {departure.CompleteAirport} to {arrival.CompleteAirport}<br/>" +
+                                $"On: {flight.DateTime}<br/><br/>Name: {ticket.PassangerName}<br/>Travel Class: {ticket.TravelClass}<br/>" +
+                                $"Seat Number: {ticket.SeatNumber}");
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-
-                else if (model.TravelClass.Contains("Business"))
+                catch (Exception exception)
                 {
-                    var nextSeat = _ticketRepository.GetBusinessSeats(model.FlightId);
-
-                    if (nextSeat == 0)
-                    {
-                        this.ModelState.AddModelError(string.Empty, "Flight is full");
-                    }
-
-                    else
-                    {
-                        var ticket = new Ticket
-                        {
-                            FlightId = model.FlightId,
-                            PassangerName = model.PassangerName,
-                            TravelClass = "Business",
-                            SeatNumber = nextSeat,
-                            User = user,
-                            PaidPrice = model.BusinessPrice
-                        };
-
-                        await _ticketRepository.CreateAsync(ticket);
-
-                        var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
-                        var tokenLink = this.Url.Action("ConfirmEmail", "Account", new
-                        {
-                            userid = user.Id,
-                            token = myToken
-                        }, protocol: HttpContext.Request.Scheme);
-
-                        var flight = await _flightRepository.GetByIdAsync(model.FlightId);
-
-                        var arrival = await _airportRepository.GetByIdAsync(flight.ArrivalAirportId);
-
-                        var departure = await _airportRepository.GetByIdAsync(flight.DepartureAirportId);
-
-
-                        _mailHelper.SendMail(user.Email, $"Your reservation for flight nº{ticket.FlightId}:", $"<h1>Was completed successfully!</h1>" +
-                            $"Here are the details:<br/>From {departure.CompleteAirport} to {arrival.CompleteAirport}<br/>" +
-                            $"On: {flight.DateTime}<br/><br/>Name: {ticket.PassangerName}<br/>Travel Class: {ticket.TravelClass}<br/>" +
-                            $"Seat Number: {ticket.SeatNumber}");
-                    }
+                    ModelState.AddModelError(string.Empty, exception.Message);
                 }
-                return RedirectToAction(nameof(Index));
             }
-
             return View(model);
         }
-
     }
 }
 

@@ -58,27 +58,6 @@ namespace Flights.Web
                     };
                 });
 
-            services.AddAuthentication()
-                .AddGoogle(options =>
-                {
-                    IConfigurationSection googleAuthNSection =
-               Configuration.GetSection("Authentication:Google");
-
-                    options.ClientId = googleAuthNSection["ClientId"];
-                    options.ClientSecret = googleAuthNSection["ClientSecret"];
-                    options.SignInScheme = IdentityConstants.ExternalScheme;
-                })
-                .AddFacebook(options =>
-                {
-                    IConfigurationSection fbAuthNSection =
-              Configuration.GetSection("Authentication:Facebook");
-
-                    options.AppId = fbAuthNSection["AppId"];
-                    options.AppSecret = fbAuthNSection["AppSecret"];
-                    options.SignInScheme = IdentityConstants.ExternalScheme;
-                });
-
-
             services.AddDbContext<DataContext>(cfg =>
             {
                 cfg.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
@@ -96,7 +75,7 @@ namespace Flights.Web
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IIndicativeRepository, IndicativeRepository>();
             services.AddScoped<ITicketRepository, TicketRepository>();
-
+            services.AddScoped<IHistoryRepository, HistoryRepository>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {
