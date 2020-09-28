@@ -4,6 +4,8 @@ using Flights.Web.Data.Repositories;
 using Flights.Web.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -186,5 +188,37 @@ namespace FlightTicketsSystem.Web.Data.Repositories
             return ticket;
         }
 
+        public async Task<List<Ticket>> GetBoughtTickets(string id)
+        {
+            var tickets = await _context.Tickets
+                .AsNoTracking()
+                .Include(t => t.PassangerName)
+                .Where(t => t.User.Id == id)
+                .ToListAsync();
+
+            return tickets;
+        }
+
+
+        public IQueryable GetAllBoughtByUser(string user)
+        {
+           return _context.Tickets
+            .Include(a => a.Flight.DepartureAirport)
+            .Include(a => a.Flight.ArrivalAirport)
+            .OrderBy(p => p.Flight.DateTime)
+            .Where(a => a.User.Email == user)
+            .Where(a => a.Flight.DateTime >= DateTime.Today.ToUniversalTime());
+        }
+
+
+
+        public IQueryable GetAllByDate()
+        {
+            return _context.Tickets
+                 .Include(a => a.Flight.DepartureAirport)
+                 .Include(a => a.Flight.ArrivalAirport)
+                 .OrderBy(p => p.Flight.DateTime)
+                 .Where(a => a.Flight.DateTime >= DateTime.Today.ToUniversalTime());
+        }
     }
 }

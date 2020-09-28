@@ -37,7 +37,7 @@
                 {
                     @Html.AntiForgeryToken()
                     <div class="card-body">
-                        <table id="airports" class="display table table-bordered table-striped" style="width:100%">
+                        <table id="flights" class="display table table-bordered table-striped" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>
@@ -187,9 +187,10 @@
         <script>
 
             $(document).ready(function () {
-                $('#airports').DataTable();
+                $('#flights').DataTable();
             });</script>
 
+        
         <script src="~/~/plugins/moment/moment.min.js"></script>
         <script src="~/~/plugins/inputmask/jquery.inputmask.min.js"></script>
         <!-- date-range-picker -->

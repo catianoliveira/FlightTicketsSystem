@@ -19,6 +19,8 @@ namespace Flights.Web.Data.Entities
         [Range(1, int.MaxValue, ErrorMessage = "You must select an airport.")]
         public int AirplaneId { get; set; }
 
+
+
         [Display(Name = "Airplane")]
         public IEnumerable<SelectListItem> Airplanes { get; set; }
 
@@ -39,13 +41,8 @@ namespace Flights.Web.Data.Entities
         public int ArrivalAirportId { get; set; }
 
 
-        public ICollection<Airport> ArrivalsCollection { get; set; }
 
-
-        public ICollection<Airport> DeparturesCollection { get; set; }
-
-
-        public IEnumerable<SelectListItem> AirportsEnumerable { get; set; }
+        public IEnumerable<SelectListItem> Airports { get; set; }
 
 
         [Display(Name = "Departure Airport")]
@@ -56,9 +53,10 @@ namespace Flights.Web.Data.Entities
 
 
 
-
         [Required]
+        [GreaterThanDateAttributte(ErrorMessage = "Flight's date must be equal or greater than today's")]
         [Display(Name = "Date and Time")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime DateTime { get; set; }
 
 

@@ -1,6 +1,7 @@
 ﻿using Flights.Web.Data.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Flights.Web.Data.Repositories
@@ -12,15 +13,10 @@ namespace Flights.Web.Data.Repositories
         IEnumerable<SelectListItem> GetComboArrivals(int departureId);
 
 
+        IQueryable GetAllFlights();
+
+
         Task<Flight> GetAirplanesAsync(int id);
-
-
-        Task<Flight> GetDeparturesWithArrivalsAsync(int id);
-
-
-        
-
-        //IEnumerable<SelectListItem> GetComboDepartures();
 
     }
 }

@@ -12,9 +12,7 @@ using System.Threading.Tasks;
 
 namespace Flights.Web.Controllers
 {
-    //[Authorize(Roles = "Admin")]
-    //[Authorize(Roles = "SuperAdmin")]
-    //[Authorize(Roles = "Employee")]
+    [Authorize(Roles = "Admin, SuperAdmin, Employee")]
 
     public class FlightsController : Controller
     {
@@ -39,18 +37,14 @@ namespace Flights.Web.Controllers
         // GET: Flights
         public IActionResult Index()
         {
-            var model = _context.Flights
-                .Include(a => a.Airplane)
-                .Include(a => a.DepartureAirport)
-                .Include(a => a.ArrivalAirport)
-                .OrderBy(p => p.DateTime);
-
-            return View(model.ToList());
+            var flights = _flightRepository.GetAllFlights();
+            return View(flights);
         }
 
         // GET: Flights/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            //TODO
             if (id == null)
             {
                 return NotFound();
@@ -72,7 +66,7 @@ namespace Flights.Web.Controllers
             var model = new Flight
             {
                 Airplanes = _airplaneRepository.GetComboAirplanes(),
-                AirportsEnumerable = _airportRepository.GetComboAirports()
+                Airports = _airportRepository.GetComboAirports()
             };
 
             return this.View(model);
@@ -93,8 +87,6 @@ namespace Flights.Web.Controllers
                     {
                         ArrivalAirportId = flights.ArrivalAirportId,
                         DepartureAirportId = flights.DepartureAirportId,
-                        ArrivalsCollection = new List<Airport>(),
-                        DeparturesCollection = new List<Airport>(),
                         AirplaneId = flights.AirplaneId,
                         BusinessPrice = flights.BusinessPrice,
                         EconomyPrice = flights.EconomyPrice,
@@ -133,7 +125,7 @@ namespace Flights.Web.Controllers
 
             var model = new Flight
             {
-                AirportsEnumerable = _airportRepository.GetComboAirports(),
+                Airports = _airportRepository.GetComboAirports(),
                 Airplanes = _airplaneRepository.GetComboAirplanes(),
                 AirplaneId = flight.AirplaneId,
                 DepartureAirportId = flight.DepartureAirportId,
@@ -157,7 +149,6 @@ namespace Flights.Web.Controllers
             {
                 try
                 {
-                    //TODO airplane.User = await _userHelper.GetUserByEmailAsync();
                     await _flightRepository.UpdateAsync(flight);
                 }
                 catch (DbUpdateConcurrencyException)

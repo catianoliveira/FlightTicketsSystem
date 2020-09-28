@@ -11,9 +11,7 @@ using System.Threading.Tasks;
 
 namespace Flights.Web.Controllers
 {
-    //[Authorize(Roles = "Admin")]
-    //[Authorize(Roles = "SuperAdmin")]
-    //[Authorize(Roles = "Employee")]
+    [Authorize(Roles = "Admin, SuperAdmin, Employee")]
 
     public class AirportsController : Controller
     {
@@ -189,6 +187,8 @@ namespace Flights.Web.Controllers
                 {
                     ModelState.AddModelError(string.Empty, exception.Message);
                 }
+
+                return RedirectToAction(nameof(Index));
             }
             return View(airport);
         }

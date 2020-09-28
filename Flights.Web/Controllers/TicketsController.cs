@@ -15,9 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace FlightTicketsSystem.Web.Controllers
 {
-    //[Authorize(Roles = "Admin")]
-    //[Authorize(Roles = "SuperAdmin")]
-    //[Authorize(Roles = "Employee")]
+    [Authorize(Roles = "Admin, SuperAdmin, Employee, Client")]
     public class TicketsController : Controller
     {
         private readonly DataContext _context;
@@ -52,15 +50,21 @@ namespace FlightTicketsSystem.Web.Controllers
             _airportRepository = airportRepository;
         }
 
-
         public IActionResult Index()
         {
-            var model = _context.Tickets
-                .Include(a => a.Flight.DepartureAirport)
-                .Include(a => a.Flight.ArrivalAirport)
-                .OrderBy(p => p.Flight.DateTime);
+            if (User.IsInRole("Client"))
+            {
+                var user = User.Identity.Name;
 
-            return View(model.ToList());
+                var client = _ticketRepository.GetAllBoughtByUser(user);
+
+                return View(client);
+            }
+
+            else
+            {
+                return View(_ticketRepository.GetAllByDate());
+            }            
         }
 
         [AllowAnonymous]
@@ -77,6 +81,7 @@ namespace FlightTicketsSystem.Web.Controllers
         }
 
         // GET: Tickets/Details/5
+        [Authorize(Roles = "Admin, SuperAdmin, Employee")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -98,6 +103,7 @@ namespace FlightTicketsSystem.Web.Controllers
 
 
         // GET: Tickets/Edit/5
+        [Authorize(Roles = "Admin, SuperAdmin, Employee")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -128,6 +134,7 @@ namespace FlightTicketsSystem.Web.Controllers
         // POST: Airplanes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin, SuperAdmin, Employee")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Ticket ticket)
@@ -159,6 +166,7 @@ namespace FlightTicketsSystem.Web.Controllers
         }
 
 
+        [Authorize(Roles = "Admin, SuperAdmin, Employee")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -186,8 +194,7 @@ namespace FlightTicketsSystem.Web.Controllers
         }
 
 
-
-        //[Authorize(Roles = "Client")]
+        [AllowAnonymous]
         public async Task<IActionResult> BuyTicket(int id)
         {
             if (this.User.Identity.IsAuthenticated)
@@ -222,7 +229,7 @@ namespace FlightTicketsSystem.Web.Controllers
         }
 
 
-        //[Authorize(Roles = "Client")]
+        [Authorize(Roles = "Client, SuperAdmin, Admin, Employee")]
         [HttpPost]
         public async Task<IActionResult> BuyTicket(BuyTicketViewModel model)
         {
@@ -230,8 +237,6 @@ namespace FlightTicketsSystem.Web.Controllers
             {
                 try
                 {
-
-
                     var user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
 
                     if (model.TravelClass.Contains("Economy"))
@@ -251,7 +256,7 @@ namespace FlightTicketsSystem.Web.Controllers
                                 PassangerName = model.PassangerName,
                                 TravelClass = "Economy",
                                 SeatNumber = nextSeat,
-                                User = user
+                                User = user,
                             };
 
                             await _ticketRepository.CreateAsync(ticket);
@@ -295,7 +300,7 @@ namespace FlightTicketsSystem.Web.Controllers
                                 PassangerName = model.PassangerName,
                                 TravelClass = "Business",
                                 SeatNumber = nextSeat,
-                                User = user,
+                                User = user
                             };
 
                             await _ticketRepository.CreateAsync(ticket);
@@ -320,14 +325,13 @@ namespace FlightTicketsSystem.Web.Controllers
                                 $"Seat Number: {ticket.SeatNumber}");
                         }
                     }
-                    return RedirectToAction(nameof(Index));
                 }
                 catch (Exception exception)
                 {
                     ModelState.AddModelError(string.Empty, exception.Message);
                 }
             }
-            return View(model);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

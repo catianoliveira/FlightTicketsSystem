@@ -65,8 +65,8 @@ namespace Flights.Web.Controllers
 
         /// <summary>
         /// Checks if user and password are correct. 
-        /// Locks out user for 10min if password is incorret for 5 times
-        /// Send email to reset password
+        /// Locks out user for 10min if password is wrong 5 times
+        /// Sends email to reset password
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -110,7 +110,7 @@ namespace Flights.Web.Controllers
                     $"<a href = \"{link}\">Reset Password</a>");
                 }
 
-
+               
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Incorrect username or password");
@@ -140,9 +140,7 @@ namespace Flights.Web.Controllers
 
         /// <summary>
         /// checks if user is logged in. if yes, then the admin or super admin
-        /// gets to choose the new user's role and the password is "HighFly123*".
-        /// otherwise the new user's role is "client" and he gets to choose a new 
-        /// password
+        /// gets to choose the new user's role otherwise the new user's role is "client"
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -166,7 +164,8 @@ namespace Flights.Web.Controllers
                         PhoneNumber = model.PhoneNumber,
                         City = model.City,
                         CountryId = model.CountryId,
-                        RoleId = model.RoleID
+                        RoleId = model.RoleID,
+                        DateOfBirth = model.DateOfBirth
                     };
                 }
 
@@ -174,7 +173,7 @@ namespace Flights.Web.Controllers
                 {
                     try
                     {
-                        var result = await _userHelper.AddUserAsync(user, "HighFly123*");
+                        var result = await _userHelper.AddUserAsync(user, model.Password);
 
                         if (result != IdentityResult.Success)
                         {
@@ -185,6 +184,7 @@ namespace Flights.Web.Controllers
                         var roleName = await _roleManager.FindByIdAsync(user.RoleId);
                         var register = await _userManager.FindByIdAsync(user.Id);
                         await _userManager.AddToRoleAsync(register, roleName.ToString());
+                        ModelState.AddModelError(string.Empty, "User registered with success. Verify email address.");
                     }
                     catch (Exception ex)
                     {

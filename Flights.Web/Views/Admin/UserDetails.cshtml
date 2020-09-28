@@ -1,5 +1,4 @@
-﻿@model FlightTicketsSystem.Web.Models.UserRoleViewModel
-
+﻿@model Flights.Web.Data.Entities.User
 
 <!DOCTYPE html>
 <html lang="en">
@@ -35,7 +34,7 @@
             <h1></h1>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="/Admin/ListUsers">Users List</a></li>
+                    <li class="breadcrumb-item"><a href="/ListUsers">Users</a></li>
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
                 </ol>
             </div>
@@ -51,39 +50,23 @@
 
                 </div>
                 <!-- Content Header (Page header) -->
-                <div class="card-body">
+               
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <dl class="dl-horizontal">
+
                                     <dt>
-                                        @Html.DisplayNameFor(model => model.Name)
+                                        @Html.DisplayNameFor(model => model.FirstName)
                                     </dt>
                                     <dd>
-                                        @Html.DisplayFor(model => model.Name)
+                                        @Html.DisplayFor(model => model.FirstName)
                                     </dd>
                                     <dt>
-                                        @Html.DisplayNameFor(model => model.Role)
+                                        @Html.DisplayNameFor(model => model.LastName)
                                     </dt>
                                     <dd>
-                                        @Html.DisplayFor(model => model.Role)
-                                    </dd>
-                                    <dt>
-                                        @Html.DisplayNameFor(model => model.UserName)
-                                    </dt>
-                                    <dd>
-                                        @Html.DisplayFor(model => model.UserName)
-                                    </dd>
-                                    <dt>
-                                        @Html.DisplayNameFor(model => model.DateOfBirth)
-                                    </dt>
-                                    <dd>
-                                        @Html.DisplayFor(model => model.DateOfBirth)
-                                    </dd>
-                                    <dt>
-                                        @Html.DisplayNameFor(model => model.PhoneNumber)
-                                    </dt>
-                                    <dd>
-                                        @Html.DisplayFor(model => model.PhoneNumber)
+                                        @Html.DisplayFor(model => model.LastName)
                                     </dd>
                                     <dt>
                                         @Html.DisplayNameFor(model => model.Address)
@@ -91,15 +74,26 @@
                                     <dd>
                                         @Html.DisplayFor(model => model.Address)
                                     </dd>
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.Email)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.Email)
+                                    </dd>
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.PhoneNumber)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.PhoneNumber)
+                                    </dd>
                                 </dl>
                             </div>
                         </div>
+                        <div>
+                            <a asp-action="EditUser" asp-route-id="@Model.Id" class="btn btn-warning"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
+                        </div>
                     </div>
                 
-            </div>
-            <div>
-                <a asp-action="Edit" asp-route-id="@Model.UserId">Edit</a> |
-                <a asp-action="Index">Back to List</a>
             </div>
         </div>
     </section>
@@ -135,4 +129,3 @@
     }
 </body>
 </html>
-

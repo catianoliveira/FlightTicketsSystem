@@ -12,9 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Flights.Web.Controllers
 {
-    //[Authorize(Roles = "Admin")]
-    //[Authorize(Roles = "SuperAdmin")]
-    //[Authorize(Roles = "Employee")]
+    [Authorize(Roles = "Admin, SuperAdmin, Employee")]
 
     public class AirplanesController : Controller
     {

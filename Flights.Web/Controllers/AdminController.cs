@@ -1,10 +1,13 @@
 ﻿using Flights.Web.Data;
 using Flights.Web.Data.Entities;
+using Flights.Web.Data.Repositories;
 using Flights.Web.Helpers;
+using FlightTicketsSystem.Web.Data.Repositories;
 using FlightTicketsSystem.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,8 +16,7 @@ using System.Threading.Tasks;
 
 namespace FlightTicketsSystem.Web.Controllers
 {
-    //[Authorize(Roles = "SuperAdmin")]
-    //[Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "SuperAdmin, Admin")]
     public class AdminController : Controller
     {
         private readonly IUserHelper _userHelper;
@@ -22,20 +24,25 @@ namespace FlightTicketsSystem.Web.Controllers
         private readonly UserManager<User> _userManager;
         private readonly DataContext _context;
         private readonly SignInManager<User> _signInManager;
-
+        private readonly IIndicativeRepository _indicativeRepository;
+        private readonly ICountryRepository _countryRepository;
 
         public AdminController(
             IUserHelper userHelper,
             RoleManager<IdentityRole> roleManager,
             UserManager<User> userManager,
             DataContext context,
-            SignInManager<User> signInManager)
+            SignInManager<User> signInManager,
+            IIndicativeRepository indicativeRepository,
+            ICountryRepository countryRepository)
         {
             _userHelper = userHelper;
             _roleManager = roleManager;
             _userManager = userManager;
             _context = context;
             _signInManager = signInManager;
+            _indicativeRepository = indicativeRepository;
+            _countryRepository = countryRepository;
         }
 
 
@@ -70,7 +77,7 @@ namespace FlightTicketsSystem.Web.Controllers
                 {
                     await _userHelper.CheckRoleAsync(model.Role);
                     ModelState.AddModelError(string.Empty, "Role created with success");
-                    return View(model);
+                    return RedirectToAction(nameof(ListUsers));
                 }
                 catch (DbUpdateException dbUpdateException)
                 {
@@ -139,7 +146,7 @@ namespace FlightTicketsSystem.Web.Controllers
             {
                 Name = user.FullName,
                 UserName = user.UserName,
-                Address = user.FullAdress,
+                Address = user.Address,
                 PhoneNumber = user.PhoneNumber,
                 DateOfBirth = user.DateOfBirth,
                 UserId = user.Id,
@@ -147,6 +154,131 @@ namespace FlightTicketsSystem.Web.Controllers
             };
 
             return View(model);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> EditUser(string id)
+        {
+            var user = await _userHelper.GetUserByIdAsync(id);
+
+            if (id == null)
+            {
+                ModelState.AddModelError(string.Empty, "User not found");
+            }
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            var model = new EditUserViewModel
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Address = user.Address,
+                City = user.City,
+                PhoneNumber = user.PhoneNumber,
+                Indicatives = _indicativeRepository.GetComboIndicatives(),
+                Countries = _countryRepository.GetComboCountries(),
+                IndicativeId = user.IndicativeId,
+                CountryId = user.CountryId,
+                Roles = _roleManager.Roles.ToList().Select(
+                    x => new SelectListItem()
+                    {
+                        Selected = userRoles.Contains(x.Name),
+                        Text = x.Name,
+                        Value = x.Id
+                    })
+            };
+
+            return View(model);
+        }
+
+        // POST: Admin/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUser(EditUserViewModel editUser)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var user = await _userHelper.GetUserByIdAsync(editUser.Id);
+
+                    if (user == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "User not found");
+                    }
+
+                    user.FirstName = editUser.FirstName;
+                    user.LastName = editUser.LastName;
+                    user.Address = editUser.Address;
+                    user.PhoneNumber = editUser.PhoneNumber;
+                    user.CountryId = editUser.CountryId;
+                    user.IndicativeId = editUser.IndicativeId;
+                    user.City = editUser.City;
+
+                    var selectedRole = await _roleManager.FindByIdAsync(editUser.SelectedRole);
+
+                    foreach (var currentRole in _roleManager.Roles.ToList())
+                    {
+                        var isSelectedRole = selectedRole.Name.Equals(currentRole.Name);
+                        if (!isSelectedRole && await _userHelper.IsUserInRoleAsync(user, currentRole.Name))
+                        {
+                            await _userManager.RemoveFromRoleAsync(user, currentRole.Name);
+                        }
+                    }
+
+                    await _userHelper.AddUserToRoleAsync(user, selectedRole.Name);
+
+                    var result = await _userHelper.UpdateUserAsync(user);
+
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("ListUsers");
+                    }
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+            }
+
+            return View(editUser);
+        }
+
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userHelper.GetUserByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _userManager.DeleteAsync(user);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+
+            return RedirectToAction(nameof(ListUsers));
         }
     }
 }

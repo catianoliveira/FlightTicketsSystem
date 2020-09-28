@@ -77,7 +77,7 @@ namespace Flights.Web.Data.Entities
 
 
 
-        public Country Country { get; set; }
+        //public Country Country { get; set; }
 
 
 
@@ -96,15 +96,5 @@ namespace Flights.Web.Data.Entities
         public IEnumerable<SelectListItem> Indicatives { get; set; }
 
 
-
-
-
-        public string FullAdress
-        {
-            get
-            {
-                return $"{this.Address}, {this.City}, {this.Country}";
-            }
-        }        
     }
 }

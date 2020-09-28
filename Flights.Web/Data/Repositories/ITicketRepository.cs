@@ -1,14 +1,13 @@
 ﻿using Flights.Web.Data;
 using Flights.Web.Data.Entities;
-using FlightTicketsSystem.Web.Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FlightTicketsSystem.Web.Data.Repositories
 {
     public interface ITicketRepository : IGenericRepository<Ticket>
     {
-        //IEnumerable<SelectListItem> GetComboTickets();
-
         int GetEconomySeats(int flightId);
 
         int GetBusinessSeats(int flightId);
@@ -18,5 +17,13 @@ namespace FlightTicketsSystem.Web.Data.Repositories
         decimal GetBusinessPrice(int flightId);
 
         Task<Ticket> GetDetailsTicketAsync(int flightId);
+
+        Task<List<Ticket>> GetBoughtTickets(string id);
+
+
+        IQueryable GetAllBoughtByUser(string userId);
+
+
+        IQueryable GetAllByDate();
     }
 }

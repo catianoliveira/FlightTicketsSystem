@@ -13,17 +13,20 @@ namespace Flights.Web.Data.Entities
         public int Id { get; set; }
 
 
+
+
         [Required]
         public User User { get; set; }
 
         
+
         [Required]
         [Display(Name = "Flight Id")]
         [ForeignKey("Flight")]
         public int FlightId { get; set; }
 
 
-        public Flight Flight { get; set; }
+        
 
 
         [Required]
@@ -31,9 +34,11 @@ namespace Flights.Web.Data.Entities
         public string PassangerName { get; set; }
 
 
+
         [Required]
         [Display(Name = "Seat Number")]
         public int SeatNumber { get; set; }
+
 
 
         [Required]
@@ -41,7 +46,14 @@ namespace Flights.Web.Data.Entities
         public string TravelClass { get; set; }
 
 
+
         [Required]
         public bool Lugagge { get; set; }
+
+
+
+
+
+        public Flight Flight { get; set; }
     }
 }

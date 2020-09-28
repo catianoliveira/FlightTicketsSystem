@@ -53,5 +53,12 @@ namespace FlightTicketsSystem.Web.Models
         public decimal BusinessPrice { get; set; }
 
         public decimal EconomyPrice { get; set; }
+
+
+        [Required]
+        [Display(Name = "Bought On")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
+        public DateTime BoughtOn { get; set; }
     }
 }

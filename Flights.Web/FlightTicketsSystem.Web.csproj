@@ -2,7 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>f96c0af8-fe2c-41f1-b8cd-36aa8676397c</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\404\**" />
+    <Compile Remove="wwwroot\images\Staff\**" />
+    <Content Remove="wwwroot\404\**" />
+    <Content Remove="wwwroot\images\Staff\**" />
+    <EmbeddedResource Remove="wwwroot\404\**" />
+    <EmbeddedResource Remove="wwwroot\images\Staff\**" />
+    <None Remove="wwwroot\404\**" />
+    <None Remove="wwwroot\images\Staff\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="wwwroot\js\site.js" />
@@ -30,8 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\404\" />
-    <Folder Include="wwwroot\images\Staff\" />
+    <Folder Include="Views\Clients\" />
   </ItemGroup>
 
 </Project>

@@ -71,11 +71,15 @@ namespace Flights.Web.Data.Repositories
             return list;
         }
 
-        public async Task<Flight> GetDeparturesWithArrivalsAsync(int departureAirportId)
+        public IQueryable GetAllFlights()
         {
-            return await _context.Flights
-              .Include(c => c.ArrivalsCollection)
-              .FirstOrDefaultAsync(d => d.DepartureAirportId == departureAirportId);
+            return _context.Flights
+                .AsNoTracking()
+                .Include(a => a.Airplane)
+                .Include(a => a.DepartureAirport)
+                .Include(a => a.ArrivalAirport)
+                .OrderBy(p => p.DateTime)
+                .Where(a => a.DateTime >= DateTime.Today.ToUniversalTime());
         }
     }
 }
