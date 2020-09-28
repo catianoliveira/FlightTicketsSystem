@@ -70,14 +70,9 @@ namespace FlightTicketsSystem.Web.Controllers
         [AllowAnonymous]
         public IActionResult ChooseFlight()
         {
-            var model = _context.Flights
-                .Include(a => a.Airplane)
-                .Include(a => a.DepartureAirport)
-                .Include(a => a.ArrivalAirport)
-                .Where(a => a.DateTime >= DateTime.Today.ToUniversalTime())
-                .OrderBy(p => p.DateTime);
+            var model = _flightRepository.GetTodaysFlights();
 
-            return View(model.ToList());
+            return View(model);
         }
 
         // GET: Tickets/Details/5

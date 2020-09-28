@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace FlightTicketsSystem.Web.Controllers
 {
-    //[Authorize(Roles = "SuperAdmin, Admin")]
+    [Authorize(Roles = "SuperAdmin, Admin")]
     public class AdminController : Controller
     {
         private readonly IUserHelper _userHelper;
@@ -46,22 +46,6 @@ namespace FlightTicketsSystem.Web.Controllers
         }
 
 
-        public IActionResult IndexClients()
-        {
-            return View();
-        }
-
-
-        public IActionResult IndexEmployees()
-        {
-            return View();
-        }
-
-
-        public IActionResult IndexRoles()
-        {
-            return View();
-        }
 
         public IActionResult CreateRole()
         {
@@ -103,6 +87,7 @@ namespace FlightTicketsSystem.Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "SuperAdmin, Admin, Employee")]
         public async Task<ActionResult> ListUsers()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -204,6 +189,10 @@ namespace FlightTicketsSystem.Web.Controllers
             {
                 try
                 {
+                    if (User.IsInRole("Employee"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Employees cannot edit users");
+                    }
                     var user = await _userHelper.GetUserByIdAsync(editUser.Id);
 
                     if (user == null)
@@ -257,6 +246,11 @@ namespace FlightTicketsSystem.Web.Controllers
 
         public async Task<IActionResult> Delete(string id)
         {
+            if (User.IsInRole("Employee"))
+            {
+                ModelState.AddModelError(string.Empty, "Employees cannot delete users");
+            }
+
             if (id == null)
             {
                 return NotFound();

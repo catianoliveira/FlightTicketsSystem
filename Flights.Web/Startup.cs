@@ -3,6 +3,7 @@ using Flights.Web.Data.Entities;
 using Flights.Web.Data.Repositories;
 using Flights.Web.Helpers;
 using FlightTicketsSystem.Web.Data.Repositories;
+using FlightTicketsSystem.Web.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -75,6 +76,8 @@ namespace Flights.Web
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IIndicativeRepository, IndicativeRepository>();
             services.AddScoped<ITicketRepository, TicketRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IConverterHelper, ConverterHelper>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -90,6 +93,7 @@ namespace Flights.Web
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

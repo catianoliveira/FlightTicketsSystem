@@ -21,12 +21,19 @@ namespace FlightTicketsSystem.Web.Models
 
 
 
-        [Required]
-        [Display(Name = "Bought On")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        [DataType(DataType.Date)]
-        public DateTime BoughtOn { get; set; }
 
+        
+        public int SeatNumber { get; set; }
+
+
+
+        
+        public string TravelClass { get; set; }
+
+
+
+        
+        public bool Lugagge { get; set; }
 
     }
 }

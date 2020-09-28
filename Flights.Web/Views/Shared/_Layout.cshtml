@@ -57,7 +57,7 @@
             <!-- Brand Logo -->
             <a href="/" class="brand-link elevation-4 bg-gradient-info">
                 <img src="~/images/logo.png" alt="HighFly" class="brand-image img-circle elevation-3 bg-gradient-info" style="opacity: .8">
-                <span class=" font-weight-light text-light">HighFly</span>
+                <span class=" font-weight-light text-light">          HighFly</span>
             </a>
 
             <!-- Sidebar -->
@@ -83,7 +83,7 @@
 
                 <!-- Sidebar Menu -->
                 @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("SuperAdmin")
-              || this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+|| this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
                 {
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -166,7 +166,7 @@
                                 <a href="/Account/Register" class="nav-link">
                                     <i class="nav-icon fas fa-edit"></i>
                                     <p>
-                                        Register new client
+                                        Register new Client
                                     </p>
                                 </a>
                             </li>
@@ -194,11 +194,11 @@
                                     </p>
                                 </a>
                             </li>
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fa-address-book"></i>
+                            <li class="nav-item">
+                                <a href="/Admin/ListUsers" class="nav-link">
+                                    <i class="nav-icon far fa-address-book"></i>
                                     <p>
-                                        Clients
+                                        Users
                                     </p>
                                 </a>
                             </li>
@@ -269,10 +269,10 @@
 
                                 <div class="container body-content">
                                     @RenderBody()
-                                    <hr />
+                                        <hr />
 
 
-                                </div>
+                                    </div>
                                 <!-- /.card -->
                             </div>
                         </div>

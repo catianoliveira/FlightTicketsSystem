@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Flights.Web.Models;
 using Flights.Web.Data.Entities;
 using Flights.Web.Helpers;
+using Flights.Web.Data.Repositories;
+using FlightTicketsSystem.Web.Models;
 
 namespace Flights.Web.Controllers
 {
@@ -15,19 +17,23 @@ namespace Flights.Web.Controllers
     {
         private readonly IUserHelper _userHelper;
         private readonly IMailHelper _mailHelper;
+        private readonly IFlightRepository _flightRepository;
 
         public HomeController(
             IUserHelper userHelper,
-            IMailHelper mailHelper)
+            IMailHelper mailHelper,
+            IFlightRepository flightRepository)
         {
             _userHelper = userHelper;
             _mailHelper = mailHelper;
+            _flightRepository = flightRepository;
         }
 
 
         public IActionResult Index()
         {
-            return View();
+            var flight = _flightRepository.GetTodaysFlights();
+            return View(flight);
         }
 
         public IActionResult About()
@@ -41,20 +47,10 @@ namespace Flights.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Contact(User user)
+        public IActionResult Contact(ContactViewModel model)
         {
-            user = await _userHelper.GetUserByEmailAsync(User.Identity.Name);
-
-            var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
-            var tokenLink = this.Url.Action("ConfirmEmail", "Account", new
-            {
-                userid = user.Id,
-                token = myToken
-            }, protocol: HttpContext.Request.Scheme);
-
-            _mailHelper.SendMail("highflyairline@gmail.com", "Email confirmation", $"<h1>Email Confirmation</h1>" +
-                $"Complete your registration by " +
-                $"clicking link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+            _mailHelper.SendMail("highflyairline@gmail.com", model.Subject, $"Mail from: {model.Name}, {model.Email}</br>" +
+                $"</br></br>Message: {model.Message}");
 
 
             return View();

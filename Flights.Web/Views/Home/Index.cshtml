@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@model IEnumerable<Flights.Web.Data.Entities.Flight>
+
+
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -27,23 +32,110 @@
     </div>
     <!-- /.container-fluid -->
     <!-- Main content -->
+
     <section class="content">
         <div class="col-12">
             <div class="card">
-                <!-- Content Header (Page header) -->
-                <div>
-                    <img src="~/images/welcome.png"  />
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                    </ol>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img class="d-block w-100" src="~/images/1.jpg">
+                        </div>
+                        <div class="carousel-item">
+                            <img class="d-block w-100" src="~/images/6.jpg">
+                        </div>
+                        <div class="carousel-item">
+                            <img class="d-block w-100" src="~/images/3new.jpg">
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
                 </div>
-
-
             </div>
         </div>
 
+
+
+
+        @if (User.IsInRole("Admin") || User.IsInRole("Employee") || User.IsInRole("SuperAdmin"))
+        {
+            @using (Html.BeginForm("Index", "Flights", FormMethod.Post, new { @autocomplete = "on" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="col-12">
+                    <div class="card">
+                        <!-- Content Header (Page header) -->
+                        <div class="card-header">
+                            <h3 class="card-title">Next flights:</h3>
+                        </div>
+                        <div class="card-body">
+                            <table id="flights" class="display table table-bordered table-striped" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.DepartureAirport)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ArrivalAirport)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.DateTime)
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DepartureAirport.CompleteAirport)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ArrivalAirport.CompleteAirport)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DateTime)
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.DepartureAirport)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ArrivalAirport)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.DateTime)
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+        }
+
+
+
+
     </section>
-
-
-
-
 
     @section Scripts {
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

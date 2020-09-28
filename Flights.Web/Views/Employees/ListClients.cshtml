@@ -1,11 +1,11 @@
-﻿@model IEnumerable<Flights.Web.Data.Entities.Airplane>
+﻿@model List<FlightTicketsSystem.Web.Models.UserRoleViewModel>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Airplanes - HighFly</title>
+    <title>Users - HighFly</title>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
 </head>
 <body class="hold-transition sidebar-mini">
@@ -16,12 +16,6 @@
             <div class="col-sm-6">
             </div>
             <h1></h1>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="/Airplanes/Create">Create New</a></li>
-                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                </ol>
-            </div>
         </div>
     </div>
     <!-- /.container-fluid -->
@@ -30,49 +24,29 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Airplanes</h3>
+                    <h3 class="card-title">Users</h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <table id="example" class="display table table-bordered table-striped" style="width:100%">
+                    <table id="users" class="display table table-bordered table-striped" style="width:100%">
                         <thead>
                             <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Model)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.EconomySeats)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.BusinessSeats)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Seats)
-                                </th>
+                                <th>Name</th>
+                                <th>Email</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
+                            @foreach (var user in Model)
                             {
-                                @using (Html.BeginForm("Delete", "Airplanes", new { id = item.Id }))
+                                if (user.Role.ToString() == "Client")
                                 {
                                     <tr>
+                                        <td>@user.Name</td>
+                                        <td>@user.UserName</td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Model)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.EconomySeats)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.BusinessSeats)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Seats)
-                                        </td>
-                                        <td id="@item.Id">
-                                            <a class="btn btn-info pull-right" asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-user-edit"></i></a>
-                                            <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@item.Id" id="btnDelete"><i class="fa fa-trash"></i></a>
+                                            <a class="btn btn-primary pull-right" asp-action="EditUser" asp-route-id="@user.UserId"><i class="fa fa-user-edit"></i></a>
+                                            <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@user.UserId" id="btnDelete"><i class="fa fa-trash"></i></a>
                                         </td>
                                     </tr>
                                 }
@@ -80,18 +54,9 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Model)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.EconomySeats)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.BusinessSeats)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Seats)
-                                </th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
                                 <th></th>
                             </tr>
                         </tfoot>
@@ -108,6 +73,8 @@
     <!-- /.content -->
     <!-- /.content-wrapper -->
     <!-- ./wrapper -->
+
+
 
 
 
@@ -132,10 +99,12 @@
 
 
 
+
     @section Scripts {
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+
 
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
@@ -164,15 +133,12 @@
             });
         </script>
 
-
         <script>
 
             $(document).ready(function () {
-                $('#example').DataTable();
+                $('#users').DataTable();
             });
         </script>
-
-
 
     }
 

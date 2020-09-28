@@ -1,6 +1,8 @@
 ﻿using Flights.Web.Data;
 using Flights.Web.Data.Entities;
 using Flights.Web.Data.Repositories;
+using FlightTicketsSystem.Web.Helpers;
+using FlightTicketsSystem.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,18 +22,20 @@ namespace Flights.Web.Controllers
         private readonly IAirplaneRepository _airplaneRepository;
         private readonly IFlightRepository _flightRepository;
         private readonly IAirportRepository _airportRepository;
-
+        private readonly IConverterHelper _converterHelper;
 
         public FlightsController(
             DataContext context,
             IAirplaneRepository airplaneRepository,
             IFlightRepository flightRepository,
-            IAirportRepository airportRepository)
+            IAirportRepository airportRepository,
+            IConverterHelper converterHelper)
         {
             _context = context;
             _airplaneRepository = airplaneRepository;
             _flightRepository = flightRepository;
             _airportRepository = airportRepository;
+            _converterHelper = converterHelper;
         }
 
         // GET: Flights
@@ -77,7 +81,7 @@ namespace Flights.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Flight flights)
+        public async Task<IActionResult> Create(FlightViewModel flights)
         {
             if (ModelState.IsValid)
             {
@@ -104,7 +108,7 @@ namespace Flights.Web.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            return View(flights);
+            return RedirectToAction(nameof(Index));
         }
 
 
@@ -123,17 +127,7 @@ namespace Flights.Web.Controllers
                 return NotFound();
             }
 
-            var model = new Flight
-            {
-                Airports = _airportRepository.GetComboAirports(),
-                Airplanes = _airplaneRepository.GetComboAirplanes(),
-                AirplaneId = flight.AirplaneId,
-                DepartureAirportId = flight.DepartureAirportId,
-                ArrivalAirportId = flight.ArrivalAirportId,
-                BusinessPrice = flight.BusinessPrice,
-                EconomyPrice = flight.EconomyPrice,
-                DateTime = flight.DateTime
-            };
+            var model = _converterHelper.ToFlightViewModel(flight);
 
             return View(model);
         }
@@ -159,7 +153,7 @@ namespace Flights.Web.Controllers
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError(string.Empty, "Erro");
                     }
                 }
                 catch (Exception exception)

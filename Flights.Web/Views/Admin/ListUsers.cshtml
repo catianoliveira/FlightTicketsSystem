@@ -45,9 +45,8 @@
                                     <td>@user.UserName</td>
                                     <td>@string.Join(" , ", user.Roles.ToList())</td>
                                     <td>
-                                        <a class="btn btn-info pull-right" asp-action="UserDetails" asp-route-id="@user.UserId">Details</a>
-                                        <a class="btn btn-primary pull-right" asp-action="EditUser" asp-route-id="@user.UserId">Edit</a>
-                                        <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@user.UserId" id="btnDelete">Delete</a>
+                                        <a class="btn btn-info pull-right" asp-action="EditUser" asp-route-id="@user.UserId"><i class="fa fa-user-edit"></i></a>
+                                        <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@user.UserId" id="btnDelete"><i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
                             }

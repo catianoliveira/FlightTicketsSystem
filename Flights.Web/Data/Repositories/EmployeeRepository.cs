@@ -14,18 +14,14 @@ namespace FlightTicketsSystem.Web.Data.Repositories
             _context = context;
         }
 
-        //public IQueryable GetClients()
-        //{
-        //    //vai buscar o id do role client
+        public string GetRoleId()
+        {
+            var roleId = _context.Roles
+                .AsNoTracking()
+                .Include(r => r.Id)
+                .FirstOrDefault(r => r.Name == "Client");
 
-        //    var roleId = _context.Roles
-        //        .Include(r => r.Id)
-        //        .Where(r => r.Name == "Client");
-
-        //    var list = _context.Users
-        //        .Include(r => r.UserName)
-        //        .Include(r => r.FullName)
-        //        .Where(r => r.RoleId == roleId);
-        //}
+            return roleId.ToString();
+        }
     }
 }

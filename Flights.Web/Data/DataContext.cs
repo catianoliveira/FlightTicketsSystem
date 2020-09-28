@@ -22,6 +22,8 @@ namespace Flights.Web.Data
 
         public DbSet<Ticket> Tickets { get; set; }
 
+        public DbSet<Employee> Employees { get; set; }
+
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {

@@ -1,6 +1,4 @@
 ﻿using Flights.Web.Data.Entities;
-using FlightTicketsSystem.Web.Models;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -81,6 +79,14 @@ namespace Flights.Web.Data.Repositories
                 .OrderBy(p => p.DateTime)
                 .Where(a => a.DateTime >= DateTime.Today.ToUniversalTime());
         }
+
+        public IQueryable GetTodaysFlights()
+        {
+            return _context.Flights
+                .Include(f => f.ArrivalAirport)
+                .Include(f => f.DepartureAirport)
+                .OrderBy(f => f.DateTime)
+                .Where(f => f.DateTime >= DateTime.Today.ToUniversalTime());
+        }
     }
 }
-        

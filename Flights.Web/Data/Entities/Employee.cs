@@ -1,4 +1,5 @@
 ﻿using Flights.Web.Data.Entities;
+using FlightTicketsSystem.Web.CustomValidation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,25 +14,22 @@ namespace FlightTicketsSystem.Web.Data.Entities
         [Key]
         public int Id { get; set; }
 
-        public User UserId { get; set; }
 
-        [Required(ErrorMessage = "Must insert the {0}")]
+        [Required]
         public string FirstName { get; set; }
 
 
-        [Required(ErrorMessage = "Must insert the {0}")]
-        [Display(Name = "Last Name")]
+
+        [Required]
         public string LastName { get; set; }
 
-        
-        [Display(Name = "Phone Number")]
-        [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = false)]
-        [DataType(DataType.PhoneNumber)]
-        public string PhoneNumber { get; set; }
 
 
-        [Required(ErrorMessage = "Must insert the {0}")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Required]
+        [LessThanDate(ErrorMessage = "Date of birth must be less than today's day")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime DateOfBirth { get; set; }
+
+
     }
 }

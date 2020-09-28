@@ -30,7 +30,7 @@ namespace FlightTicketsSystem.Web.Models
         [DataType(DataType.EmailAddress)]
         public string UserName { get; set; }
 
-        //TODO public bool IsSelected { get; set; }
+
 
 
         public IEnumerable<string> Roles { get; set; }

@@ -4,6 +4,7 @@ using Flights.Web.Data.Repositories;
 using Flights.Web.Helpers;
 using Flights.Web.Models;
 using FlightTicketsSystem.Web.Data.Repositories;
+using FlightTicketsSystem.Web.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +30,7 @@ namespace Flights.Web.Controllers
         private readonly UserManager<User> _userManager;
         private readonly DataContext _context;
         private readonly SignInManager<User> _signInManager;
+        private readonly IConverterHelper _converterHelper;
 
         public AccountController(
             IUserHelper userHelper,
@@ -39,7 +41,8 @@ namespace Flights.Web.Controllers
             RoleManager<IdentityRole> roleManager,
             UserManager<User> userManager,
             DataContext context,
-            SignInManager<User> signInManager)
+            SignInManager<User> signInManager,
+            IConverterHelper converterHelper)
         {
             _userHelper = userHelper;
             _configuration = configuration;
@@ -50,6 +53,7 @@ namespace Flights.Web.Controllers
             _userManager = userManager;
             _context = context;
             _signInManager = signInManager;
+            _converterHelper = converterHelper;
         }
 
         public IActionResult Login()

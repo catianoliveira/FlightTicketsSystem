@@ -56,7 +56,14 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.SeatNumber)
                                 </th>
-                                <th></th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Flight.DateTime)
+                                </th>
+                                @if (!User.IsInRole("Client"))
+                                {
+                                    <th></th>
+
+                                }
                             </tr>
                         </thead>
                         <tbody>
@@ -64,30 +71,36 @@
                             {
                                 @using (Html.BeginForm("Delete", "Tickets", new { id = item.Id }))
                                 {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.FlightId)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Flight.ArrivalAirport.CompleteAirport)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Flight.DepartureAirport.CompleteAirport)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.PassangerName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.TravelClass)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.SeatNumber)
-                                        </td>
-                                        <td id="@item.Id">
-                                            <a class="btn btn-primary pull-right" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                                            <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@item.Id" id="btnDelete">Delete</a>
-                                        </td>
-                                    </tr>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FlightId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Flight.ArrivalAirport.CompleteAirport)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Flight.DepartureAirport.CompleteAirport)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PassangerName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TravelClass)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SeatNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Flight.DateTime)
+                                </td>
+                                @if (!User.IsInRole("Client"))
+                                {
+                                    <td id="@item.Id">
+                                        <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@item.Id" id="btnDelete"><i class="fa fa-trash"></i></a>
+                                    </td>
+                                }
+
+                            </tr>
                                 }
                             }
                         </tbody>
@@ -111,7 +124,14 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.SeatNumber)
                                 </th>
-                                <th></th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Flight.DateTime)
+                                </th>
+                                @if (!User.IsInRole("Client"))
+                                {
+                                    <th></th>
+                                }
+
                             </tr>
                         </tfoot>
                     </table>

@@ -1,14 +1,21 @@
 ﻿using Flights.Web.Data.Entities;
+using FlightTicketsSystem.Web.Data.Entities;
+using FlightTicketsSystem.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Flights.Web.Helpers
+namespace FlightTicketsSystem.Web.Helpers
 {
     public interface IConverterHelper
     {
-        //TODO Converter Hlper aula 06/07 15min
+        Flight ToFlight(FlightViewModel model, bool isNew);
 
+        FlightViewModel ToFlightViewModel(Flight model);
+
+        Ticket ToTicket(BuyTicketViewModel model, string userId);
+
+        BuyTicketViewModel ToBuyTicketViewModel(Ticket model, string userId);
     }
 }

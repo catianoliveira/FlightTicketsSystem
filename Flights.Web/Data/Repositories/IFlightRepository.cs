@@ -16,6 +16,9 @@ namespace Flights.Web.Data.Repositories
         IQueryable GetAllFlights();
 
 
+        IQueryable GetTodaysFlights();
+
+
         Task<Flight> GetAirplanesAsync(int id);
 
     }

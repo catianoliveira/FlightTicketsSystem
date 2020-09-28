@@ -16,16 +16,17 @@ namespace Flights.Web.Data
         private readonly IUserHelper _userHelper;
 
 
-        //TODO aauthorize
-        //User manager faz a gestão dos users
         public SeedDb(DataContext context, IUserHelper userHelper)
         {
             _context = context;
             _userHelper = userHelper;
         }
 
-        //TODO ver user manager
 
+        /// <summary>
+        /// list of countries, indicatives, creates users, airplanes and airports
+        /// </summary>
+        /// <returns></returns>
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();
@@ -35,7 +36,7 @@ namespace Flights.Web.Data
             await _userHelper.CheckRoleAsync("Employee");
             await _userHelper.CheckRoleAsync("Client");
 
-
+            
             if (!_context.Countries.Any())
             {
 
@@ -81,7 +82,6 @@ namespace Flights.Web.Data
                 this.AddAirports("Madrid", "Spain", "MAD");
                 this.AddAirports("Dublin", "Ireland", "DUB");
             }
-
 
 
 
@@ -345,7 +345,8 @@ namespace Flights.Web.Data
                     Address = "Rua da Luz 1 2ºEsq 1200-110 Lisboa",
                     City = "Lisboa",
                     CountryId = 179,
-                    EmailConfirmed = true                };
+                    EmailConfirmed = true
+                };
 
                 var result = await _userHelper.AddUserAsync(user, "HighFly123*");
 
@@ -368,9 +369,92 @@ namespace Flights.Web.Data
                 }
 
                 await _context.SaveChangesAsync();
+
+
+                var client = await _userHelper.GetUserByEmailAsync("xrobot@hotmail.com");
+
+                if (client == null)
+                {
+                    client = new User
+                    {
+                        FirstName = "Nuno",
+                        LastName = "Tavares",
+                        Email = "xrobot@hotmail.com",
+                        UserName = "xrobot@hotmail.com",
+                        IndicativeId = 171,
+                        PhoneNumber = "912345678",
+                        Address = "Rua da Luz 1 2ºEsq 1200-110 Lisboa",
+                        City = "Lisboa",
+                        CountryId = 179,
+                        EmailConfirmed = true
+                    };
+
+                    var result2 = await _userHelper.AddUserAsync(client, "HighFly123*");
+
+
+
+                    if (result2 != IdentityResult.Success)
+                    {
+                        throw new InvalidOperationException("Could not create the user in seeder.");
+                    }
+
+
+                    var token2 = await _userHelper.GenerateEmailConfirmationTokenAsync(client);
+                    await _userHelper.ConfirmEmailAsync(client, token2);
+
+
+                    var isInRole2 = await _userHelper.IsUserInRoleAsync(client, "Client");
+                    if (!isInRole2)
+                    {
+                        await _userHelper.AddUserToRoleAsync(client, "Client");
+                    }
+
+                    await _context.SaveChangesAsync();
+
+
+                    var employee = await _userHelper.GetUserByEmailAsync("throwawaycatia@outlook.pt");
+
+                    if (employee == null)
+                    {
+                        employee = new User
+                        {
+                            FirstName = "Maria",
+                            LastName = "Almeida",
+                            Email = "throwawaycatia@outlook.pt",
+                            UserName = "throwawaycatia@outlook.pt",
+                            IndicativeId = 171,
+                            PhoneNumber = "912345678",
+                            Address = "Rua da Pereiras 1 2ºEsq 1200-110 Lisboa",
+                            City = "Lisboa",
+                            CountryId = 179,
+                            EmailConfirmed = true
+                        };
+
+                        var result3 = await _userHelper.AddUserAsync(employee, "HighFly123*");
+
+
+
+                        if (result3 != IdentityResult.Success)
+                        {
+                            throw new InvalidOperationException("Could not create the user in seeder.");
+                        }
+
+
+                        var token3 = await _userHelper.GenerateEmailConfirmationTokenAsync(employee);
+                        await _userHelper.ConfirmEmailAsync(employee, token3);
+
+
+                        var isInRole3 = await _userHelper.IsUserInRoleAsync(employee, "Employee");
+                        if (!isInRole3)
+                        {
+                            await _userHelper.AddUserToRoleAsync(employee, "Employee");
+                        }
+
+                        await _context.SaveChangesAsync();
+                    }
+                }
             }
         }
-
 
         private void AddIndicatives(
         string country, string code)

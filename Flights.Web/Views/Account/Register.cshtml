@@ -1,4 +1,6 @@
 ﻿@model Flights.Web.Models.RegisterNewUserViewModel
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,220 +51,86 @@
 
                 </div>
                 <!-- Content Header (Page header) -->
-                @*@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @autocomplete = "on" }))
-                    {
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @autocomplete = "on" }))
+                {
 
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
 
-                                    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("SuperAdmin")
-                                     || this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
-                                    {
-                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                        <div class="form-group">
-                                            <label asp-for="RoleID" class="control-label"></label>
-                                            <select asp-for="RoleID" asp-items="Model.RoleChoices" class="form-control"></select>
-                                            <span asp-validation-for="RoleID" class="text-danger"></span>
-                                        </div>
-                                    }
+                                @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("SuperAdmin")
+                                || this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                                {
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                     <div class="form-group">
-                                        <label asp-for="FirstName">First Name</label>
-                                        <input asp-for="FirstName" class="form-control" />
-                                        <span asp-validation-for="FirstName" class="text-warning"></span>
+                                        <label asp-for="RoleID" class="control-label"></label>
+                                        <select asp-for="RoleID" asp-items="Model.RoleChoices" class="form-control"></select>
+                                        <span asp-validation-for="RoleID" class="text-danger"></span>
                                     </div>
-                                    <div class="form-group">
-                                        <label asp-for="LastName">Last Name</label>
-                                        <input asp-for="LastName" class="form-control" />
-                                        <span asp-validation-for="LastName" class="text-warning"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="City">City</label>
-                                        <input asp-for="City" class="form-control" />
-                                        <span asp-validation-for="City" class="text-warning"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="IndicativeId" class="control-label"></label>
-                                        <select asp-for="IndicativeId" asp-items="Model.Indicatives" class="form-control"></select>
-                                        <span asp-validation-for="IndicativeId" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Password">Password</label>
-                                        <input asp-for="Password" type="password" class="form-control" />
-                                        <span asp-validation-for="Password" class="text-warning"></span>
-                                    </div>
-                                     <div class="form-group">
-                                        <label asp-for="Confirm">Confirm</label>
-                                        <input asp-for="Confirm" type="password" class="form-control" />
-                                        <span asp-validation-for="Confirm" class="text-warning"></span>
-                                    </div>
-                                    <br />
-                                    <div class="form-group">
-                                        <input type="submit" value="Register New User" class="btn btn-success" />
-                                    </div>
+                                }
+                                <div class="form-group">
+                                    <label asp-for="FirstName">First Name</label>
+                                    <input asp-for="FirstName" class="form-control" />
+                                    <span asp-validation-for="FirstName" class="text-warning"></span>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label asp-for="EmailAddress">Email Address</label>
-                                        <input asp-for="EmailAddress" class="form-control" />
-                                        <span asp-validation-for="EmailAddress" class="text-warning"></span>
-                                    </div>
+                                <div class="form-group">
+                                    <label asp-for="LastName">Last Name</label>
+                                    <input asp-for="LastName" class="form-control" />
+                                    <span asp-validation-for="LastName" class="text-warning"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="City">City</label>
+                                    <input asp-for="City" class="form-control" />
+                                    <span asp-validation-for="City" class="text-warning"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="IndicativeId" class="control-label"></label>
+                                    <select asp-for="IndicativeId" asp-items="Model.Indicatives" class="form-control"></select>
+                                    <span asp-validation-for="IndicativeId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Password">Password</label>
+                                    <input asp-for="Password" type="password" class="form-control" />
+                                    <span asp-validation-for="Password" class="text-warning"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Confirm">Confirm</label>
+                                    <input asp-for="Confirm" type="password" class="form-control" />
+                                    <span asp-validation-for="Confirm" class="text-warning"></span>
+                                </div>
+                                <br />
+                                <div class="form-group">
+                                    <input type="submit" value="Register New User" class="btn btn-success" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="EmailAddress">Email Address</label>
+                                    <input asp-for="EmailAddress" class="form-control" />
+                                    <span asp-validation-for="EmailAddress" class="text-warning"></span>
+                                </div>
 
-                                    <div class="form-group">
-                                        <label asp-for="DateOfBirth">Date of Birth</label>
-                                        <input asp-for="DateOfBirth" class="form-control" />
-                                        <span asp-validation-for="DateOfBirth" class="text-warning"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Address">Address</label>
-                                        <input asp-for="Address" class="form-control" />
-                                        <span asp-validation-for="Address" class="text-warning"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="CountryId" class="control-label"></label>
-                                        <select asp-for="CountryId" asp-items="Model.Countries" class="form-control"></select>
-                                        <span asp-validation-for="CountryId" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="PhoneNumber">Phone Number</label>
-                                        <input asp-for="PhoneNumber" class="form-control" />
-                                        <span asp-validation-for="PhoneNumber" class="text-warning"></span>
-                                    </div>
+                                <div class="form-group">
+                                    <label asp-for="DateOfBirth">Date of Birth</label>
+                                    <input asp-for="DateOfBirth" class="form-control" />
+                                    <span asp-validation-for="DateOfBirth" class="text-warning"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Address">Address</label>
+                                    <input asp-for="Address" class="form-control" />
+                                    <span asp-validation-for="Address" class="text-warning"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="CountryId" class="control-label"></label>
+                                    <select asp-for="CountryId" asp-items="Model.Countries" class="form-control"></select>
+                                    <span asp-validation-for="CountryId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="PhoneNumber">Phone Number</label>
+                                    <input asp-for="PhoneNumber" class="form-control" />
+                                    <span asp-validation-for="PhoneNumber" class="text-warning"></span>
+                                </div>
 
-                                </div>
-                            </div>
-                        </div>
-                    }*@
-
-
-
-                @section ControlsSection{
-                    <div class="col-lg-12 control-section">
-                        <div class="content-wrapper">
-                            <div class="row material2">
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6"><b>Outlined and Filled</b></div>
-                            </div>
-                            <div class="row material2">
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                                    @Html.EJS().TextBox("outlined").Placeholder("Outlined").CssClass("e-outline").FloatLabelType(FloatLabelType.Auto).Render()
-                                </div>
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                                    @Html.EJS().TextBox("filled").Placeholder("Filled").CssClass("e-filled").FloatLabelType(FloatLabelType.Auto).Render()
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6"><b>Floating Label</b></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                                    @Html.EJS().TextBox("firstname").Placeholder("First Name").FloatLabelType(FloatLabelType.Auto).Render()
-                                </div>
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                                    @Html.EJS().TextBox("lastname").Placeholder("Last Name").FloatLabelType(FloatLabelType.Auto).EnableRtl(true).Render()
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-                                    <div class="e-float-input e-input-group">
-                                        <input type="text" required="">
-                                        <span class="e-float-line"></span>
-                                        <label class="e-float-text">Country</label>
-                                        <span class="e-input-group-icon e-spin-down"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6"><b>Inputs</b></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                                    <div class="e-input-group">
-                                        <input class="e-input" type="text" placeholder="Enter Name">
-                                    </div>
-                                </div>
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                                    <div class="e-input-group e-rtl">
-                                        <input class="e-input" type="text" placeholder="Last Name">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                                    <div class="e-input-group">
-                                        <input class="e-input" type="password" placeholder="Password" value="password">
-                                    </div>
-                                </div>
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                                    <div class="e-input-group">
-                                        <input class="e-input" type="email" placeholder="Enter Email">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                                    <div class="e-input-group e-disabled">
-                                        <input class="e-input" type="text" placeholder="Disabled" disabled="">
-                                    </div>
-                                </div>
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                                    <div class="e-input-group">
-                                        <input class="e-input" type="text" placeholder="Enter Name" value="Readonly" readonly="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6"><b>Validation States</b></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                                    <div class="e-input-group e-success">
-                                        <input class="e-input" type="text" placeholder="Success">
-                                    </div>
-                                </div>
-                                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                                    <div class="e-input-group e-warning">
-                                        <input class="e-input" type="text" placeholder="Warning">
-                                    </div>
-                                </div>
-                                <div class="col-xs-4 col-sm-4 col-lg-4 col-md-4">
-                                    <div class="e-input-group e-error">
-                                        <input class="e-input" type="text" placeholder="Error">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6"><b>Sizing</b></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 custom-padding-05">
-                                    <div class="e-input-group e-small">
-                                        <input class="e-input" type="text" placeholder="Small">
-                                    </div>
-                                </div>
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                                    <div class="e-input-group">
-                                        <input class="e-input" type="text" placeholder="Normal">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6"><b>Input &amp; Elements</b></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                                    <div class="e-input-group">
-                                        <input class="e-input" type="text" placeholder="Date of Birth">
-                                        <span class="e-input-group-icon e-input-calendar"></span>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-                                    <div class="e-input-group e-float-icon-left">
-                                        <span class="e-input-group-icon e-input-picture"></span>
-                                        <div class="e-input-in-wrap">
-                                            <input class="e-input" type="text" placeholder="Upload Picture">
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -302,6 +170,49 @@
         <!-- AdminLTE for demo purposes -->
         <script src="~/~/dist/js/demo.js"></script>
         <!-- page script -->
+
+        <script>
+            var inputObject = {};
+            var input = document.querySelectorAll('.e-input-group .e-input,.e-float-input.e-input-group input');
+            var inputIcon = document.querySelectorAll('.e-input-group-icon');
+            var focusFn = function (index) {
+                return function () {
+                    getParentNode(input[index]).classList.add('e-input-focus');
+                };
+            };
+
+            var blurFn = function (index) {
+                return function () {
+                    getParentNode(input[index]).classList.remove('e-input-focus');
+                };
+            };
+
+            var mouseupFn = function () {
+                var ele = this;
+                setTimeout(function () { ele.classList.remove('e-input-btn-ripple'); }, 500);
+            };
+
+            for (var i = 0; i < input.length; i++) {
+                //Focus Event binding for input component
+                input[i].addEventListener('focus', focusFn(i));
+                //Blur Event binding for input component
+                input[i].addEventListener('blur', blurFn(i));
+            }
+            for (var j = 0; j < inputIcon.length; j++) {
+                inputIcon[j].addEventListener('mousedown', function () {
+                    this.classList.add('e-input-btn-ripple');
+                });
+                inputIcon[j].addEventListener('mouseup', mouseupFn);
+            }
+            function getParentNode(element) {
+                var parentNode = element.parentNode;
+                if (parentNode.classList.contains('e-input-in-wrap')) {
+                    return parentNode.parentNode;
+                }
+                return parentNode;
+            }
+        </script>
+
     }
 
 </body>
