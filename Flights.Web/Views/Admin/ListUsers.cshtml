@@ -46,7 +46,7 @@
                                     <td>@string.Join(" , ", user.Roles.ToList())</td>
                                     <td>
                                         <a class="btn btn-info pull-right" asp-action="EditUser" asp-route-id="@user.UserId"><i class="fa fa-user-edit"></i></a>
-                                        <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@user.UserId" id="btnDelete"><i class="fa fa-trash"></i></a>
+                                        <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@user.UserId"  onclick="return confirm('Are you sure you want to delete @user.Name?')"><i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
                             }
@@ -107,30 +107,7 @@
 
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function () {
-
-                var id = 0;
-
-                $('a[id*=btnDelete]').click(function () {
-                    debugger;
-                    id = $(this).parent()[0].id;
-                    $("#deleteDialog").modal('show');
-                    return false;
-                });
-
-                $("#btnNoDelete").click(function () {
-                    $("#deleteDialog").modal('hide');
-                    return false;
-                });
-
-
-                $("#btnYesDelete").click(function () {
-                    window.location.href = '/Airplanes/Delete/' + id;
-                });
-
-            });
-        </script>
+       
 
         <script>
 

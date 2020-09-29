@@ -11,8 +11,6 @@ namespace Flights.Web.Data.Repositories
 	public interface ICountryRepository : IGenericRepository<Country>
 	{
 		
-		IQueryable GetCountries();
-
 
 		IEnumerable<SelectListItem> GetComboCountries();
 

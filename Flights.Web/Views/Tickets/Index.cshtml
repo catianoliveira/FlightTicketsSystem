@@ -96,7 +96,7 @@
                                 @if (!User.IsInRole("Client"))
                                 {
                                     <td id="@item.Id">
-                                        <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@item.Id" id="btnDelete"><i class="fa fa-trash"></i></a>
+                                        <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@item.Id"  onclick="return confirm('Are you sure you want to delete this ticket?')"><i class="fa fa-trash"></i></a>
                                     </td>
                                 }
 
@@ -175,30 +175,6 @@
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
 
 
-        <script type="text/javascript">
-            $(document).ready(function () {
-
-                var id = 0;
-
-                $('a[id*=btnDelete]').click(function () {
-                    debugger;
-                    id = $(this).parent()[0].id;
-                    $("#deleteDialog").modal('show');
-                    return false;
-                });
-
-                $("#btnNoDelete").click(function () {
-                    $("#deleteDialog").modal('hide');
-                    return false;
-                });
-
-
-                $("#btnYesDelete").click(function () {
-                    window.location.href = '/Tickets/Delete/' + id;
-                });
-
-            });
-        </script>
         <script>
 
             $(document).ready(function () {
