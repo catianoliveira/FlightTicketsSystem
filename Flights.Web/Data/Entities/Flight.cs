@@ -25,7 +25,7 @@ namespace Flights.Web.Data.Entities
         public IEnumerable<SelectListItem> Airplanes { get; set; }
 
 
-        public Airplane Airplane { get; set; }
+      
 
 
         [Required]
@@ -45,14 +45,7 @@ namespace Flights.Web.Data.Entities
         public IEnumerable<SelectListItem> Airports { get; set; }
 
 
-        [Display(Name = "Departure Airport")]
-        public Airport DepartureAirport { get; set; }
-
-        [Display(Name = "Arrival Airport")]
-        public Airport ArrivalAirport { get; set; }
-
-
-
+        
         [Required]
         [GreaterThanDateAttributte(ErrorMessage = "Flight's date must be equal or greater than today's")]
         [Display(Name = "Date and Time")]
@@ -81,6 +74,22 @@ namespace Flights.Web.Data.Entities
                 return $"{this.DepartureAirport} -> {this.ArrivalAirport}";
             }
         }
+
+
+
+        public Airplane Airplane { get; set; }
+
+
+
+        [Display(Name = "Departure Airport")]
+        public Airport DepartureAirport { get; set; }
+
+        [Display(Name = "Arrival Airport")]
+        public Airport ArrivalAirport { get; set; }
+
+
+
+
 
     }
 }

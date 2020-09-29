@@ -17,11 +17,6 @@ namespace Flights.Web.Models
         public IEnumerable<SelectListItem> RoleChoices { get; set; }
 
 
-        public IdentityRole Role { get; set; }
-
-
-        //public bool IsSelected { get; set; }
-
 
 
 
@@ -45,6 +40,7 @@ namespace Flights.Web.Models
 
 
         [Required]
+        [Display(Name = "Indicative")]
         public int IndicativeId { get; set; }
         public IEnumerable<SelectListItem> Indicatives { get; set; }
 
@@ -62,9 +58,9 @@ namespace Flights.Web.Models
 
 
 
-        [Display(Name = "City")]
         [Required]
         public string City { get; set; }
+
 
 
         [Display(Name = "Country")]
@@ -72,10 +68,12 @@ namespace Flights.Web.Models
         public int CountryId { get; set; }
 
 
+
         public IEnumerable<SelectListItem> Countries { get; set; }
 
 
-        public Country Country { get; set; }
+
+
 
 
         [Required]
@@ -84,9 +82,11 @@ namespace Flights.Web.Models
 
 
 
+
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
 
         [Required]
         [DataType(DataType.Password)]

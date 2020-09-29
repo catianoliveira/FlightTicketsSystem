@@ -76,7 +76,6 @@ namespace Flights.Web
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IIndicativeRepository, IndicativeRepository>();
             services.AddScoped<ITicketRepository, TicketRepository>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<IConverterHelper, ConverterHelper>();
 
             services.Configure<CookiePolicyOptions>(options =>

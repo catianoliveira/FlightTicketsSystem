@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlightTicketsSystem.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200928170955_InitialDb")]
+    [Migration("20200929094838_InitialDb")]
     partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,14 +52,10 @@ namespace FlightTicketsSystem.Web.Migrations
                     b.Property<string>("Country")
                         .IsRequired();
 
-                    b.Property<int?>("CountryId");
-
                     b.Property<string>("IATA")
                         .IsRequired();
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
 
                     b.HasIndex("IATA")
                         .IsUnique();
@@ -226,25 +222,6 @@ namespace FlightTicketsSystem.Web.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("FlightTicketsSystem.Web.Data.Entities.Employee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("DateOfBirth");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired();
-
-                    b.Property<string>("LastName")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Employees");
-                });
-
             modelBuilder.Entity("FlightTicketsSystem.Web.Data.Entities.Indicative", b =>
                 {
                     b.Property<int>("Id")
@@ -370,13 +347,6 @@ namespace FlightTicketsSystem.Web.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("Flights.Web.Data.Entities.Airport", b =>
-                {
-                    b.HasOne("Flights.Web.Data.Entities.Country")
-                        .WithMany("Airports")
-                        .HasForeignKey("CountryId");
                 });
 
             modelBuilder.Entity("Flights.Web.Data.Entities.Flight", b =>

@@ -4712,7 +4712,7 @@ input[type="button"].btn-block {
 }
 
 .navbar-light .navbar-text {
-  color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
 }
 
 .navbar-light .navbar-text a {
@@ -4720,7 +4720,7 @@ input[type="button"].btn-block {
 }
 
 .navbar-light .navbar-text a:hover, .navbar-light .navbar-text a:focus {
-  color: rgba(0, 0, 0, 0.9);
+  color: #ffffff;
 }
 
 .navbar-dark .navbar-brand {

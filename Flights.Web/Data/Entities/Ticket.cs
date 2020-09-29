@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Flights.Web.Data.Entities
 {
@@ -18,7 +13,7 @@ namespace Flights.Web.Data.Entities
         [Required]
         public User User { get; set; }
 
-        
+
 
         [Required]
         [Display(Name = "Flight Id")]
@@ -26,7 +21,7 @@ namespace Flights.Web.Data.Entities
         public int FlightId { get; set; }
 
 
-        
+
 
 
         [Required]
