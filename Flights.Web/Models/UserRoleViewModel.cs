@@ -11,25 +11,17 @@ namespace FlightTicketsSystem.Web.Models
     public class UserRoleViewModel
     {
 
-        public IEnumerable<SelectListItem> RoleChoices { get; set; }
-
-
-        public IdentityRole Role { get; set; }
-
-
-
+       
         public string UserId { get; set; }
 
 
         public string Name { get; set; }
 
 
-        public RoleViewModel RoleId { get; set; }
 
 
         [DataType(DataType.EmailAddress)]
         public string UserName { get; set; }
-
 
 
 

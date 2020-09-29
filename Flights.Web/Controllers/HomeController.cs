@@ -15,16 +15,13 @@ namespace Flights.Web.Controllers
     [RequireHttps]
     public class HomeController : Controller
     {
-        private readonly IUserHelper _userHelper;
         private readonly IMailHelper _mailHelper;
         private readonly IFlightRepository _flightRepository;
 
         public HomeController(
-            IUserHelper userHelper,
             IMailHelper mailHelper,
             IFlightRepository flightRepository)
         {
-            _userHelper = userHelper;
             _mailHelper = mailHelper;
             _flightRepository = flightRepository;
         }
@@ -32,7 +29,7 @@ namespace Flights.Web.Controllers
 
         public IActionResult Index()
         {
-            var flight = _flightRepository.GetTodaysFlights();
+            var flight = _flightRepository.GetNextFlights();
             return View(flight);
         }
 

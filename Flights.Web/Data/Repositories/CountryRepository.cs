@@ -34,14 +34,5 @@ namespace Flights.Web.Data.Repositories
 
         }
 
-
-
-        public IQueryable GetCountries()
-        {
-            return _context.Countries
-            .OrderBy(c => c.Name);
-
-        }
-
     }
 }

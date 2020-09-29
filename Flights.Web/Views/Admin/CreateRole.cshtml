@@ -55,6 +55,7 @@
 
                 @using (Html.BeginForm("CreateRole", "Admin", FormMethod.Post, new { @autocomplete = "on" }))
                 {
+                    @Html.ValidationSummary(false)
                     @Html.AntiForgeryToken()
                     <div class="card-body">
                         <div class="row">

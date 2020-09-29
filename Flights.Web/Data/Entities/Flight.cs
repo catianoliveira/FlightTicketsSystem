@@ -21,11 +21,14 @@ namespace Flights.Web.Data.Entities
 
 
 
+
+
+
         [Display(Name = "Airplane")]
         public IEnumerable<SelectListItem> Airplanes { get; set; }
 
 
-      
+
 
 
         [Required]
@@ -34,8 +37,9 @@ namespace Flights.Web.Data.Entities
         public int DepartureAirportId { get; set; }
 
 
-        [Required]
 
+
+        [Required]
         [Display(Name = "Arrival Airport")]
         [ForeignKey("ArrivalAirport")]
         public int ArrivalAirportId { get; set; }
@@ -46,11 +50,16 @@ namespace Flights.Web.Data.Entities
 
 
         
+
+
+
         [Required]
         [GreaterThanDateAttributte(ErrorMessage = "Flight's date must be equal or greater than today's")]
         [Display(Name = "Date and Time")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime DateTime { get; set; }
+
+
 
 
 
@@ -61,9 +70,18 @@ namespace Flights.Web.Data.Entities
 
 
 
+
+
         [Required]
         [Display(Name = "Business C. Price")]
         public decimal BusinessPrice { get; set; }
+
+
+
+
+        public ICollection<Ticket> Tickets { get; set; }
+
+
 
 
 
@@ -77,18 +95,19 @@ namespace Flights.Web.Data.Entities
 
 
 
-        public Airplane Airplane { get; set; }
-
-
 
         [Display(Name = "Departure Airport")]
         public Airport DepartureAirport { get; set; }
+
+
+
 
         [Display(Name = "Arrival Airport")]
         public Airport ArrivalAirport { get; set; }
 
 
 
+        public Airplane Airplane { get; set; }
 
 
     }

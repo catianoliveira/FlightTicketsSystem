@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -169,7 +170,8 @@ namespace Flights.Web.Controllers
                         City = model.City,
                         CountryId = model.CountryId,
                         RoleId = model.RoleID,
-                        DateOfBirth = model.DateOfBirth
+                        DateOfBirth = model.DateOfBirth,
+                        Tickets = new List<Ticket>()
                     };
                 }
 
@@ -353,6 +355,7 @@ namespace Flights.Web.Controllers
         }
 
 
+        
         public async Task<IActionResult> ChangeUser()
         {
             var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
@@ -401,6 +404,11 @@ namespace Flights.Web.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// change users info
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeUser(ChangeUserViewModel model)

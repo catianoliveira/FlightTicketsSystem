@@ -64,6 +64,8 @@ namespace Flights.Web.Controllers
             return View(flight);
         }
 
+
+
         // GET: Flights/Create
         public IActionResult Create()
         {
@@ -75,6 +77,8 @@ namespace Flights.Web.Controllers
 
             return this.View(model);
         }
+
+
 
         // POST: Flights/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -96,7 +100,8 @@ namespace Flights.Web.Controllers
                         EconomyPrice = flights.EconomyPrice,
                         DateTime = flights.DateTime,
                         ArrivalAirport = flights.ArrivalAirport,
-                        DepartureAirport = flights.DepartureAirport
+                        DepartureAirport = flights.DepartureAirport,
+                        Tickets = new List<Ticket>()
                     };
 
                     await _flightRepository.CreateAsync(flight);
@@ -110,6 +115,7 @@ namespace Flights.Web.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
 
 
         // GET: Flights/Edit/5
@@ -131,6 +137,9 @@ namespace Flights.Web.Controllers
 
             return View(model);
         }
+
+
+
 
         // POST: Airplanes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -165,6 +174,8 @@ namespace Flights.Web.Controllers
             }
             return View(flight);
         }
+
+
 
         public async Task<IActionResult> Delete(int? id)
         {

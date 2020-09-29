@@ -66,10 +66,8 @@ namespace Flights.Web
 
             services.AddTransient<SeedDb>();
 
-            //cria instancia nova do objeto sempre que for preciso
             services.AddScoped<IAirplaneRepository, AirplaneRepository>();
             services.AddScoped<IAirportRepository, AirportRepository>();
-            services.AddScoped<IImageHelper, ImageHelper>();
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<IMailHelper, MailHelper>();
             services.AddScoped<IFlightRepository, FlightRepository>();

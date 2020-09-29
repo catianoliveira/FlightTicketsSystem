@@ -52,6 +52,8 @@ namespace FlightTicketsSystem.Web.Controllers
             return View();
         }
 
+
+
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
         {
@@ -87,6 +89,12 @@ namespace FlightTicketsSystem.Web.Controllers
             return View(model);
         }
 
+
+
+        /// <summary>
+        /// lists users and their roles
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "SuperAdmin, Admin, Employee")]
         public async Task<ActionResult> ListUsers()
         {
@@ -108,11 +116,20 @@ namespace FlightTicketsSystem.Web.Controllers
             return View(userRolesViewModel);
         }
 
+
+
+
         private async Task<List<string>> GetUserRoles(User user)
         {
             return new List<string>(await _userManager.GetRolesAsync(user));
         }
 
+
+        /// <summary>
+        /// gets users details
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<IActionResult> UserDetails(string userId)
         {
             if (userId == null)
@@ -135,11 +152,11 @@ namespace FlightTicketsSystem.Web.Controllers
                 PhoneNumber = user.PhoneNumber,
                 DateOfBirth = user.DateOfBirth,
                 UserId = user.Id,
-                Role = user.Role
             };
 
             return View(model);
         }
+
 
 
         [HttpGet]
@@ -177,6 +194,8 @@ namespace FlightTicketsSystem.Web.Controllers
 
             return View(model);
         }
+
+
 
         // POST: Admin/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -242,6 +261,7 @@ namespace FlightTicketsSystem.Web.Controllers
 
             return View(editUser);
         }
+
 
 
         public async Task<IActionResult> Delete(string id)

@@ -42,10 +42,10 @@
                                     @Html.DisplayNameFor(model => model.FlightId)
                                 </td>
                                 <td>
-                                    @Html.DisplayNameFor(model => model.Flight.ArrivalAirport)
+                                    @Html.DisplayNameFor(model => model.Flight.DepartureAirport)
                                 </td>
                                 <td>
-                                    @Html.DisplayNameFor(model => model.Flight.DepartureAirport)
+                                    @Html.DisplayNameFor(model => model.Flight.ArrivalAirport)
                                 </td>
                                 <th>
                                     @Html.DisplayNameFor(model => model.PassangerName)
@@ -76,10 +76,10 @@
                                     @Html.DisplayFor(modelItem => item.FlightId)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Flight.ArrivalAirport.CompleteAirport)
+                                    @Html.DisplayFor(modelItem => item.Flight.DepartureAirport.CompleteAirport)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Flight.DepartureAirport.CompleteAirport)
+                                    @Html.DisplayFor(modelItem => item.Flight.ArrivalAirport.CompleteAirport)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.PassangerName)
@@ -96,7 +96,7 @@
                                 @if (!User.IsInRole("Client"))
                                 {
                                     <td id="@item.Id">
-                                        <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@item.Id" id="btnDelete"><i class="fa fa-trash"></i></a>
+                                        <a class="btn btn-danger pull-right" asp-action="Delete" asp-route-id="@item.Id"  onclick="return confirm('Are you sure you want to delete this ticket?')"><i class="fa fa-trash"></i></a>
                                     </td>
                                 }
 
@@ -110,10 +110,10 @@
                                     @Html.DisplayNameFor(model => model.FlightId)
                                 </td>
                                 <td>
-                                    @Html.DisplayNameFor(model => model.Flight.ArrivalAirport)
+                                    @Html.DisplayNameFor(model => model.Flight.DepartureAirport)
                                 </td>
                                 <td>
-                                    @Html.DisplayNameFor(model => model.Flight.DepartureAirport)
+                                    @Html.DisplayNameFor(model => model.Flight.ArrivalAirport)
                                 </td>
                                 <th>
                                     @Html.DisplayNameFor(model => model.PassangerName)
@@ -175,30 +175,6 @@
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
 
 
-        <script type="text/javascript">
-            $(document).ready(function () {
-
-                var id = 0;
-
-                $('a[id*=btnDelete]').click(function () {
-                    debugger;
-                    id = $(this).parent()[0].id;
-                    $("#deleteDialog").modal('show');
-                    return false;
-                });
-
-                $("#btnNoDelete").click(function () {
-                    $("#deleteDialog").modal('hide');
-                    return false;
-                });
-
-
-                $("#btnYesDelete").click(function () {
-                    window.location.href = '/Tickets/Delete/' + id;
-                });
-
-            });
-        </script>
         <script>
 
             $(document).ready(function () {

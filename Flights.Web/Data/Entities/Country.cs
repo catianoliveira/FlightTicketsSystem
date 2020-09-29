@@ -12,5 +12,7 @@ namespace Flights.Web.Data.Entities
         [MaxLength(50, ErrorMessage = "The field {0} can only contain {1} characters")]
         [Required]
         public string Name { get; set; }
+
+
     }
 }

@@ -15,11 +15,6 @@ namespace Flights.Web.Data.Entities
         public string RoleId { get; set; }
 
 
-       
-
-        public IdentityRole Role { get; set; }
-
-
 
 
         [Required]
@@ -49,6 +44,13 @@ namespace Flights.Web.Data.Entities
             }
 
         }
+
+
+
+
+        public ICollection<Ticket> Tickets { get; set; }
+
+
 
 
 

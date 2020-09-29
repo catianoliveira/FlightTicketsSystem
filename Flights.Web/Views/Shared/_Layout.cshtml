@@ -33,27 +33,28 @@
             </ul>
 
             <!-- Right navbar links -->
-        <ul class="navbar-nav ml-auto">
-            @if (this.User.Identity.IsAuthenticated)
-            {<li class="nav-item d-none d-sm-inline-block">
-                    <a href="~/Account/Logout" class="nav-link">Logout</a>
-                </li>
-            }
-            else
-            {
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="~/Account/Login" class="nav-link">Login</a>
-                </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="~/Account/Register" class="nav-link">Register</a>
-                </li>
-            }
+            <ul class="navbar-nav ml-auto">
+                @if (this.User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item d-none d-sm-inline-block">
+                        <a href="~/Account/Logout" class="nav-link">Logout</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item d-none d-sm-inline-block">
+                        <a href="~/Account/Login" class="nav-link">Login</a>
+                    </li>
+                    <li class="nav-item d-none d-sm-inline-block">
+                        <a href="~/Account/Register" class="nav-link">Register</a>
+                    </li>
+                }
 
-        </ul>
+            </ul>
         </nav>
         <!-- /.navbar -->
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar bg-light accent-info" >
+        <aside class="main-sidebar bg-light accent-info">
             <!-- Brand Logo -->
             <a href="/" class="brand-link elevation-4 bg-gradient-info">
                 <img src="~/images/logo.png" alt="HighFly" class="brand-image img-circle elevation-3 bg-gradient-info" style="opacity: .8">
@@ -73,13 +74,13 @@
                     else
                     {
                         <div class="info">
-                            
+
                         </div>
                     }
 
                 </div>
 
-                
+
 
                 <!-- Sidebar Menu -->
                 @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("SuperAdmin")
@@ -88,7 +89,7 @@
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-    with font-awesome or any other icon font library -->
+                            with font-awesome or any other icon font library -->
                             <li class="nav-item">
                                 <a href="/Account/Register" class="nav-link">
                                     <i class="nav-icon fas fa-edit"></i>
@@ -161,7 +162,7 @@
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-                with font-awesome or any other icon font library -->
+                            with font-awesome or any other icon font library -->
                             <li class="nav-item">
                                 <a href="/Account/Register" class="nav-link">
                                     <i class="nav-icon fas fa-edit"></i>
@@ -202,7 +203,7 @@
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-                with font-awesome or any other icon font library -->
+                            with font-awesome or any other icon font library -->
                             <li class="nav-item">
                                 <a href="/Tickets/ChooseFlight" class="nav-link">
                                     <i class="nav-icon far fa-calendar-alt"></i>
@@ -247,54 +248,54 @@
                 }
                 <!-- /.sidebar-menu -->
             </div>
-                <!-- /.sidebar -->
-            </aside>
+            <!-- /.sidebar -->
+        </aside>
 
-            <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper">
-                <!-- Content Header (Page header) -->
-                <section class="content">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-12">
-                                <!-- Default box -->
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <!-- Default box -->
 
-                                <div class="container body-content">
-                                    @RenderBody()
-                                        <hr />
+                            <div class="container body-content">
+                                @RenderBody()
+                                <hr />
 
 
-                                    </div>
-                                <!-- /.card -->
                             </div>
+                            <!-- /.card -->
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
 
-            </div>
-            <!-- /.content-wrapper -->
-
-            <footer class="main-footer">
-                
-                All rights reserved. &copy;HighFly 2020
-            </footer>
-
-            <!-- Control Sidebar -->
-            <aside class="control-sidebar control-sidebar-dark">
-                <!-- Control sidebar content goes here -->
-            </aside>
-            <!-- /.control-sidebar -->
         </div>
-        <!-- ./wrapper -->
-        <!-- jQuery -->
-        <script src="~/plugins/jquery/jquery.min.js"></script>
-        <!-- Bootstrap 4 -->
-        <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <!-- AdminLTE App -->
-        <script src="~/dist/js/adminlte.min.js"></script>
-        <!-- AdminLTE for demo purposes -->
-        <script src="~/dist/js/demo.js"></script>
-        @RenderSection("Scripts", required: false)
-    </body>
+        <!-- /.content-wrapper -->
+
+        <footer class="main-footer">
+
+            All rights reserved. &copy;HighFly 2020
+        </footer>
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- ./wrapper -->
+    <!-- jQuery -->
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/dist/js/demo.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
 </html>
