@@ -25,7 +25,8 @@ namespace FlightTicketsSystem.Web.Helpers
                 Airplane = model.Airplane,
                 BusinessPrice = model.BusinessPrice,
                 EconomyPrice = model.EconomyPrice,
-                DateTime = model.DateTime
+                DateTime = model.DateTime,
+                Tickets = model.Tickets
             };
         }
 
@@ -42,7 +43,8 @@ namespace FlightTicketsSystem.Web.Helpers
                 AirplaneId = model.AirplaneId,
                 ArrivalAirportId = model.ArrivalAirportId,
                 DepartureAirportId = model.DepartureAirportId,
-                Id = model.Id
+                Id = model.Id,
+                Tickets = model.Tickets
             };
         }
 

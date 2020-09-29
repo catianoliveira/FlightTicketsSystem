@@ -49,7 +49,14 @@ namespace FlightTicketsSystem.Web.Controllers
             _mailHelper = mailHelper;
             _airportRepository = airportRepository;
         }
+        
 
+
+
+        /// <summary>
+        /// gets users tickets if logged in, otherwise every ticket bought
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Index()
         {
             if (User.IsInRole("Client"))
@@ -67,13 +74,22 @@ namespace FlightTicketsSystem.Web.Controllers
             }            
         }
 
+
+
+        /// <summary>
+        /// shows every flight from todays date forward
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         public IActionResult ChooseFlight()
         {
-            var model = _flightRepository.GetTodaysFlights();
+            var model = _flightRepository.GetNextFlights();
 
             return View(model);
         }
+
+
+
 
         // GET: Tickets/Details/5
         [Authorize(Roles = "Admin, SuperAdmin, Employee")]
@@ -95,6 +111,9 @@ namespace FlightTicketsSystem.Web.Controllers
 
             return View(ticket);
         }
+
+
+
 
 
         // GET: Tickets/Edit/5
@@ -125,6 +144,10 @@ namespace FlightTicketsSystem.Web.Controllers
 
             return View(model);
         }
+
+
+
+
 
         // POST: Airplanes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -161,6 +184,9 @@ namespace FlightTicketsSystem.Web.Controllers
         }
 
 
+
+
+
         [Authorize(Roles = "Admin, SuperAdmin, Employee")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -189,6 +215,8 @@ namespace FlightTicketsSystem.Web.Controllers
         }
 
 
+
+
         [AllowAnonymous]
         public async Task<IActionResult> BuyTicket(int id)
         {
@@ -211,7 +239,7 @@ namespace FlightTicketsSystem.Web.Controllers
                     Indicatives = _indicativeRepository.GetComboIndicatives(),
                     PassangerName = user.FullName,
                     EconomyPrice = economyPrice,
-                    BusinessPrice = businessPrice
+                    BusinessPrice = businessPrice                    
                 };
 
                 return View(model);
@@ -222,6 +250,9 @@ namespace FlightTicketsSystem.Web.Controllers
                 return RedirectToAction("Login", "Account");
             }
         }
+
+
+
 
 
         [Authorize(Roles = "Client, SuperAdmin, Admin, Employee")]

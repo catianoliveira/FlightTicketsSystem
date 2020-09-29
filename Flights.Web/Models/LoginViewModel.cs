@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Flights.Web.Models
 {
@@ -17,11 +15,6 @@ namespace Flights.Web.Models
         public bool RememberMe { get; set; }
 
 
-        public string ReturnUrl { get; set; }
-
-
-
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
     }
 }

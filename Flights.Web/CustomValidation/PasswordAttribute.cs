@@ -5,6 +5,13 @@ namespace FlightTicketsSystem.Web.CustomValidation
 {
     public class PasswordAttribute<TUser> : IPasswordValidator<TUser> where TUser : class
     {
+        /// <summary>
+        /// checks if password is the same as username
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <param name="user"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public async Task<IdentityResult> ValidateAsync(UserManager<TUser> manager, TUser user, string password)
         {
             var username = await manager.GetUserNameAsync(user);

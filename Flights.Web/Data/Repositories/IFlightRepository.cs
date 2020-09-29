@@ -8,18 +8,17 @@ namespace Flights.Web.Data.Repositories
 {
     public interface IFlightRepository : IGenericRepository<Flight>
     {
-        IEnumerable<SelectListItem> GetComboDepartures();
-
-        IEnumerable<SelectListItem> GetComboArrivals(int departureId);
-
 
         IQueryable GetAllFlights();
 
 
-        IQueryable GetTodaysFlights();
+        /// <summary>
+        /// gets flights from todays date forward
+        /// </summary>
+        /// <returns></returns>
+        IQueryable GetNextFlights();
 
 
-        Task<Flight> GetAirplanesAsync(int id);
 
     }
 }

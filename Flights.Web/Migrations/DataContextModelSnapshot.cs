@@ -50,14 +50,10 @@ namespace FlightTicketsSystem.Web.Migrations
                     b.Property<string>("Country")
                         .IsRequired();
 
-                    b.Property<int?>("CountryId");
-
                     b.Property<string>("IATA")
                         .IsRequired();
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
 
                     b.HasIndex("IATA")
                         .IsUnique();
@@ -215,32 +211,11 @@ namespace FlightTicketsSystem.Web.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("RoleId");
-
                     b.HasIndex("UserName")
                         .IsUnique()
                         .HasFilter("[UserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("FlightTicketsSystem.Web.Data.Entities.Employee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("DateOfBirth");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired();
-
-                    b.Property<string>("LastName")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("FlightTicketsSystem.Web.Data.Entities.Indicative", b =>
@@ -370,13 +345,6 @@ namespace FlightTicketsSystem.Web.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Flights.Web.Data.Entities.Airport", b =>
-                {
-                    b.HasOne("Flights.Web.Data.Entities.Country")
-                        .WithMany("Airports")
-                        .HasForeignKey("CountryId");
-                });
-
             modelBuilder.Entity("Flights.Web.Data.Entities.Flight", b =>
                 {
                     b.HasOne("Flights.Web.Data.Entities.Airplane", "Airplane")
@@ -406,13 +374,6 @@ namespace FlightTicketsSystem.Web.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("Flights.Web.Data.Entities.User", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

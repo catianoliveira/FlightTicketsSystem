@@ -17,10 +17,8 @@ namespace Flights.Web.Models
         public IEnumerable<SelectListItem> RoleChoices { get; set; }
 
 
+
         public IdentityRole Role { get; set; }
-
-
-        //public bool IsSelected { get; set; }
 
 
 
@@ -75,7 +73,7 @@ namespace Flights.Web.Models
         public IEnumerable<SelectListItem> Countries { get; set; }
 
 
-        public Country Country { get; set; }
+       
 
 
         [Required]

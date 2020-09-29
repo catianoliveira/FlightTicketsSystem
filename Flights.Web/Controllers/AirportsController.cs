@@ -40,6 +40,8 @@ namespace Flights.Web.Controllers
             return View(model);
         }
 
+
+
         // GET: Airports/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -65,11 +67,15 @@ namespace Flights.Web.Controllers
             return View(model);
         }
 
+
+
         // GET: Airports/Create
         public IActionResult Create()
         {
             return this.View();
         }
+
+
 
         // POST: Airports/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -158,6 +164,9 @@ namespace Flights.Web.Controllers
 
             return View(model);
         }
+
+
+
 
         // POST: Airplanes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 

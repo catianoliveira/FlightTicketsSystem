@@ -88,6 +88,7 @@ namespace Flights.Web.Controllers
             return View(airplane);
         }
 
+
         // GET: Airplanes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -105,6 +106,8 @@ namespace Flights.Web.Controllers
 
             return View(airplane);
         }
+
+
 
         // POST: Airplanes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -139,6 +142,8 @@ namespace Flights.Web.Controllers
             }
             return View(airplane);
         }
+
+
 
         public async Task<IActionResult> Delete(int? id)
         {

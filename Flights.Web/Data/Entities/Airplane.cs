@@ -15,9 +15,14 @@ namespace Flights.Web.Data.Entities
 
         
 
+
+
         [Display(Name = "Economy Class Seats")]
         [Required]
         public int EconomySeats { get; set; }
+
+
+
 
 
 

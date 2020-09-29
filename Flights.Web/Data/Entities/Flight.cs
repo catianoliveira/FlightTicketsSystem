@@ -21,11 +21,14 @@ namespace Flights.Web.Data.Entities
 
 
 
+
+
+
         [Display(Name = "Airplane")]
         public IEnumerable<SelectListItem> Airplanes { get; set; }
 
 
-        public Airplane Airplane { get; set; }
+
 
 
         [Required]
@@ -34,8 +37,9 @@ namespace Flights.Web.Data.Entities
         public int DepartureAirportId { get; set; }
 
 
-        [Required]
 
+
+        [Required]
         [Display(Name = "Arrival Airport")]
         [ForeignKey("ArrivalAirport")]
         public int ArrivalAirportId { get; set; }
@@ -45,11 +49,7 @@ namespace Flights.Web.Data.Entities
         public IEnumerable<SelectListItem> Airports { get; set; }
 
 
-        [Display(Name = "Departure Airport")]
-        public Airport DepartureAirport { get; set; }
-
-        [Display(Name = "Arrival Airport")]
-        public Airport ArrivalAirport { get; set; }
+        
 
 
 
@@ -61,9 +61,13 @@ namespace Flights.Web.Data.Entities
 
 
 
+
+
         [Required]
         [Display(Name = "Economy C. Price")]
         public decimal EconomyPrice { get; set; }
+
+
 
 
 
@@ -74,6 +78,13 @@ namespace Flights.Web.Data.Entities
 
 
 
+
+        public ICollection<Ticket> Tickets { get; set; }
+
+
+
+
+
         public string CompleteFlight
         {
             get
@@ -81,6 +92,23 @@ namespace Flights.Web.Data.Entities
                 return $"{this.DepartureAirport} -> {this.ArrivalAirport}";
             }
         }
+
+
+
+
+        [Display(Name = "Departure Airport")]
+        public Airport DepartureAirport { get; set; }
+
+
+
+
+        [Display(Name = "Arrival Airport")]
+        public Airport ArrivalAirport { get; set; }
+
+
+
+        public Airplane Airplane { get; set; }
+
 
     }
 }

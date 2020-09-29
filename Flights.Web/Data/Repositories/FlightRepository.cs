@@ -24,51 +24,6 @@ namespace Flights.Web.Data.Repositories
             _airportRepository = airportRepository;
         }
 
-        public async Task<Flight> GetAirplanesAsync(int id)
-        {
-            return await _context.Flights
-                         .Include(c => c.Airplanes)
-                         .Where(c => c.Id == id)
-                         .FirstOrDefaultAsync();
-        }
-
-        public IEnumerable<SelectListItem> GetComboArrivals(int departureId)
-        {
-            var list = _context.Flights.Where(a => a.DepartureAirportId == departureId).Select(a => new SelectListItem
-            {
-                Text = a.ArrivalAirport.CompleteAirport,
-                Value = a.ArrivalAirportId.ToString()
-
-            }).OrderBy(a => a.Text).ToList();
-
-            list.Insert(0, new SelectListItem
-            {
-                Text = "Select an airport",
-                Value = "0"
-            });
-
-            return list;
-        }
-
-        public IEnumerable<SelectListItem> GetComboDepartures()
-        {
-            var list = _context.Flights.Select(d => new SelectListItem
-            {
-                Text = d.DepartureAirport.CompleteAirport,
-                Value = d.DepartureAirportId.ToString()
-
-            }).OrderBy(l => l.Text).ToList();
-
-
-            list.Insert(0, new SelectListItem
-            {
-                Text = "Select an airport",
-                Value = "0"
-            });
-
-            return list;
-        }
-
         public IQueryable GetAllFlights()
         {
             return _context.Flights
@@ -80,13 +35,14 @@ namespace Flights.Web.Data.Repositories
                 .Where(a => a.DateTime >= DateTime.Today.ToUniversalTime());
         }
 
-        public IQueryable GetTodaysFlights()
+
+        public IQueryable GetNextFlights()
         {
             return _context.Flights
                 .Include(f => f.ArrivalAirport)
                 .Include(f => f.DepartureAirport)
                 .OrderBy(f => f.DateTime)
-                .Where(f => f.DateTime >= DateTime.Today.ToUniversalTime());
+                .Where(f => f.DateTime > DateTime.Today.ToUniversalTime());
         }
     }
 }
