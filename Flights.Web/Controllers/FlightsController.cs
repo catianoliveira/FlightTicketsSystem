@@ -91,20 +91,30 @@ namespace Flights.Web.Controllers
             {
                 try
                 {
-                    Flight flight = new Flight
+                    if (flights.ArrivalAirportId != flights.DepartureAirportId)
                     {
-                        ArrivalAirportId = flights.ArrivalAirportId,
-                        DepartureAirportId = flights.DepartureAirportId,
-                        AirplaneId = flights.AirplaneId,
-                        BusinessPrice = flights.BusinessPrice,
-                        EconomyPrice = flights.EconomyPrice,
-                        DateTime = flights.DateTime,
-                        ArrivalAirport = flights.ArrivalAirport,
-                        DepartureAirport = flights.DepartureAirport,
-                        Tickets = new List<Ticket>()
-                    };
 
-                    await _flightRepository.CreateAsync(flight);
+
+                        Flight flight = new Flight
+                        {
+                            ArrivalAirportId = flights.ArrivalAirportId,
+                            DepartureAirportId = flights.DepartureAirportId,
+                            AirplaneId = flights.AirplaneId,
+                            BusinessPrice = flights.BusinessPrice,
+                            EconomyPrice = flights.EconomyPrice,
+                            DateTime = flights.DateTime,
+                            ArrivalAirport = flights.ArrivalAirport,
+                            DepartureAirport = flights.DepartureAirport,
+                            Tickets = new List<Ticket>()
+                        };
+
+                        await _flightRepository.CreateAsync(flight);
+                    }
+
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Arrival Airport and Departure Airport can't be the same");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -126,16 +136,16 @@ namespace Flights.Web.Controllers
                 return NotFound();
             }
 
-            var flight = await _flightRepository.GetByIdAsync(id.Value);
+            var model = await _flightRepository.GetByIdAsync(id.Value);
 
-            if (flight == null)
+            if (model == null)
             {
                 return NotFound();
             }
 
-            var model = _converterHelper.ToFlightViewModel(flight);
+            var flight = _converterHelper.ToFlightViewModel(model);
 
-            return View(model);
+            return View(flight);
         }
 
 

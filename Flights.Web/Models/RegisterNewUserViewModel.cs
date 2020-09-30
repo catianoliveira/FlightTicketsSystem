@@ -11,6 +11,8 @@ namespace Flights.Web.Models
     public class RegisterNewUserViewModel
     {
 
+        [Required]
+        [Display(Name = "Role")]
         public string RoleID { get; set; }
 
 

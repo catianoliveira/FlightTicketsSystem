@@ -8,15 +8,15 @@ namespace FlightTicketsSystem.Web.Models
     public class FlightViewModel : Flight
     {
 
-
+        [Display(Name = "Airplane")]
         public int AirplaneId { get; set; }
 
 
-
+        [Display(Name = "Departure Airport")]
         public int DepartureAirportId { get; set; }
 
 
-
+        [Display(Name = "Arrival Airport")]
         public int ArrivalAirportId { get; set; }
 
 

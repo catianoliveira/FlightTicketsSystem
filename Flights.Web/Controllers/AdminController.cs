@@ -259,7 +259,7 @@ namespace FlightTicketsSystem.Web.Controllers
                 }
             }
 
-            return View(editUser);
+            return RedirectToAction(nameof(ListUsers));
         }
 
 

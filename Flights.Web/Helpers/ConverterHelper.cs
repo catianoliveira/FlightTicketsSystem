@@ -1,4 +1,5 @@
-﻿using Flights.Web.Data.Entities;
+﻿using Flights.Web.Data;
+using Flights.Web.Data.Entities;
 using Flights.Web.Helpers;
 using FlightTicketsSystem.Web.Data.Entities;
 using FlightTicketsSystem.Web.Models;
@@ -8,11 +9,17 @@ namespace FlightTicketsSystem.Web.Helpers
     public class ConverterHelper : IConverterHelper
     {
         private readonly IUserHelper _userHelper;
+        private readonly IAirplaneRepository _airplaneRepository;
+        private readonly IAirportRepository _airportRepository;
 
         public ConverterHelper(
-            IUserHelper userHelper)
+            IUserHelper userHelper,
+            IAirplaneRepository airplaneRepository,
+            IAirportRepository airportRepository)
         {
             _userHelper = userHelper;
+            _airplaneRepository = airplaneRepository;
+            _airportRepository = airportRepository;
         }
 
 
@@ -34,6 +41,8 @@ namespace FlightTicketsSystem.Web.Helpers
         {
             return new FlightViewModel
             {
+                Airplanes = _airplaneRepository.GetComboAirplanes(),
+                Airports = _airportRepository.GetComboAirports(),
                 ArrivalAirport = model.ArrivalAirport,
                 DepartureAirport = model.DepartureAirport,
                 Airplane = model.Airplane,
